@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const express = require("express");
-const mysqlConnection = require("../dbConnection");
+const mysqlConnection = require("../config/dbConnection");
 
 router.get("/", (req, res) => {
     res.status(200).send("Idea");
