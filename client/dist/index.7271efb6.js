@@ -1003,12 +1003,13 @@ var prevRefreshSig = window.$RefreshSig$;
 $parcel$ReactRefreshHelpers$f00f.prelude(module);
 
 try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _jsxDevRuntime = require("react/jsx-dev-runtime");
 var _reactDom = require("react-dom");
+var _login = require("./components/Login");
+var _loginDefault = parcelHelpers.interopDefault(_login);
 const App = ()=>{
-    return(/*#__PURE__*/ _jsxDevRuntime.jsxDEV("h1", {
-        className: "p-0 m-0",
-        children: "Adopt"
+    return(/*#__PURE__*/ _jsxDevRuntime.jsxDEV(_loginDefault.default, {
     }, void 0, false, {
         fileName: "src/App.js",
         lineNumber: 4,
@@ -1019,7 +1020,7 @@ _c = App;
 _reactDom.render(/*#__PURE__*/ _jsxDevRuntime.jsxDEV(App, {
 }, void 0, false, {
     fileName: "src/App.js",
-    lineNumber: 7,
+    lineNumber: 6,
     columnNumber: 8
 }, undefined), document.getElementById("root"));
 var _c;
@@ -1030,7 +1031,7 @@ $RefreshReg$(_c, "App");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react-dom":"j6uA9","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"iTorj":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react-dom":"j6uA9","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./components/Login":"hsmcH","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"iTorj":[function(require,module,exports) {
 'use strict';
 module.exports = require('./cjs/react-jsx-dev-runtime.development.js');
 
@@ -22896,6 +22897,238 @@ function registerExportsForReactRefresh(module) {
     }
 }
 
-},{"react-refresh/runtime":"786KC"}]},["kn9T2","1MduV","2kQhy"], "2kQhy", "parcelRequiree8ef")
+},{"react-refresh/runtime":"786KC"}],"hsmcH":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$5afe = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$5afe.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+const Login = ()=>{
+    return(/*grid start*/ /*#__PURE__*/ _jsxDevRuntime.jsxDEV("div", {
+        class: "grid grid-cols-2 divide-x",
+        children: [
+            /*#__PURE__*/ _jsxDevRuntime.jsxDEV("div", {
+                class: "min-h-screen bg-blue-500 bg-opacity-100 bg-gradient-to-tr from-blue-grd to-green-grd "
+            }, void 0, false, {
+                fileName: "src/components/Login.js",
+                lineNumber: 7,
+                columnNumber: 9
+            }, undefined),
+            /*#__PURE__*/ _jsxDevRuntime.jsxDEV("div", {
+                class: "min-h-screen bg-white text-pink-800 antialiased px-2 py-4 flex flex-col justify-center sm:py-1",
+                children: [
+                    /*#__PURE__*/ _jsxDevRuntime.jsxDEV("h2", {
+                        class: "my-8 font-display font-medium text-4xl text-pink-700 text-center",
+                        children: "Login"
+                    }, void 0, false, {
+                        fileName: "src/components/Login.js",
+                        lineNumber: 11,
+                        columnNumber: 9
+                    }, undefined),
+                    /*#__PURE__*/ _jsxDevRuntime.jsxDEV("div", {
+                        class: "flex items-center mb-5",
+                        children: [
+                            /*#__PURE__*/ _jsxDevRuntime.jsxDEV("label", {
+                                for: "name",
+                                class: "inline-block w-20 mr-6 text-center font-bold text-gray-600"
+                            }, void 0, false, {
+                                fileName: "src/components/Login.js",
+                                lineNumber: 16,
+                                columnNumber: 13
+                            }, undefined),
+                            /*#__PURE__*/ _jsxDevRuntime.jsxDEV("input", {
+                                type: "email",
+                                id: "email",
+                                name: "email",
+                                placeholder: "Enter your email-id",
+                                class: "flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none"
+                            }, void 0, false, {
+                                fileName: "src/components/Login.js",
+                                lineNumber: 17,
+                                columnNumber: 13
+                            }, undefined)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/components/Login.js",
+                        lineNumber: 15,
+                        columnNumber: 9
+                    }, undefined),
+                    /*#__PURE__*/ _jsxDevRuntime.jsxDEV("div", {
+                        class: "flex items-center mb-10",
+                        children: [
+                            /*#__PURE__*/ _jsxDevRuntime.jsxDEV("label", {
+                                for: "password",
+                                class: "inline-block w-20 mr-6 text-right font-bold text-gray-600"
+                            }, void 0, false, {
+                                fileName: "src/components/Login.js",
+                                lineNumber: 21,
+                                columnNumber: 13
+                            }, undefined),
+                            /*#__PURE__*/ _jsxDevRuntime.jsxDEV("input", {
+                                type: "password",
+                                id: "password",
+                                name: "password",
+                                placeholder: "Enter your password",
+                                id: "pass",
+                                name: "password",
+                                minlength: "8",
+                                required: true,
+                                class: "flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none"
+                            }, void 0, false, {
+                                fileName: "src/components/Login.js",
+                                lineNumber: 23,
+                                columnNumber: 13
+                            }, undefined)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/components/Login.js",
+                        lineNumber: 20,
+                        columnNumber: 9
+                    }, undefined),
+                    /*#__PURE__*/ _jsxDevRuntime.jsxDEV("div", {
+                        class: "text-center",
+                        children: /*#__PURE__*/ _jsxDevRuntime.jsxDEV("button", {
+                            class: "py-3 px-14 rounded-full bg-black-btn text-white font-bold",
+                            children: "Login"
+                        }, void 0, false, {
+                            fileName: "src/components/Login.js",
+                            lineNumber: 30,
+                            columnNumber: 13
+                        }, undefined)
+                    }, void 0, false, {
+                        fileName: "src/components/Login.js",
+                        lineNumber: 29,
+                        columnNumber: 9
+                    }, undefined),
+                    /*#__PURE__*/ _jsxDevRuntime.jsxDEV("br", {
+                    }, void 0, false, {
+                        fileName: "src/components/Login.js",
+                        lineNumber: 37,
+                        columnNumber: 9
+                    }, undefined),
+                    /*#__PURE__*/ _jsxDevRuntime.jsxDEV("br", {
+                    }, void 0, false, {
+                        fileName: "src/components/Login.js",
+                        lineNumber: 38,
+                        columnNumber: 9
+                    }, undefined),
+                    /*#__PURE__*/ _jsxDevRuntime.jsxDEV("br", {
+                    }, void 0, false, {
+                        fileName: "src/components/Login.js",
+                        lineNumber: 39,
+                        columnNumber: 9
+                    }, undefined),
+                    /*#__PURE__*/ _jsxDevRuntime.jsxDEV("div", {
+                        class: "flex items-center mb-44",
+                        children: [
+                            /*#__PURE__*/ _jsxDevRuntime.jsxDEV("label", {
+                                for: "account",
+                                class: "inline-block w-25 mr-6 text-center font-medium text-gray-600 ",
+                                children: "Don't have an account?"
+                            }, void 0, false, {
+                                fileName: "src/components/Login.js",
+                                lineNumber: 41,
+                                columnNumber: 13
+                            }, undefined),
+                            /*#__PURE__*/ _jsxDevRuntime.jsxDEV("a", {
+                                href: "#",
+                                class: "self-end mr-6 text-pink-600 font-bold",
+                                children: "Register"
+                            }, void 0, false, {
+                                fileName: "src/components/Login.js",
+                                lineNumber: 42,
+                                columnNumber: 13
+                            }, undefined)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/components/Login.js",
+                        lineNumber: 40,
+                        columnNumber: 9
+                    }, undefined),
+                    /*#__PURE__*/ _jsxDevRuntime.jsxDEV("div", {
+                        class: "flex items-center mb-24",
+                        children: [
+                            /*#__PURE__*/ _jsxDevRuntime.jsxDEV("a", {
+                                href: "#",
+                                class: "self-end mb-9 text-pink-600 font-semibold",
+                                children: "Forgot Username?"
+                            }, void 0, false, {
+                                fileName: "src/components/Login.js",
+                                lineNumber: 45,
+                                columnNumber: 13
+                            }, undefined),
+                            /*#__PURE__*/ _jsxDevRuntime.jsxDEV("a", {
+                                href: "#",
+                                class: "self-end mb-9 text-pink-600 font-semibold",
+                                children: "Forgot Password?"
+                            }, void 0, false, {
+                                fileName: "src/components/Login.js",
+                                lineNumber: 45,
+                                columnNumber: 95
+                            }, undefined)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/components/Login.js",
+                        lineNumber: 44,
+                        columnNumber: 9
+                    }, undefined)
+                ]
+            }, void 0, true, {
+                fileName: "src/components/Login.js",
+                lineNumber: 10,
+                columnNumber: 9
+            }, undefined)
+        ]
+    }, void 0, true, {
+        fileName: "src/components/Login.js",
+        lineNumber: 5,
+        columnNumber: 5
+    }, undefined));
+};
+_c = Login;
+exports.default = Login;
+var _c;
+$RefreshReg$(_c, "Login");
+
+  $parcel$ReactRefreshHelpers$5afe.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"gkKU3":[function(require,module,exports) {
+exports.interopDefault = function(a) {
+    return a && a.__esModule ? a : {
+        default: a
+    };
+};
+exports.defineInteropFlag = function(a) {
+    Object.defineProperty(a, '__esModule', {
+        value: true
+    });
+};
+exports.exportAll = function(source, dest) {
+    Object.keys(source).forEach(function(key) {
+        if (key === 'default' || key === '__esModule' || dest.hasOwnProperty(key)) return;
+        Object.defineProperty(dest, key, {
+            enumerable: true,
+            get: function() {
+                return source[key];
+            }
+        });
+    });
+    return dest;
+};
+exports.export = function(dest, destName, get) {
+    Object.defineProperty(dest, destName, {
+        enumerable: true,
+        get: get
+    });
+};
+
+},{}]},["kn9T2","1MduV","2kQhy"], "2kQhy", "parcelRequiree8ef")
 
 //# sourceMappingURL=index.7271efb6.js.map

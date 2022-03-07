@@ -1,7 +1,6 @@
 import { render } from "react-dom";
-
+import Login from "./components/Login";
 const App = () => {
-  return <h1 className="p-0 m-0">Adopt</h1>;
-};
-
+  return <Login/>
+}
 render(<App />, document.getElementById("root"));
