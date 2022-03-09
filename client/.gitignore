@@ -12,6 +12,8 @@
 /build
 
 # misc
+/.parcel-cache
+/dist
 .DS_Store
 .env.local
 .env.development.local
