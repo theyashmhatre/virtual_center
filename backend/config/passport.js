@@ -10,15 +10,18 @@ module.exports = passport => {
 
     passport.use(
         new JwtStrategy(opts, (jwt_payload, done) => {
-
             mysqlConnection.query(`SELECT * from user where userId = ${jwt_payload.id}`, function (err, row, fields) {
+                const user = row[0];
+                console.log(user, jwt_payload);
+
                 if (err) console.log(err);
 
                 else {
                     if (row) {
+
                         return done(null, user);
                     }
-                    return done(null, false)
+                    return done(null, false);
                 }
             })
         })  

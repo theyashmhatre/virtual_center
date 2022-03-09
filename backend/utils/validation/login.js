@@ -1,24 +1,23 @@
-const Validator = require("validator");
-const isEmpty = require("is-empty");
-
+const isEmpty = require("lodash/isEmpty");
+const emailValidation = require("./emailValidation");
 
 function validateLoginParams(data) {
-    let errors = {}
+    let errors = {};
 
     let {email, password} = data;
 
     // Email checks
-    if (Validator.isEmpty(email)) {errors.email = "Email field is required";} 
-    else if (!Validator.isEmail(email)) {errors.email = "Email is invalid";}
+
+    errors = emailValidation(email, errors);
 
 
     // Password checks
-    if (Validator.isEmpty(password)) {errors.password = "Password field is required";}
+    if (!password) {errors.password = "Password field is required";}
 
     return {
         errors,
-        isValid: isEmpty(errors)
-    }
+        isValid: isEmpty(errors) 
+    };
 }
 
 module.exports = validateLoginParams;
