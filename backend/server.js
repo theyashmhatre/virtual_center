@@ -5,10 +5,12 @@ const app = express();
 const bodyParser = require("body-parser");
 const passport = require("passport");
 const mysqlConnection = require("./config/dbConnection");
+var cookieParser = require('cookie-parser');
 
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(cookieParser());
 
 app.use("/user", require("./routes/user"));
 app.use("/idea", require("./routes/idea"));

@@ -1,5 +1,5 @@
-const isEmpty = require("lodash/isEmpty");
-const emailValidation = require("./emailValidation");
+const {isEmptyObject} = require("../utils");
+const emailValidation = require("./singleInputValidations/emailValidation");
 
 function validateLoginParams(data) {
     let errors = {};
@@ -16,7 +16,7 @@ function validateLoginParams(data) {
 
     return {
         errors,
-        isValid: isEmpty(errors) 
+        isValid: isEmptyObject(errors) 
     };
 }
 
