@@ -19,17 +19,22 @@ const Register = () => {
   const navigate = useNavigate();
 
   const getSecurityQuestions = () => {
-    const endpoint = new URL('/user/securityQuestions', apiURL).href
+    const endpoint = new URL('/user/securityQuestions', apiURL).href;
     axios
       .get(endpoint)
       .then(({ data }) => {
-        setSecurityQuestions(data)
+        setSecurityQuestions(data);
       })
-      .catch((e) => setError(e.message))
-  }
+      .catch((e) => {
+        if (error.response)
+          if (error.response.data) setError(error.response.data.error);
+          else setError('Some Error Occured, Try Again!');
+        else setError('Some Error Occured, Try Again!');
+      });
+  };
 
   const signUp = () => {
-    const endpoint = new URL('/user/register', apiURL).href
+    const endpoint = new URL('/user/register', apiURL).href;
     axios
       .post(endpoint, {
         firstName: firstName,
@@ -43,12 +48,17 @@ const Register = () => {
       .then(() => {
         navigate('/home');
       })
-      .catch((e) => setError(e.message));
-  }
+      .catch((e) => {
+        if (error.response)
+          if (error.response.data) setError(error.response.data.error);
+          else setError('Some Error Occured, Try Again!');
+        else setError('Some Error Occured, Try Again!');
+      });
+  };
 
   useEffect(() => {
-    getSecurityQuestions()
-  }, [])
+    getSecurityQuestions();
+  }, []);
 
   const onSubmit = () => {
     setError('')

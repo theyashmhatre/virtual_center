@@ -12,7 +12,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const signIn = () => {
-    const endpoint = new URL('/user/login', apiURL).href
+    const endpoint = new URL('/user/login', apiURL).href;
     axios
       .post(endpoint, {
         email: email,
@@ -24,8 +24,8 @@ const Login = () => {
       .catch((error) => {
         if (error.response)
           if (error.response.data) setError(error.response.data.error);
-          else setError('Some Error Occured at Server, Try Again!');
-        else setError('Some Error Occured at Server, Try Again!');
+          else setError('Some Error Occured, Try Again!');
+        else setError('Some Error Occured, Try Again!');
       });
   }
 
@@ -34,7 +34,7 @@ const Login = () => {
     if (email && password)
       if (emailRegex.test(email))
         // signin using api
-        signIn()
+        signIn();
       else setError('Email is incorrect');
     else setError('All fields are required');
   };
