@@ -102,7 +102,7 @@ router.post("/login", (req, res) => {
         let user = row[0];
 
         if (!user) {
-            return res.status(404).json({emailNotFound: "Email not found"});
+            return res.status(404).json({error: "Email not found"});
         }
 
         //Check password    
@@ -136,7 +136,7 @@ router.post("/login", (req, res) => {
                     }
                 );
             } else {
-                return res.status(400).json({ err: "Password incorrect" });
+                return res.status(400).json({ error: "Password incorrect" });
             }
         });
     });
