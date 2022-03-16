@@ -1,6 +1,4 @@
-const {isEmptyObject} = require("../utils");
-const emailValidation = require("./singleInputValidations/emailValidation");
-const passwordValidation = require("./singleInputValidations/passwordValidation");
+const {isEmptyObject, emailValidation, passwordsValidation} = require("../utils");
 
 
 function validateRegisterParams(data) {
@@ -19,7 +17,7 @@ function validateRegisterParams(data) {
 
 
     // Password validation
-    errors = passwordValidation(password,password2, errors);
+    errors = passwordsValidation(password,password2, errors);
 
     if (!securityQuestionId || isNaN(securityQuestionId)) errors.securityQuestionId = "Please select a valid Security Question";
     if (!securityQuestionAnswer) errors.securityQuestionAnswer = "Please enter an answer to your Security Question";
