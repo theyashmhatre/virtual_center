@@ -1,12 +1,12 @@
-const isEmpty = require("lodash/isEmpty");
-const emailValidation = require("./emailValidation");
-const passwordValidation = require("./passwordValidation");
+const {isEmptyObject} = require("../utils");
+const emailValidation = require("./singleInputValidations/emailValidation");
+const passwordValidation = require("./singleInputValidations/passwordValidation");
 
 
 function validateRegisterParams(data) {
     let errors = {};
 
-    let {firstName, lastName , email, password, password2} = data;
+    let {firstName, lastName , email, password, password2, securityQuestionId, securityQuestionAnswer} = data;
 
 
     //Name validation
@@ -21,11 +21,12 @@ function validateRegisterParams(data) {
     // Password validation
     errors = passwordValidation(password,password2, errors);
 
+    if (!securityQuestionId || isNaN(securityQuestionId)) errors.securityQuestionId = "Please select a valid Security Question";
+    if (!securityQuestionAnswer) errors.securityQuestionAnswer = "Please enter an answer to your Security Question";
 
-    console.log(errors);
     return {
         errors,
-        isValid: isEmpty(errors)
+        isValid: isEmptyObject(errors)
     };
 }
 

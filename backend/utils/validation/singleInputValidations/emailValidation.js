@@ -1,5 +1,4 @@
-const {emailRegex} = require("../constants");
-
+const {emailRegex} = require("../../constants");
 
 function emailValidation(email, errors) {
     if (!email) {errors.email = "Email field is required";}
@@ -7,6 +6,5 @@ function emailValidation(email, errors) {
 
     return errors;
 }
-
 
 module.exports = emailValidation;
