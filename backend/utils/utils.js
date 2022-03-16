@@ -1,3 +1,5 @@
+const {emailRegex, passwordRegex} = require("./constants");
+
 
 function isEmptyObject(obj) {
   return !Object.keys(obj).length;

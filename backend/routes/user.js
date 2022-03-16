@@ -124,15 +124,11 @@ router.post("/login", (req, res) => {
                     },
                     (err,token) => {
 
-                        //sets the jwt token as a cookie
-                        res.cookie('AUTH_TOKEN', token, 
-                            {
-                                httpOnly: true,
-                                maxAge: 31556926
-                            }
-                        );
-
-                        res.status(200).json({success: true});
+                        //returns jwt token to be stored in browser's sessionStorage
+                        res.status(200).json({
+                            success: true,
+                            token: token
+                        });
                     }
                 );
             } else {
@@ -144,7 +140,7 @@ router.post("/login", (req, res) => {
 
 router.post('/profile', passport.authenticate('jwt', { session: false }),
     function(req, res) {
-        res.send("Profile page accessed!");
+        res.status(200).send("Profile page accessed!");
     }
 );
 
@@ -160,12 +156,12 @@ router.post("/forgotPassword", (req, res) => {
 
         if (err) {
             console.log(err);
-            res.status(400);
+            res.status(400).json({error: "Something went wrong"});
         } else {
             user = rows[0];
 
             //checks if user selected question matches with the one selected at the time of registration
-            if (parseInt(securityQuestionId) !== user.security_question_id) return res.status(400).json({err: "Something went wrong"});
+            if (parseInt(securityQuestionId) !== user.security_question_id) return res.status(400).json({error: "Something went wrong"});
 
             //compares user's current answer with the one stored in the database
             bcrypt.compare(securityQuestionAnswer, user.security_question_answer).then((isMatch) => {
