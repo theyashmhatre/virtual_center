@@ -1,8 +1,8 @@
-import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-import { apiURL, emailRegex } from "../../constants";
+import { emailRegex } from "../../constants";
+import { login } from "../utils/user";
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -11,30 +11,19 @@ const Login = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const signIn = () => {
-    const endpoint = new URL('/user/login', apiURL).href;
-    axios
-      .post(endpoint, {
-        email: email,
-        password: password
-      })
-      .then((response) => {
-        navigate('/home');
-      })
-      .catch((error) => {
-        if (error.response)
-          if (error.response.data) setError(error.response.data.error);
-          else setError('Some Error Occured, Try Again!');
-        else setError('Some Error Occured, Try Again!');
-      });
-  }
-
-  const login = () => {
+  const onClick = () => {
     setError('')
     if (email && password)
       if (emailRegex.test(email))
         // signin using api
-        signIn();
+        login(email, password)
+          .then(() => navigate('/home'))
+          .catch((error) => {
+            if (error.response)
+              if (error.response.data) setError(error.response.data.error);
+              else setError('Some Error Occured, Try Again!');
+            else setError('Some Error Occured, Try Again!');
+          });
       else setError('Email is incorrect');
     else setError('All fields are required');
   };
@@ -99,7 +88,7 @@ const Login = () => {
           <div className="text-center">
             <button
               className="py-3 px-14 rounded-full bg-black-btn text-white font-bold"
-              onClick={login}
+              onClick={onClick}
             >
               Login
             </button>
