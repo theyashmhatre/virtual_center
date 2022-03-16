@@ -1,5 +1,4 @@
-const {isEmptyObject} = require("../utils");
-const emailValidation = require("./singleInputValidations/emailValidation");
+const {isEmptyObject, emailValidation} = require("../utils");
 
 function validateLoginParams(data) {
     let errors = {};

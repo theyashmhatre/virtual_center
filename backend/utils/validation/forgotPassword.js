@@ -1,5 +1,4 @@
-const {isEmptyObject} = require("../utils");
-const passwordValidation = require("./singleInputValidations/passwordValidation");
+const {isEmptyObject, passwordsValidation} = require("../utils");
 
 function validateForgotPasswordParams(data) {
     let errors = {};
@@ -15,7 +14,7 @@ function validateForgotPasswordParams(data) {
 
 
     // Password validation
-    errors = passwordValidation(password,password2, errors);
+    errors = passwordsValidation(password,password2, errors);
 
     return {
         errors,

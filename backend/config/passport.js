@@ -3,20 +3,10 @@ const ExtractJwt = require("passport-jwt").ExtractJwt;
 const mysqlConnection = require("../config/dbConnection");
 
 
-//extracts jwt token from the cookie which is passed in req
-const cookieExtractor = req => {
-    let jwt = null;
-
-    if (req && req.cookies) {
-        jwt = req.cookies.AUTH_TOKEN;
-    }
-
-    return jwt;
-};
-
 const opts = {};
-opts.jwtFromRequest = cookieExtractor;
+opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 opts.secretOrKey = process.env.secretOrKey;
+opts.algorithms = ['HS256'];
 
 module.exports = passport => {
 
