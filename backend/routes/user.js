@@ -26,8 +26,11 @@ router.post("/register", (req, res) => {
 
     if (!isValid) return res.status(400).json(errors);
 
-    mysqlConnection.query(`SELECT * from user where email="${email}"`, function (err, result, fields) {     
-        if (err) {console.log(err.code, err.sqlMessage);}
+    mysqlConnection.query(`SELECT * from user where email="${email}"`, function (error, result, fields) {     
+        if (error) {
+            console.log(error.code, error.sqlMessage);
+            res.status(500).json({main: "Something went wrong. Please try again", devError: error, devMsg: "MySql query error"});
+        }
 
         if (!isEmptyObject(result)) {         //check if user email already exists
 
@@ -39,7 +42,10 @@ router.post("/register", (req, res) => {
 
                 //encrypting user's password
                 bcrypt.hash(password, salt, (err, hash) => {
-                    if (err) console.log("bcrypt error for password",err);
+                    if (err) {
+                        console.log("bcrypt error for password",err);
+                        res.status(500).json({main: "Something went wrong", devError: err, devMsg: "Error while encrypting password using bcrypt library"});
+                    }
 
                     let userName = email.substring(0, email.indexOf("@")) + parseInt(Math.random() * (999 - 1) + 1);       //creates a default username using content before '@' from the email + a random digit from 1 to 999
                     userName = userName.replace(/[^a-zA-Z0-9 ]/g, '');      // eliminates special characters, if any
@@ -56,7 +62,10 @@ router.post("/register", (req, res) => {
                     
                     //encrypting security question's answer
                     bcrypt.hash(securityQuestionAnswer, salt, (err, ans_hash) => {
-                        if (err) console.log("bcrypt error for security answer", err);
+                        if (err) {
+                            console.log("bcrypt error for password", err);
+                            res.status(500).json({main: "Something went wrong", devError: err,devMsg: "Error while encrypting security answer using bcrypt library"});
+                        }
 
                         const user = {
                             first_name: firstName,
@@ -70,12 +79,15 @@ router.post("/register", (req, res) => {
                         };
 
                         //adding user to database
-                        mysqlConnection.query(`INSERT INTO user SET ?`, user, function (err, result, fields) {
-                            if (err) {console.log(err);}
+                        mysqlConnection.query(`INSERT INTO user SET ?`, user, function (sqlErr, result, fields) {
+                            if (sqlErr) {
+                                console.log(sqlErr);
+                                res.status(500).json({main: "Something went wrong", devError: sqlErr, devMsg: "Error occured while adding user into db"});
+                            }
 
                             else{
                                 console.log("User Created");
-                                return res.status(201).send("New user Created");
+                                return res.status(201).json({devMsg: "New user created successfully"});
                             }
                         });
                     });
@@ -96,13 +108,16 @@ router.post("/login", (req, res) => {
     //Check validation
     if (!isValid) return res.status(400).json(errors);
 
-    mysqlConnection.query(`SELECT * from user where email = "${email}"`, function (err, row, fields) {
-        if (err) console.log("Login error on searching for user", err);
+    mysqlConnection.query(`SELECT * from user where email = "${email}"`, function (error, row, fields) {
+        if (error) {
+            console.log(error.code, error.sqlMessage);
+            res.status(500).json({main: "Something went wrong. Please try again", devError: error, devMsg: "MySql query error"});
+        }
 
         let user = row[0];
 
         if (!user) {
-            return res.status(404).json({error: "Email not found"});
+            return res.status(404).json({main: "Email not found"});
         }
 
         //Check password    
@@ -124,6 +139,11 @@ router.post("/login", (req, res) => {
                     },
                     (err,token) => {
 
+                        if (err) {
+                            console.log(err);
+                            res.status(500).json({main: "Something went wrong. Please try again", devError: err, devMsg: "Error while signing jwt token"});
+                        }
+
                         //returns jwt token to be stored in browser's sessionStorage
                         res.status(200).json({
                             success: true,
@@ -134,6 +154,9 @@ router.post("/login", (req, res) => {
             } else {
                 return res.status(400).json({ error: "Password incorrect" });
             }
+        }).catch((error) => {
+            console.log(error);
+            res.status(500).json({devError: error, devMsg: "Error occured while comparing passwords"});
         });
     });
 });
@@ -152,11 +175,11 @@ router.post("/forgotPassword", (req, res) => {
     //Check validation
     if (!isValid) return res.status(400).json(errors);
 
-    mysqlConnection.query(`SELECT * from user where email = "${email}"`, (err, rows, fields) => {
+    mysqlConnection.query(`SELECT * from user where email = "${email}"`, (error, rows, fields) => {
 
-        if (err) {
-            console.log(err);
-            res.status(400).json({error: "Something went wrong"});
+        if (error) {
+            console.log(error);
+            res.status(500).json({main: "Something went wrong. Please try again", devError: error, devMsg: "MySql query error"});
         } else {
             user = rows[0];
 
@@ -165,28 +188,13 @@ router.post("/forgotPassword", (req, res) => {
 
             //compares user's current answer with the one stored in the database
             bcrypt.compare(securityQuestionAnswer, user.security_question_answer).then((isMatch) => {
-                if (!isMatch) return res.status(400).json({err: "Answers do not match."});
+                if (!isMatch) return res.status(400).json({main: "Wrong credentials. Please retry", devMsg: "Answers do not match"});
 
-                // encrypts user's new password
-                bcrypt.genSalt(10, (err, salt) => {
-                    bcrypt.hash(password, salt, (err, hash) => {
-                        if (err) console.log("bcrypt error for forgot password",err);
+                //sending email with a unique link
 
-                        const encryptedPassword = hash;
 
-                        //updates password
-                        mysqlConnection.query(`UPDATE user SET password = "${encryptedPassword}" where email = "${email}"`, function (err, result, fields) {
-                            if (err) {console.log(err);}
-
-                            else{
-                                return res.status(201).json({msg: "Password changed successfully!"});
-                            }
-                        });
-
-                    });
-                });
             }).catch((err) => {
-                return res.status(400).json({err: "Something went wrong " + err});
+                return res.status(400).json({main: "Something went wrong ", devError: err, devMsg: "Error occured while comparing user's answers"});
             });
         }
     });
@@ -197,7 +205,7 @@ router.get("/securityQuestions", (req, res) => {
     mysqlConnection.query("Select question_id as securityQuestionId, question_text as securityQuestionText from security_question", (err, rows, fields) => {
         if (err) {
             console.log(err);
-            res.status(400);
+            res.status(500).json({main: "Something went wrong. Please try again", devError: error, devMsg: "MySql query error"});;
         } else {
             //return list containing multiple objects having securityQuestionId and securityQuestionText as keys
             res.status(200).send(rows);      

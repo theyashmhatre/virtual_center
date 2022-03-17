@@ -3,7 +3,7 @@ const {isEmptyObject, passwordsValidation} = require("../utils");
 function validateForgotPasswordParams(data) {
     let errors = {};
 
-    let {email, securityQuestionId, securityQuestionAnswer, password, password2} = data;
+    let {email, securityQuestionId, securityQuestionAnswer, password, confirmPassword} = data;
 
     // Email checks
     if (!email) errors.email = "Please enter email and retry";
@@ -14,7 +14,7 @@ function validateForgotPasswordParams(data) {
 
 
     // Password validation
-    errors = passwordsValidation(password,password2, errors);
+    errors = passwordsValidation(password,confirmPassword, errors);
 
     return {
         errors,
