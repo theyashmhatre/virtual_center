@@ -12,11 +12,11 @@ function emailValidation(email, errors) {
     return errors;
 }
 
-function passwordsValidation(password, password2, errors) {
+function passwordsValidation(password, confirmPassword, errors) {
 
     if (!password) {errors.password = "Password field is required";}
 
-    if (!password2) {errors.password2 = "Confirm password field is required";}
+    if (!confirmPassword) {errors.confirmPassword = "Confirm password field is required";}
 
     if (!isEmptyObject(errors)) return errors;
 
@@ -25,7 +25,7 @@ function passwordsValidation(password, password2, errors) {
 
     if (!isEmptyObject(errors)) return errors;
 
-    if (password !== password2) {
+    if (password !== confirmPassword) {
         errors.password = "Passwords must match";
         return errors;
     }
