@@ -5,10 +5,9 @@ const jwt = require("jsonwebtoken");
 const validateRegisterParams = require("../utils/validation/register");
 const validateLoginParams = require("../utils/validation/login");
 const passport = require("passport");
-const { isEmptyObject } = require("../utils/utils");
+const { isEmptyObject, passwordsValidation } = require("../utils/utils");
 const validateForgotPasswordParams = require("../utils/validation/forgotPassword");
 const nodemailer = require("nodemailer");
-const { passwordsValidation } = require("../utils/utils");
 
 router.get("/", (req, res) => {
   mysqlConnection.query("Select * from user", (err, rows, fields) => {
@@ -36,22 +35,34 @@ router.post("/register", (req, res) => {
 
   mysqlConnection.query(
     `SELECT * from user where email="${email}"`,
-    function (err, result, fields) {
-      if (err) {
-        console.log(err.code, err.sqlMessage);
+    function (error, result, fields) {
+      if (error) {
+        console.log(error.code, error.sqlMessage);
+        res.status(500).json({
+          main: "Something went wrong. Please try again",
+          devError: error,
+          devMsg: "MySql query error",
+        });
       }
 
       if (!isEmptyObject(result)) {
         //check if user email already exists
 
-        return res.status(400).json({ error: "Email already exists" });
+        return res.status(400).json({ email: "Email already exists" });
       } else {
         //generate passwordHash and create user on database
 
         bcrypt.genSalt(10, (err, salt) => {
           //encrypting user's password
           bcrypt.hash(password, salt, (err, hash) => {
-            if (err) console.log("bcrypt error for password", err);
+            if (err) {
+              console.log("bcrypt error for password", err);
+              res.status(500).json({
+                main: "Something went wrong",
+                devError: err,
+                devMsg: "Error while encrypting password using bcrypt library",
+              });
+            }
 
             let userName =
               email.substring(0, email.indexOf("@")) +
@@ -71,7 +82,15 @@ router.post("/register", (req, res) => {
 
             //encrypting security question's answer
             bcrypt.hash(securityQuestionAnswer, salt, (err, ans_hash) => {
-              if (err) console.log("bcrypt error for security answer", err);
+              if (err) {
+                console.log("bcrypt error for password", err);
+                res.status(500).json({
+                  main: "Something went wrong",
+                  devError: err,
+                  devMsg:
+                    "Error while encrypting security answer using bcrypt library",
+                });
+              }
 
               const user = {
                 first_name: firstName,
@@ -88,12 +107,19 @@ router.post("/register", (req, res) => {
               mysqlConnection.query(
                 `INSERT INTO user SET ?`,
                 user,
-                function (err, result, fields) {
-                  if (err) {
-                    console.log(err);
+                function (sqlErr, result, fields) {
+                  if (sqlErr) {
+                    console.log(sqlErr);
+                    res.status(500).json({
+                      main: "Something went wrong",
+                      devError: sqlErr,
+                      devMsg: "Error occured while adding user into db",
+                    });
                   } else {
                     console.log("User Created");
-                    return res.status(201).send("New user Created");
+                    return res
+                      .status(201)
+                      .json({ devMsg: "New user created successfully" });
                   }
                 }
               );
@@ -116,46 +142,69 @@ router.post("/login", (req, res) => {
 
   mysqlConnection.query(
     `SELECT * from user where email = "${email}"`,
-    function (err, row, fields) {
-      if (err) console.log("Login error on searching for user", err);
+    function (error, row, fields) {
+      if (error) {
+        console.log(error.code, error.sqlMessage);
+        res.status(500).json({
+          main: "Something went wrong. Please try again",
+          devError: error,
+          devMsg: "MySql query error",
+        });
+      }
 
       let user = row[0];
 
       if (!user) {
-        return res.status(404).json({ error: "Email not found" });
+        return res.status(404).json({ main: "Email not found" });
       }
 
       //Check password
-      bcrypt.compare(password, user.password).then((isMatch) => {
-        if (isMatch) {
-          // user password verified, Create JWT Payload
-          const payload = {
-            id: user.user_id,
-            email: user.email,
-            name: user.first_name + " " + user.last_name,
-          };
+      bcrypt
+        .compare(password, user.password)
+        .then((isMatch) => {
+          if (isMatch) {
+            // user password verified, Create JWT Payload
+            const payload = {
+              id: user.user_id,
+              email: user.email,
+              name: user.first_name + " " + user.last_name,
+            };
 
-          //Sign token
-          jwt.sign(
-            payload,
-            process.env.secretOrKey,
-            {
-              expiresIn: 31556926, // 1 year in seconds
-            },
-            (err, token) => {
-              //sets the jwt token as a cookie
-              res.cookie("AUTH_TOKEN", token, {
-                httpOnly: true,
-                maxAge: 31556926,
-              });
+            //Sign token
+            jwt.sign(
+              payload,
+              process.env.secretOrKey,
+              {
+                expiresIn: 31556926, // 1 year in seconds
+              },
+              (err, token) => {
+                if (err) {
+                  console.log(err);
+                  res.status(500).json({
+                    main: "Something went wrong. Please try again",
+                    devError: err,
+                    devMsg: "Error while signing jwt token",
+                  });
+                }
 
-              res.status(200).json({ success: true });
-            }
-          );
-        } else {
-          return res.status(400).json({ err: "Password incorrect" });
-        }
-      });
+                //returns jwt token to be stored in browser's sessionStorage
+                res.status(200).json({
+                  success: true,
+                  token: token,
+                });
+              }
+            );
+          } else {
+            return res.status(400).json({ error: "Password incorrect" });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          res.status(500).json({
+            devError: error,
+            devMsg: "Error occured while comparing passwords",
+          });
+        });
     }
   );
 });
@@ -164,7 +213,7 @@ router.post(
   "/profile",
   passport.authenticate("jwt", { session: false }),
   function (req, res) {
-    res.send("Profile page accessed!");
+    res.status(200).send("Profile page accessed!");
   }
 );
 
@@ -178,23 +227,31 @@ router.post("/forgotPassword", (req, res) => {
 
   mysqlConnection.query(
     `SELECT * from user where email = "${email}"`,
-    (err, rows, fields) => {
-      if (err) {
-        console.log(err);
-        res.status(400);
+    (error, rows, fields) => {
+      if (error) {
+        console.log(error);
+        res.status(500).json({
+          main: "Something went wrong. Please try again",
+          devError: error,
+          devMsg: "MySql query error",
+        });
       } else {
         user = rows[0];
 
         //checks if user selected question matches with the one selected at the time of registration
         if (parseInt(securityQuestionId) !== user.security_question_id)
-          return res.status(400).json({ err: "Something went wrong" });
+          return res.status(400).json({ error: "Something went wrong" });
 
         //compares user's current answer with the one stored in the database
         bcrypt
           .compare(securityQuestionAnswer, user.security_question_answer)
           .then((isMatch) => {
-            if (!isMatch)
-              return res.status(400).json({ err: "Answers do not match." });
+            if (!isMatch) {
+              return res.status(400).json({
+                main: "Wrong credentials. Please retry",
+                devMsg: "Answers do not match",
+              });
+            }
 
             //User exists and now create a One Time Link which is valid for 15minutes
             const key = process.env.secretOrKey;
@@ -204,6 +261,8 @@ router.post("/forgotPassword", (req, res) => {
             };
             const token = jwt.sign(payload, key, { expiresIn: "15m" });
             const link = `http://localhost:4000/user/reset-password/${token}`;
+
+            //Initializing the mail service
             var transporter = nodemailer.createTransport({
               service: "gmail",
               auth: {
@@ -212,6 +271,7 @@ router.post("/forgotPassword", (req, res) => {
               },
             });
 
+            //Message in the mail with reset-password link
             var mailOptions = {
               from: process.env.AUTH_EMAIL,
               to: email,
@@ -223,20 +283,27 @@ router.post("/forgotPassword", (req, res) => {
                 "If you did not request this  ,please ignore this email and your password will remain unchanged \n\n",
             };
 
+            //Sending the mail
             transporter.sendMail(mailOptions, (err, result) => {
               if (err) {
                 console.log(err);
-                return res
-                  .status(400)
-                  .json({ err: "Something went wrong " + err });
+                return res.status(400).json({
+                  main: "Something went wrong ",
+                  devError: err,
+                  devMsg: "Error while sending the mail",
+                });
               } else {
                 console.log("Email sent successfully" + result);
-                return res.status(200).json({ msg: "Recovery mail sent!" });
+                return res.status(200).json({ main: "Recovery mail sent!" });
               }
             });
           })
           .catch((err) => {
-            return res.status(400).json({ err: "Something went wrong " + err });
+            return res.status(400).json({
+              main: "Something went wrong ",
+              devError: err,
+              devMsg: "Error occured while comparing user's answers",
+            });
           });
       }
     }
@@ -244,8 +311,11 @@ router.post("/forgotPassword", (req, res) => {
 });
 
 router.post("/reset-password/:token", (req, res) => {
+
   const { token } = req.params;
-  const { password, password2 } = req.body;
+  const { password, confirmPassword } = req.body;
+
+  //Verifying the token
   const key = process.env.secretOrKey;
   jwt.verify(token, key, (err, payload) => {
     if (err) {
@@ -254,7 +324,7 @@ router.post("/reset-password/:token", (req, res) => {
     } else {
       let errors = {};
 
-      errors = passwordsValidation(password, password2, errors);
+      errors = passwordsValidation(password, confirmPassword, errors);
 
       //Check validation
       if (!isEmptyObject(errors)) return res.status(400).json(errors);
@@ -272,7 +342,7 @@ router.post("/reset-password/:token", (req, res) => {
                 console.log(err);
               } else {
                 console.log("User Password Updated");
-                return res.status(201).send("Password is updated");
+                return res.status(201).json({main:"Password is updated"});
               }
             }
           );
@@ -282,57 +352,17 @@ router.post("/reset-password/:token", (req, res) => {
   });
 });
 
-router.post("/otp", (req, res) => {
-  const { email } = req.body;
-  mysqlConnection.query(
-    `SELECT * from user where email="${email}"`,
-    function (err, result, fields) {
-      if (err) {
-        console.log(err.code, err.sqlMessage);
-      }
-
-      if (isEmptyObject(result)) {
-        //check if user email doesn't exists
-        return res.status(400).json({ error: "Email doesn't exists" });
-      } else {
-        var rndOtp = Math.floor(Math.random() * (999999 - 100000)) + 100000; //Generates a random 6-digit number
-
-        var transporter = nodemailer.createTransport({
-          service: "gmail",
-          auth: {
-            user: process.env.AUTH_EMAIL,
-            pass: process.env.AUTH_PASS,
-          },
-        });
-
-        var mailOptions = {
-          from: process.env.AUTH_EMAIL,
-          to: email,
-          subject: "OTP for Resetting the Password",
-          text: "The OTP to reset the password is " + rndOtp,
-        };
-
-        transporter.sendMail(mailOptions, (err, result) => {
-          if (err) {
-            console.log(err);
-            return res.status(400).json({ err: "Something went wrong " + err });
-          } else {
-            console.log("Email sent successfully" + result);
-            return res.status(200).json({ OTP: rndOtp });
-          }
-        });
-      }
-    }
-  );
-});
-
 router.get("/securityQuestions", (req, res) => {
   mysqlConnection.query(
     "Select question_id as securityQuestionId, question_text as securityQuestionText from security_question",
     (err, rows, fields) => {
       if (err) {
         console.log(err);
-        res.status(400);
+        res.status(500).json({
+          main: "Something went wrong. Please try again",
+          devError: error,
+          devMsg: "MySql query error",
+        });
       } else {
         //return list containing multiple objects having securityQuestionId and securityQuestionText as keys
         res.status(200).send(rows);
