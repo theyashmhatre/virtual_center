@@ -217,7 +217,7 @@ router.post(
   }
 );
 
-router.post("/forgotPassword", (req, res) => {
+router.post("/forgot-password", (req, res) => {
   const { email, securityQuestionId, securityQuestionAnswer } = req.body;
 
   const { errors, isValid } = validateForgotPasswordParams(req.body);
@@ -352,7 +352,7 @@ router.post("/reset-password/:token", (req, res) => {
   });
 });
 
-router.get("/securityQuestions", (req, res) => {
+router.get("/get-security-questions", (req, res) => {
   mysqlConnection.query(
     "Select question_id as securityQuestionId, question_text as securityQuestionText from security_question",
     (err, rows, fields) => {
