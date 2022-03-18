@@ -1,10 +1,9 @@
-const { isEmptyObject } = require("../utils");
-// const passwordValidation = require("./singleInputValidations/passwordValidation");
+const {isEmptyObject, passwordsValidation} = require("../utils");
 
 function validateForgotPasswordParams(data) {
   let errors = {};
 
-  let { email, securityQuestionId, securityQuestionAnswer } = data;
+    let {email, securityQuestionId, securityQuestionAnswer, password, confirmPassword} = data;
 
   // Email checks
   if (!email) errors.email = "Please enter email and retry";
@@ -19,10 +18,13 @@ function validateForgotPasswordParams(data) {
   // Password validation
   //   errors = passwordValidation(password, password2, errors);
 
-  return {
-    errors,
-    isValid: isEmptyObject(errors),
-  };
+    // Password validation
+    errors = passwordsValidation(password,confirmPassword, errors);
+
+    return {
+        errors,
+        isValid: isEmptyObject(errors) 
+    };
 }
 
 module.exports = validateForgotPasswordParams;

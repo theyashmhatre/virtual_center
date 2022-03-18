@@ -203,7 +203,7 @@ router.post("/forgotPassword", (req, res) => {
               id: user.user_id,
             };
             const token = jwt.sign(payload, key, { expiresIn: "15m" });
-            const link = `http://localhost:4000/user/reset-password/${user.user_id}/${token}`;
+            const link = `http://localhost:4000/user/reset-password/${token}`;
             var transporter = nodemailer.createTransport({
               service: "gmail",
               auth: {
@@ -257,7 +257,7 @@ router.post("/reset-password/:token", (req, res) => {
       errors = passwordsValidation(password, password2, errors);
 
       //Check validation
-      if (isEmptyObject(errors)) return res.status(400).json(errors);
+      if (!isEmptyObject(errors)) return res.status(400).json(errors);
 
       let { email } = payload;
 

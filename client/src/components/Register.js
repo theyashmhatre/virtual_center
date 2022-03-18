@@ -1,8 +1,8 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-import { apiURL, emailRegex, passwordRegex } from "../../constants";
+import { emailRegex, passwordRegex } from "../../constants";
+import { getSecurityQuestions, register } from "../utils/user";
 
 const Register = () => {
   const [firstName, setFirstName] = useState('');
@@ -18,46 +18,17 @@ const Register = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const getSecurityQuestions = () => {
-    const endpoint = new URL('/user/securityQuestions', apiURL).href;
-    axios
-      .get(endpoint)
+  useEffect(() => {
+    getSecurityQuestions()
       .then(({ data }) => {
         setSecurityQuestions(data);
       })
-      .catch((e) => {
+      .catch((error) => {
         if (error.response)
           if (error.response.data) setError(error.response.data.error);
           else setError('Some Error Occured, Try Again!');
         else setError('Some Error Occured, Try Again!');
       });
-  };
-
-  const signUp = () => {
-    const endpoint = new URL('/user/register', apiURL).href;
-    axios
-      .post(endpoint, {
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        securityQuestionId: securityQuestionId,
-        securityQuestionAnswer: securityQuestionAnswer,
-        password: password,
-        password2: confirmPassword
-      })
-      .then(() => {
-        navigate('/home');
-      })
-      .catch((e) => {
-        if (error.response)
-          if (error.response.data) setError(error.response.data.error);
-          else setError('Some Error Occured, Try Again!');
-        else setError('Some Error Occured, Try Again!');
-      });
-  };
-
-  useEffect(() => {
-    getSecurityQuestions();
   }, []);
 
   const onSubmit = () => {
@@ -66,8 +37,17 @@ const Register = () => {
       if (emailRegex.test(email))
         if (passwordRegex.test(password))
           if (password == confirmPassword)
-            // signup user using api
-            signUp()
+            // register user using api
+            register()
+              .then(() => {
+                navigate('/home');
+              })
+              .catch((error) => {
+                if (error.response)
+                  if (error.response.data) setError(error.response.data.error);
+                  else setError('Some Error Occured, Try Again!');
+                else setError('Some Error Occured, Try Again!');
+              });
           else setError('Confirm Password should be same as Password');
         else setError('Follow privacy rule for password');
       else setError('Email is incorrect');
