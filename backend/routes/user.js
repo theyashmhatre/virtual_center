@@ -195,7 +195,7 @@ router.post("/login", (req, res) => {
               }
             );
           } else {
-            return res.status(400).json({ error: "Password incorrect" });
+            return res.status(400).json({ main: "Password incorrect" });
           }
         })
         .catch((error) => {
@@ -240,7 +240,7 @@ router.post("/forgot-password", (req, res) => {
 
         //checks if user selected question matches with the one selected at the time of registration
         if (parseInt(securityQuestionId) !== user.security_question_id)
-          return res.status(400).json({ error: "Something went wrong" });
+          return res.status(400).json({ main: "Something went wrong" });
 
         //compares user's current answer with the one stored in the database
         bcrypt
