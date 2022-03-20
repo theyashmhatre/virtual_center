@@ -1,31 +1,45 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-import { emailRegex } from "../../constants";
-import { login } from "../utils/user";
+import { login } from "../utilities/user";
+import { isEmptyObject } from "../utilities/utils";
+import { inputValidation } from "../utilities/validation/login";
+
+initialInputValues = {
+  email: '',
+  password: ''
+};
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [inputValues, setInputValues] = useState(initialInputValues);
   const [passwordVisibility, setPasswordVisibility] = useState(false);
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
+  const handleInputChange = (e) => {
+    let { name, value } = e.target;
+
+    setInputValues({
+      ...inputValues,
+      [name]: value
+    });
+  };
+  
   const onClick = () => {
-    setError('')
-    if (email && password)
-      if (emailRegex.test(email))
-        // signin using api
-        login(email, password)
-          .then(() => navigate('/home'))
-          .catch((error) => {
-            if (error.response)
-              if (error.response.data) setError(error.response.data.error);
-              else setError('Some Error Occured, Try Again!');
-            else setError('Some Error Occured, Try Again!');
-          });
-      else setError('Email is incorrect');
-    else setError('All fields are required');
+    setErrors({});
+    const inputErrors = inputValidation(inputValues.email, inputValues.password);
+
+    if (isEmptyObject(inputErrors))
+      // signin using api
+      login(inputValues.email, inputValues.password)
+        .then(() => navigate('/home'))
+        .catch((error) => {
+          if (error.response)
+            if (error.response.data) setErrors(error.response.data);
+            else setErrors({ main: 'Some Error Occured, Try Again!' });
+          else setErrors({ main: 'Some Error Occured, Try Again!' });
+        });
+    else setErrors(inputErrors)
   };
 
   return (
@@ -62,10 +76,15 @@ const Login = () => {
               id="email"
               name="email"
               placeholder="Enter your email-id"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={inputValues.email}
+              onChange={handleInputChange}
               className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
             />
+            {!errors.email ? null : (
+              <div className="text-center text-pink-700 text-lg mt-2">
+                <p>{errors.email}</p>
+              </div>
+            )}
           </div>
           <div className="text-center mb-10">
             <input
@@ -75,14 +94,19 @@ const Login = () => {
               placeholder="Enter your password"
               minLength="8"
               required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={inputValues.password}
+              onChange={handleInputChange}
               className="py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
             />
+            {!errors.password ? null : (
+              <div className="text-center text-pink-700 text-lg mt-2">
+                <p>{errors.password}</p>
+              </div>
+            )}
           </div>
-          {!error ? null : (
-            <div className="text-center text-pink-700 text-lg mb-4">
-              <p>{error}</p>
+          {!errors.main ? null : (
+            <div className="text-center text-pink-700 text-lg mb-5">
+              <p>{errors.main}</p>
             </div>
           )}
           <div className="text-center">
