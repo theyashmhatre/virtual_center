@@ -2,30 +2,30 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { emailRegex } from "../../constants";
-import { login } from "../utils/user";
+import { login } from "../utilities/user";
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [passwordVisibility, setPasswordVisibility] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const onClick = () => {
-    setError('')
+    setError("");
     if (email && password)
       if (emailRegex.test(email))
         // signin using api
         login(email, password)
-          .then(() => navigate('/home'))
+          .then(() => navigate("/home"))
           .catch((error) => {
             if (error.response)
               if (error.response.data) setError(error.response.data.error);
-              else setError('Some Error Occured, Try Again!');
-            else setError('Some Error Occured, Try Again!');
+              else setError("Some Error Occured, Try Again!");
+            else setError("Some Error Occured, Try Again!");
           });
-      else setError('Email is incorrect');
-    else setError('All fields are required');
+      else setError("Email is incorrect");
+    else setError("All fields are required");
   };
 
   return (
@@ -69,7 +69,7 @@ const Login = () => {
           </div>
           <div className="text-center mb-10">
             <input
-              type={passwordVisibility ? 'text' : 'password'}
+              type={passwordVisibility ? "text" : "password"}
               id="password"
               name="password"
               placeholder="Enter your password"
@@ -121,7 +121,10 @@ const Login = () => {
           >
             |
           </label>
-          <a href="#" className="pl-2 self-end mb-9 text-pink-600 font-semibold">
+          <a
+            href="#"
+            className="pl-2 self-end mb-9 text-pink-600 font-semibold"
+          >
             Forgot Password?
           </a>
         </div>

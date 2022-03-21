@@ -3,7 +3,9 @@ import { Routes, Route, Link } from "react-router-dom";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Dashboard from "./components/Dashboard";
-import temp from "./components/temp";
+import Home from "./components/Home";
+import Challenges from "./components/Challenges";
+import Footer from "./components/Footer";
 
 const App = () => {
   return (
@@ -11,7 +13,9 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="register" element={<Register />} />
-        <Route path="home" element={<Dashboard />} />
+        <Route path="home" element={<Home />} />
+        <Route path="challenges" element={<Challenges />} />
+        <Route path="dashboard" element={<Dashboard />} />
       </Routes>
     </div>
   );
