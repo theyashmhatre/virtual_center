@@ -1,3 +1,5 @@
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { useParams } from "react-router";
 import { resetPassword } from "../utilities/user";
@@ -8,9 +10,14 @@ initialInputValues = {
   confirmPassword: ''
 };
 
+initialVisibility = {
+  password: false,
+  confirmPassword: false
+};
+
 const ResetPassword = () => {
   const [inputValues, setInputValues] = useState(initialInputValues);
-  const [passwordVisibility, setPasswordVisibility] = useState(false);
+  const [visibility, setVisibility] = useState(initialVisibility);
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
   const { token } = useParams();
@@ -22,6 +29,13 @@ const ResetPassword = () => {
       ...inputValues,
       [name]: value
     });
+  };
+  
+  const handleVisibilityChange = (name) => {
+    setVisibility({
+      ...visibility,
+      [name]: !visibility[name]
+    })
   };
   
   const onSubmit = () => {
@@ -81,36 +95,52 @@ const ResetPassword = () => {
               <p>{successMessage}</p>
             </div>
           )}
-          <div className="text-center mb-5">
-            <input
-              type={passwordVisibility ? 'text' : 'password'}
-              id="password"
-              name="password"
-              placeholder="Password"
-              minLength="8"
-              required
-              value={inputValues.password}
-              onChange={handleInputChange}
-              className="py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
-            />
+          <div className="flex justify-center text-center mb-5">
+            <div className="relative w-fit">
+              <input
+                type={visibility.password ? 'text' : 'password'}
+                id="password"
+                name="password"
+                placeholder="Password"
+                minLength="8"
+                required
+                value={inputValues.password}
+                onChange={handleInputChange}
+                className="py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
+              />
+              <FontAwesomeIcon
+                icon={visibility.password ? faEye : faEyeSlash}
+                size="lg"
+                className="text-gray-600 cursor-pointer absolute float-right z-10 -ml-5 mt-3"
+                onClick={() => handleVisibilityChange("password")}
+              />
+            </div>
             {!errors.password ? null : (
               <div className="text-center text-pink-700 text-lg mt-2">
                 <p>{errors.password}</p>
               </div>
             )}
           </div>
-          <div className="text-center mb-10">
-            <input
-              type="password"
-              id="cpassword"
-              name="confirmPassword"
-              placeholder="Confirm password"
-              minLength="8"
-              required
-              value={inputValues.confirmPassword}
-              onChange={handleInputChange}
-              className="py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
-            />
+          <div className="flex justify-center text-center mb-10">
+            <div className="relative w-fit">
+              <input
+                type={visibility.confirmPassword ? 'text' : 'password'}
+                id="cpassword"
+                name="confirmPassword"
+                placeholder="Confirm password"
+                minLength="8"
+                required
+                value={inputValues.confirmPassword}
+                onChange={handleInputChange}
+                className="py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
+              />
+              <FontAwesomeIcon
+                icon={visibility.confirmPassword ? faEye : faEyeSlash}
+                size="lg"
+                className="text-gray-600 cursor-pointer absolute float-right z-10 -ml-5 mt-3"
+                onClick={() => handleVisibilityChange("confirmPassword")}
+              />
+            </div>
             {!errors.confirmPassword ? null : (
               <div className="text-center text-pink-700 text-lg mt-2">
                 <p>{errors.confirmPassword}</p>
