@@ -1,3 +1,5 @@
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { forgotPassword, getSecurityQuestions } from "../utilities/user";
@@ -138,16 +140,24 @@ const ForgotPassword = () => {
               </div>
             )}
           </div>
-          <div className="text-center mb-10 pr-22 ">
-            <input
-              type={securityAnswerVisibility ? 'text' : 'password'}
-              id="securityAnswer"
-              name="securityQuestionAnswer"
-              placeholder="Your answer for the secret question"
-              value={inputValues.securityQuestionAnswer}
-              onChange={handleInputChange}
-              className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96 "
-            />
+          <div className="flex justify-center text-center mb-10">
+            <div className="relative w-fit">
+              <input
+                type={securityAnswerVisibility ? 'text' : 'password'}
+                id="securityAnswer"
+                name="securityQuestionAnswer"
+                placeholder="Your answer for the secret question"
+                value={inputValues.securityQuestionAnswer}
+                onChange={handleInputChange}
+                className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96 "
+              />
+              <FontAwesomeIcon
+                icon={securityAnswerVisibility ? faEye : faEyeSlash}
+                size="lg"
+                className="text-gray-600 cursor-pointer absolute float-right z-10 -ml-5 mt-3"
+                onClick={() => setSecurityAnswerVisibility(!securityAnswerVisibility)}
+              />
+            </div>
             {!errors.securityQuestionAnswer ? null : (
               <div className="text-center text-pink-700 text-lg mt-2">
                 <p>{errors.securityQuestionAnswer}</p>

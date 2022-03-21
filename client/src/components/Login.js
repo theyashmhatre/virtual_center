@@ -1,3 +1,5 @@
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
@@ -86,18 +88,26 @@ const Login = () => {
               </div>
             )}
           </div>
-          <div className="text-center mb-10">
-            <input
-              type={passwordVisibility ? 'text' : 'password'}
-              id="password"
-              name="password"
-              placeholder="Enter your password"
-              minLength="8"
-              required
-              value={inputValues.password}
-              onChange={handleInputChange}
-              className="py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
-            />
+          <div className="flex justify-center text-center mb-10">
+            <div className="relative w-fit">
+              <input
+                type={passwordVisibility ? 'text' : 'password'}
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                minLength="8"
+                required
+                value={inputValues.password}
+                onChange={handleInputChange}
+                className="py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
+              />
+              <FontAwesomeIcon
+                icon={passwordVisibility ? faEye : faEyeSlash}
+                size="lg"
+                className="text-gray-600 cursor-pointer absolute float-right z-10 -ml-5 mt-3"
+                onClick={() => setPasswordVisibility(!passwordVisibility)}
+              />
+            </div>
             {!errors.password ? null : (
               <div className="text-center text-pink-700 text-lg mt-2">
                 <p>{errors.password}</p>
