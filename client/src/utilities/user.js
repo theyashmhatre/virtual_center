@@ -13,7 +13,15 @@ export const login = async (email, password) => {
     });
 }
 
-export const register = async () => {
+export const register = async (
+  firstName,
+  lastName,
+  email,
+  securityQuestionId,
+  securityQuestionAnswer,
+  password,
+  confirmPassword
+) => {
   const endpoint = new URL('/user/register', apiURL).href;
   return await axios.post(endpoint, {
     firstName: firstName,
@@ -22,11 +30,32 @@ export const register = async () => {
     securityQuestionId: securityQuestionId,
     securityQuestionAnswer: securityQuestionAnswer,
     password: password,
-    password2: confirmPassword
+    confirmPassword: confirmPassword
+  });
+};
+
+export const forgotPassword = async (
+  email,
+  securityQuestionId,
+  securityQuestionAnswer
+) => {
+  const endpoint = new URL('/user/forgot-password', apiURL).href;
+  return await axios.post(endpoint, {
+    email: email,
+    securityQuestionId: securityQuestionId,
+    securityQuestionAnswer: securityQuestionAnswer
+  });
+};
+
+export const resetPassword = async (token, password, confirmPassword) => {
+  const endpoint = new URL(`/user/reset-password/${token}`, apiURL).href;
+  return await axios.post(endpoint, {
+    password: password,
+    confirmPassword: confirmPassword
   });
 };
 
 export const getSecurityQuestions = async () => {
-  const endpoint = new URL('/user/securityQuestions', apiURL).href;
+  const endpoint = new URL('/user/get-security-questions', apiURL).href;
   return await axios.get(endpoint);
 };

@@ -1,50 +1,72 @@
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { login } from "../utilities/user";
+import { forgotPassword, getSecurityQuestions } from "../utilities/user";
 import { isEmptyObject } from "../utilities/utils";
-import { inputValidation } from "../utilities/validation/login";
+import { inputValidation } from "../utilities/validation/forgotPassword";
 
 initialInputValues = {
-  email: "",
-  password: "",
+  email: '',
+  securityQuestionId: 0,
+  securityQuestionAnswer: '',
 };
 
-const Login = () => {
+const ForgotPassword = () => {
   const [inputValues, setInputValues] = useState(initialInputValues);
-  const [passwordVisibility, setPasswordVisibility] = useState(false);
+  const [securityAnswerVisibility, setSecurityAnswerVisibility] = useState(false);
+  const [securityQuestions, setSecurityQuestions] = useState([]);
   const [errors, setErrors] = useState({});
-  const navigate = useNavigate();
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleInputChange = (e) => {
     let { name, value } = e.target;
 
     setInputValues({
       ...inputValues,
-      [name]: value,
+      [name]: value
     });
   };
+  
+  useEffect(() => {
+    getSecurityQuestions()
+      .then(({ data }) => {
+        setSecurityQuestions(data);
+      })
+      .catch((error) => {
+        if (error.response)
+          if (error.response.data) setErrors(error.response.data);
+          else setErrors({ main: 'Some Error Occured, Try Again!' });
+        else setErrors({ main: 'Some Error Occured, Try Again!' });
+      });
+  }, []);
 
-  const onClick = () => {
-    setErrors({});
+  const onSubmit = () => {
+    setSuccessMessage('')
+    setErrors({})
     const inputErrors = inputValidation(
       inputValues.email,
-      inputValues.password
-    );
-
+      Number(inputValues.securityQuestionId),
+      inputValues.securityQuestionAnswer
+    )
+    
     if (isEmptyObject(inputErrors))
-      // signin using api
-      login(inputValues.email, inputValues.password)
-        .then(() => navigate("/home"))
+      // register user using api
+      forgotPassword(
+        inputValues.email,
+        Number(inputValues.securityQuestionId),
+        inputValues.securityQuestionAnswer,
+      )
+        .then(() => {
+          setSuccessMessage('Your request to reset password is successfull. Check your email and click on the provided link to reset password.')
+        })
         .catch((error) => {
           if (error.response)
             if (error.response.data) setErrors(error.response.data);
-            else setErrors({ main: "Some Error Occured, Try Again!" });
-          else setErrors({ main: "Some Error Occured, Try Again!" });
+            else setErrors({ main: 'Some Error Occured, Try Again!' });
+          else setErrors({ main: 'Some Error Occured, Try Again!' });
         });
-    else setErrors(inputErrors);
+    else setErrors(inputErrors)
   };
 
   return (
@@ -73,8 +95,13 @@ const Login = () => {
       <div>
         <div className="bg-white text-pink-800 antialiased px-2 py-4 flex flex-col pt-16">
           <h2 className="my-8 font-display font-medium text-4xl text-pink-700 text-center">
-            Login
+            Forgot Password
           </h2>
+          {!successMessage ? null : (
+            <div className="text-center text-green-500 text-lg mb-5">
+              <p>{successMessage}</p>
+            </div>
+          )}
           <div className="text-center mb-5">
             <input
               type="email"
@@ -91,29 +118,49 @@ const Login = () => {
               </div>
             )}
           </div>
+          <div className="text-center mb-5">
+            <select
+              className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
+              name="securityQuestionId"
+              value={inputValues.securityQuestionId}
+              onChange={handleInputChange}
+            >
+              <option value={0} label='---Select Secret Question---' />
+              {securityQuestions.map((question) => (
+                <option
+                  value={question.securityQuestionId}
+                  label={question.securityQuestionText}
+                  key={question.securityQuestionId}
+                />
+              ))}
+            </select>
+            {!errors.securityQuestionId ? null : (
+              <div className="text-center text-pink-700 text-lg mt-2">
+                <p>{errors.securityQuestionId}</p>
+              </div>
+            )}
+          </div>
           <div className="flex justify-center text-center mb-10">
             <div className="relative w-fit">
               <input
-                type={passwordVisibility ? "text" : "password"}
-                id="password"
-                name="password"
-                placeholder="Enter your password"
-                minLength="8"
-                required
-                value={inputValues.password}
+                type={securityAnswerVisibility ? 'text' : 'password'}
+                id="securityAnswer"
+                name="securityQuestionAnswer"
+                placeholder="Your answer for the secret question"
+                value={inputValues.securityQuestionAnswer}
                 onChange={handleInputChange}
-                className="py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
+                className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96 "
               />
               <FontAwesomeIcon
-                icon={passwordVisibility ? faEye : faEyeSlash}
+                icon={securityAnswerVisibility ? faEye : faEyeSlash}
                 size="lg"
                 className="text-gray-600 cursor-pointer absolute float-right z-10 -ml-5 mt-3"
-                onClick={() => setPasswordVisibility(!passwordVisibility)}
+                onClick={() => setSecurityAnswerVisibility(!securityAnswerVisibility)}
               />
             </div>
-            {!errors.password ? null : (
+            {!errors.securityQuestionAnswer ? null : (
               <div className="text-center text-pink-700 text-lg mt-2">
-                <p>{errors.password}</p>
+                <p>{errors.securityQuestionAnswer}</p>
               </div>
             )}
           </div>
@@ -125,9 +172,9 @@ const Login = () => {
           <div className="text-center">
             <button
               className="py-3 px-14 rounded-full bg-black-btn text-white font-bold"
-              onClick={onClick}
+              onClick={onSubmit}
             >
-              Login
+              Submit
             </button>
           </div>
         </div>
@@ -137,39 +184,20 @@ const Login = () => {
             htmlFor="account"
             className="inline-block w-25 mr-6 text-center font-medium text-gray-600"
           >
-            Don't have an account?
+            Remember your password?
           </label>
 
           <Link
-            to="/register"
+            to="/"
             className="self-end mr-6 text-pink-600 font-bold"
           >
-            Register
+            Login
           </Link>
         </div>
-
-        <div className="pl-48  pt-10 ">
-          <a href="#" className="self-end mb-9 text-pink-600 font-semibold">
-            Forgot Username?
-          </a>
-          <label
-            htmlFor="account"
-            className="inline-block pl-10 w-25 mr-6 text-center font-medium text-gray-600"
-          >
-            |
-          </label>
-          <Link
-            to="/forgot-password"
-            className="pl-2 self-end mb-9 text-pink-600 font-semibold"
-          >
-            Forgot Password?
-          </Link>
-        </div>
-
         {/* grid child_2 end*/}
       </div>
     </div>
   );
 };
 
-export default Login;
+export default ForgotPassword;

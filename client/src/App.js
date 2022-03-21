@@ -1,11 +1,9 @@
-import { render } from "react-dom";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Dashboard from "./components/Dashboard";
-import Home from "./components/Home";
-import Challenges from "./components/Challenges";
-import Footer from "./components/Footer";
+import ForgotPassword from "./components/ForgotPassword";
+import ResetPassword from "./components/ResetPassword";
 
 const App = () => {
   return (
@@ -16,6 +14,9 @@ const App = () => {
         <Route path="home" element={<Home />} />
         <Route path="challenges" element={<Challenges />} />
         <Route path="dashboard" element={<Dashboard />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route path="reset-password/:token" element={<ResetPassword />} />
+        <Route path="home" element={<Dashboard />} />
       </Routes>
     </div>
   );
