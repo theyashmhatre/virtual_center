@@ -1,20 +1,19 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
-import { login } from "../utilities/user";
-import { isEmptyObject } from "../utilities/utils";
-import { inputValidation } from "../utilities/validation/login";
+import { useParams } from "react-router";
+import { resetPassword } from "../utilities/user";
+import { isEmptyObject, passwordValidation } from "../utilities/utils";
 
 initialInputValues = {
-  email: '',
-  password: ''
+  password: '',
+  confirmPassword: ''
 };
 
-const Login = () => {
+const ResetPassword = () => {
   const [inputValues, setInputValues] = useState(initialInputValues);
   const [passwordVisibility, setPasswordVisibility] = useState(false);
   const [errors, setErrors] = useState({});
-  const navigate = useNavigate();
+  const [successMessage, setSuccessMessage] = useState('');
+  const { token } = useParams();
 
   const handleInputChange = (e) => {
     let { name, value } = e.target;
@@ -25,21 +24,28 @@ const Login = () => {
     });
   };
   
-  const onClick = () => {
+  const onSubmit = () => {
+    setSuccessMessage('');
     setErrors({});
-    const inputErrors = inputValidation(inputValues.email, inputValues.password);
-
+    const inputErrors = passwordValidation(inputValues.password, inputValues.confirmPassword);
+    
     if (isEmptyObject(inputErrors))
-      // signin using api
-      login(inputValues.email, inputValues.password)
-        .then(() => navigate('/home'))
+      // register user using api
+      resetPassword(
+        token,
+        inputValues.password,
+        inputValues.confirmPassword
+      )
+        .then(() => {
+          setSuccessMessage('Your password is updated succesfully.');
+        })
         .catch((error) => {
           if (error.response)
             if (error.response.data) setErrors(error.response.data);
             else setErrors({ main: 'Some Error Occured, Try Again!' });
           else setErrors({ main: 'Some Error Occured, Try Again!' });
         });
-    else setErrors(inputErrors)
+    else setErrors(inputErrors);
   };
 
   return (
@@ -68,30 +74,19 @@ const Login = () => {
       <div>
         <div className="bg-white text-pink-800 antialiased px-2 py-4 flex flex-col pt-16">
           <h2 className="my-8 font-display font-medium text-4xl text-pink-700 text-center">
-            Login
+            Reset Password
           </h2>
+          {!successMessage ? null : (
+            <div className="text-center text-green-500 text-lg mb-5">
+              <p>{successMessage}</p>
+            </div>
+          )}
           <div className="text-center mb-5">
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Enter your email-id"
-              value={inputValues.email}
-              onChange={handleInputChange}
-              className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
-            />
-            {!errors.email ? null : (
-              <div className="text-center text-pink-700 text-lg mt-2">
-                <p>{errors.email}</p>
-              </div>
-            )}
-          </div>
-          <div className="text-center mb-10">
             <input
               type={passwordVisibility ? 'text' : 'password'}
               id="password"
               name="password"
-              placeholder="Enter your password"
+              placeholder="Password"
               minLength="8"
               required
               value={inputValues.password}
@@ -104,6 +99,24 @@ const Login = () => {
               </div>
             )}
           </div>
+          <div className="text-center mb-10">
+            <input
+              type="password"
+              id="cpassword"
+              name="confirmPassword"
+              placeholder="Confirm password"
+              minLength="8"
+              required
+              value={inputValues.confirmPassword}
+              onChange={handleInputChange}
+              className="py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
+            />
+            {!errors.confirmPassword ? null : (
+              <div className="text-center text-pink-700 text-lg mt-2">
+                <p>{errors.confirmPassword}</p>
+              </div>
+            )}
+          </div>
           {!errors.main ? null : (
             <div className="text-center text-pink-700 text-lg mb-5">
               <p>{errors.main}</p>
@@ -112,51 +125,16 @@ const Login = () => {
           <div className="text-center">
             <button
               className="py-3 px-14 rounded-full bg-black-btn text-white font-bold"
-              onClick={onClick}
+              onClick={onSubmit}
             >
-              Login
+              Submit
             </button>
           </div>
         </div>
-
-        <div className="pl-48 pt-20">
-          <label
-            htmlFor="account"
-            className="inline-block w-25 mr-6 text-center font-medium text-gray-600"
-          >
-            Don't have an account?
-          </label>
-
-          <Link
-            to="/register"
-            className="self-end mr-6 text-pink-600 font-bold"
-          >
-            Register
-          </Link>
-        </div>
-
-        <div className="pl-48  pt-10 ">
-          <a href="#" className="self-end mb-9 text-pink-600 font-semibold">
-            Forgot Username?
-          </a>
-          <label
-            htmlFor="account"
-            className="inline-block pl-10 w-25 mr-6 text-center font-medium text-gray-600"
-          >
-            |
-          </label>
-          <Link
-            to="/forgot-password"
-            className="pl-2 self-end mb-9 text-pink-600 font-semibold"
-          >
-            Forgot Password?
-          </Link>
-        </div>
-
         {/* grid child_2 end*/}
       </div>
     </div>
   );
 };
 
-export default Login;
+export default ResetPassword;

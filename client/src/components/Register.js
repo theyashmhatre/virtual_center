@@ -55,7 +55,7 @@ const Register = () => {
       inputValues.firstName,
       inputValues.lastName,
       inputValues.email,
-      inputValues.securityQuestionId,
+      Number(inputValues.securityQuestionId),
       inputValues.securityQuestionAnswer,
       inputValues.password,
       inputValues.confirmPassword
@@ -67,7 +67,7 @@ const Register = () => {
         inputValues.firstName,
         inputValues.lastName,
         inputValues.email,
-        inputValues.securityQuestionId,
+        Number(inputValues.securityQuestionId),
         inputValues.securityQuestionAnswer,
         inputValues.password,
         inputValues.confirmPassword
@@ -206,7 +206,7 @@ const Register = () => {
               required
               value={inputValues.password}
               onChange={handleInputChange}
-              className=" py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
+              className="py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
             />
             {!errors.password ? null : (
               <div className="text-center text-pink-700 text-lg mt-2">
@@ -224,7 +224,7 @@ const Register = () => {
               required
               value={inputValues.confirmPassword}
               onChange={handleInputChange}
-              className=" py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
+              className="py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
             />
             {!errors.confirmPassword ? null : (
               <div className="text-center text-pink-700 text-lg mt-2">
@@ -247,7 +247,7 @@ const Register = () => {
           </div>
         </div>
        
-        <div className=" pl-60 pt-2 ">
+        <div className="pl-60 pt-2 ">
           <label
             htmlFor="account"
             className="inline-block w-25 mr-6 text-center font-medium text-gray-600"

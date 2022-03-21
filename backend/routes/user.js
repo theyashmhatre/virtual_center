@@ -238,9 +238,13 @@ router.post("/forgot-password", (req, res) => {
       } else {
         user = rows[0];
 
+        if (!user) {
+          return res.status(404).json({ main: "Email not found" });
+        }
+
         //checks if user selected question matches with the one selected at the time of registration
         if (parseInt(securityQuestionId) !== user.security_question_id)
-          return res.status(400).json({ main: "Something went wrong" });
+          return res.status(400).json({ main: "Wrong Credentials. Please retry" });
 
         //compares user's current answer with the one stored in the database
         bcrypt
@@ -260,7 +264,7 @@ router.post("/forgot-password", (req, res) => {
               id: user.user_id,
             };
             const token = jwt.sign(payload, key, { expiresIn: "15m" });
-            const link = `http://localhost:4000/user/reset-password/${token}`;
+            const link = `http://localhost:1234/user/reset-password/${token}`;
 
             //Initializing the mail service
             var transporter = nodemailer.createTransport({
@@ -320,7 +324,7 @@ router.post("/reset-password/:token", (req, res) => {
   jwt.verify(token, key, (err, payload) => {
     if (err) {
       console.error(err);
-      return res.status(400);
+      return res.status(400).json({ main: 'Something went wrong' });
     } else {
       let errors = {};
 

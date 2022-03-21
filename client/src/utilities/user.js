@@ -34,6 +34,27 @@ export const register = async (
   });
 };
 
+export const forgotPassword = async (
+  email,
+  securityQuestionId,
+  securityQuestionAnswer
+) => {
+  const endpoint = new URL('/user/forgot-password', apiURL).href;
+  return await axios.post(endpoint, {
+    email: email,
+    securityQuestionId: securityQuestionId,
+    securityQuestionAnswer: securityQuestionAnswer
+  });
+};
+
+export const resetPassword = async (token, password, confirmPassword) => {
+  const endpoint = new URL(`/user/reset-password/${token}`, apiURL).href;
+  return await axios.post(endpoint, {
+    password: password,
+    confirmPassword: confirmPassword
+  });
+};
+
 export const getSecurityQuestions = async () => {
   const endpoint = new URL('/user/get-security-questions', apiURL).href;
   return await axios.get(endpoint);
