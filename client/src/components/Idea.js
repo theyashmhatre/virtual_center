@@ -1,7 +1,7 @@
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 
-const Solutions = () => {
+const Idea = () => {
   return (
     <div>
       <Navbar />
@@ -91,4 +91,4 @@ const Solutions = () => {
   );
 };
 
-export default Solutions;
+export default Idea;
