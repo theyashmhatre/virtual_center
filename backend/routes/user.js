@@ -21,6 +21,7 @@ router.get("/", (req, res) => {
 });
 
 router.post("/register", (req, res) => {
+
   let {
     firstName,
     lastName,
@@ -29,6 +30,7 @@ router.post("/register", (req, res) => {
     securityQuestionId,
     securityQuestionAnswer,
   } = req.body;
+  console.log(req.body);
   const { errors, isValid } = validateRegisterParams(req.body); //validating all parameters before registering user
 
   if (!isValid) return res.status(400).json(errors);
