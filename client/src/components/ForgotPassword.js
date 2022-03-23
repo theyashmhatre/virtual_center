@@ -140,7 +140,7 @@ const ForgotPassword = () => {
               </div>
             )}
           </div>
-          <div className="flex justify-center text-center mb-10">
+          <div className="flex flex-col items-center text-center mb-10">
             <div className="relative w-fit">
               <input
                 type={securityAnswerVisibility ? 'text' : 'password'}
