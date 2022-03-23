@@ -8,6 +8,7 @@ const passport = require("passport");
 const { isEmptyObject, passwordsValidation } = require("../utils/utils");
 const validateForgotPasswordParams = require("../utils/validation/forgotPassword");
 const nodemailer = require("nodemailer");
+const crypto = require("crypto");
 
 router.get("/", (req, res) => {
   mysqlConnection.query("Select * from user", (err, rows, fields) => {
@@ -244,7 +245,9 @@ router.post("/forgot-password", (req, res) => {
 
         //checks if user selected question matches with the one selected at the time of registration
         if (parseInt(securityQuestionId) !== user.security_question_id)
-          return res.status(400).json({ main: "Wrong Credentials. Please retry" });
+          return res
+            .status(400)
+            .json({ main: "Wrong Credentials. Please retry" });
 
         //compares user's current answer with the one stored in the database
         bcrypt
@@ -257,50 +260,67 @@ router.post("/forgot-password", (req, res) => {
               });
             }
 
-            //User exists and now create a One Time Link which is valid for 15minutes
-            const key = process.env.secretOrKey;
-            const payload = {
-              email: user.email,
-              id: user.user_id,
-            };
-            const token = jwt.sign(payload, key, { expiresIn: "15m" });
-            const link = `http://localhost:1234/user/reset-password/${token}`;
+            try {
+              //User exists and now create a One Time Link which is valid for 15minutes
+              const token = crypto.randomBytes(32).toString("hex");
+              console.log(token);
+              const link = `http://localhost:4000/user/reset-password/${user.username}/${token}`;
 
-            //Initializing the mail service
-            var transporter = nodemailer.createTransport({
-              service: "gmail",
-              auth: {
-                user: process.env.AUTH_EMAIL,
-                pass: process.env.AUTH_PASS,
-              },
-            });
+              var currTime = new Date();
+              const newTime = new Date();
+              newTime.setTime(currTime.getTime() + 15 * 60000); //Expiry time will be 15 minutes
 
-            //Message in the mail with reset-password link
-            var mailOptions = {
-              from: process.env.AUTH_EMAIL,
-              to: email,
-              subject: "Link for Reset the Password",
-              text:
-                "You are receiving this because you (or someone else) have requested the reset of your password for your account \n\n" +
-                "Please click on the following link, or paste this into your browser to complete the process within 15 minutes of receiving it: \n\n" +
-                `${link} \n\n` +
-                "If you did not request this  ,please ignore this email and your password will remain unchanged \n\n",
-            };
+              const expiryTime = newTime.toISOString().slice(0, 19).replace('T', ' ');
 
-            //Sending the mail
-            transporter.sendMail(mailOptions, (err, result) => {
-              if (err) {
-                console.log(err);
-                return res.status(400).json({
-                  main: "Something went wrong ",
-                  devError: err,
-                  devMsg: "Error while sending the mail",
-                });
-              } else {
-                console.log("Email sent successfully" + result);
-                return res.status(200).json({ main: "Recovery mail sent!" });
-              }
-            });
+              mysqlConnection.query(
+                `UPDATE user SET token="${token}", expiry_time="${expiryTime}" WHERE email="${email}"`,
+                (err, result, fields) => {
+                  if (err) {
+                    console.log(err);
+                  } else {
+                    console.log("User Token Generated");
+                  }
+                }
+              );
+
+              //Initializing the mail service
+              var transporter = nodemailer.createTransport({
+                service: "gmail",
+                auth: {
+                  user: process.env.AUTH_EMAIL,
+                  pass: process.env.AUTH_PASS,
+                },
+              });
+
+              //Message in the mail with reset-password link
+              var mailOptions = {
+                from: process.env.AUTH_EMAIL,
+                to: email,
+                subject: "Link for Reset the Password",
+                text:
+                  "You are receiving this because you (or someone else) have requested the reset of your password for your account \n\n" +
+                  "Please click on the following link, or paste this into your browser to complete the process within 15 minutes of receiving it: \n\n" +
+                  `${link} \n\n` +
+                  "If you did not request this  ,please ignore this email and your password will remain unchanged \n\n",
+              };
+
+              //Sending the mail
+              transporter.sendMail(mailOptions, (err, result) => {
+                if (err) {
+                  console.log(err);
+                  return res.status(400).json({
+                    main: "Something went wrong ",
+                    devError: err,
+                    devMsg: "Error while sending the mail",
+                  });
+                } else {
+                  console.log("Email sent successfully" + result);
+                  return res.status(200).json({ main: "Recovery mail sent!" });
+                }
+              });
+            } catch (err) {
+              console.log(err);
+            }
           })
           .catch((err) => {
             return res.status(400).json({
@@ -314,18 +334,40 @@ router.post("/forgot-password", (req, res) => {
   );
 });
 
-router.post("/reset-password/:token", (req, res) => {
-
-  const { token } = req.params;
+router.post("/reset-password/:username/:token", (req, res) => {
+  const { username, token } = req.params;
   const { password, confirmPassword } = req.body;
 
-  //Verifying the token
-  const key = process.env.secretOrKey;
-  jwt.verify(token, key, (err, payload) => {
-    if (err) {
-      console.error(err);
-      return res.status(400).json({ main: 'Something went wrong' });
-    } else {
+  mysqlConnection.query(
+    `SELECT * FROM user WHERE username="${username}"`,
+    (err, rows, fields) => {
+      if (err) {
+        console.log(err);
+      } else {
+        user = rows[0];
+
+        if (!user) {
+          return res.status(400).json({ main: "Invalid Link" });
+        }
+
+        //Converting dateTime String into Date() Object
+        const curTime = new Date();
+        const expiryDateTime = user.expiry_time.toISOString();
+        let expiryDateTimeParts = expiryDateTime.split(/\D+/);
+        expiryDateTimeParts[1]--;
+        const expiryDateTimeObject = new Date(...expiryDateTimeParts);
+
+        //Checking the expiry of the link
+        if (expiryDateTimeObject.getTime() < curTime.getTime()) {
+          return res.status(400).json({ main: "Link expired" });
+        }
+
+        //Validating the link
+        if (token !== user.token) {
+          return res.status(400).json({ main: "Invalid link" });
+        }
+      }
+
       let errors = {};
 
       errors = passwordsValidation(password, confirmPassword, errors);
@@ -333,27 +375,25 @@ router.post("/reset-password/:token", (req, res) => {
       //Check validation
       if (!isEmptyObject(errors)) return res.status(400).json(errors);
 
-      let { email } = payload;
-
       bcrypt.genSalt(10, (err, salt) => {
         //encrypting user's password
         bcrypt.hash(password, salt, (err, hash) => {
           if (err) console.log("bcrypt error for password", err);
           mysqlConnection.query(
-            `UPDATE user SET password = "${hash}" WHERE email = "${email}"`,
+            `UPDATE user SET password = "${hash}" WHERE username = "${username}"`,
             (err, result, fields) => {
               if (err) {
                 console.log(err);
               } else {
                 console.log("User Password Updated");
-                return res.status(201).json({main:"Password is updated"});
+                return res.status(201).json({ main: "Password is updated" });
               }
             }
           );
         });
       });
     }
-  });
+  );
 });
 
 router.get("/get-security-questions", (req, res) => {
