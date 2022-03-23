@@ -14,15 +14,20 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(cors());
 
-app.use("/user", require("./routes/user"));
-app.use("/idea", require("./routes/idea"));
-app.use("/challenge", require("./routes/challenge"));
+app.use("/api/user", require("./routes/user"));
+app.use("/api/idea", require("./routes/idea"));
+app.use("/api/challenge", require("./routes/challenge"));
 
 // Passport Middleware
 app.use(passport.initialize());
 
 //Passport config
 require("./config/passport")(passport);
+
+// Function to serve all static files
+// inside public directory.
+app.use(express.static('assets'));
+app.use('/public/images', express.static('images'));
 
 app.use('*', (req, res) => {
     res.status(404).json({ msg: 'Not Found' });
