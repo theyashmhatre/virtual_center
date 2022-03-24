@@ -46,8 +46,25 @@ function passwordsValidation(password, confirmPassword, errors) {
   return errors;
 }
 
+
+function generateCurrentDateTime() {
+    var currTime = new Date();
+    const newDate = new Date();
+    newDate.setTime(currTime.getTime() + 330 * 60 * 1000);
+
+    const creationDate = new Date(
+      newDate.toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
+    )
+      .toISOString() //2022-09-03T12:12:38.000Z
+      .replace(/T/, " ") // replace T with a space
+      .replace(/\..+/, ""); // delete the dot and everything after => 2022-09-03 12:28:55 => YYYY-MM-DD HH-MM-SS
+
+    return newDate;
+}
+
 module.exports = {
   isEmptyObject,
   emailValidation,
   passwordsValidation,
+  generateCurrentDateTime
 };

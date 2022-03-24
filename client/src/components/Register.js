@@ -8,20 +8,20 @@ import { isEmptyObject } from "../utilities/utils";
 import { inputValidation } from "../utilities/validation/register";
 
 const initialInputValues = {
-  firstName: '',
-  lastName: '',
-  email: '',
+  firstName: "",
+  lastName: "",
+  email: "",
   securityQuestionId: 0,
-  securityQuestionAnswer: '',
-  password: '',
-  confirmPassword: ''
+  securityQuestionAnswer: "",
+  password: "",
+  confirmPassword: "",
 };
 
 const initialVisibility = {
   password: false,
   confirmPassword: false,
-  securityAnswer: false
-}
+  securityAnswer: false,
+};
 
 const Register = () => {
   const [inputValues, setInputValues] = useState(initialInputValues);
@@ -35,15 +35,15 @@ const Register = () => {
 
     setInputValues({
       ...inputValues,
-      [name]: value
+      [name]: value,
     });
-  }
+  };
 
   const handleVisibilityChange = (name) => {
     setVisibility({
       ...visibility,
-      [name]: !visibility[name]
-    })
+      [name]: !visibility[name],
+    });
   };
 
   useEffect(() => {
@@ -54,13 +54,13 @@ const Register = () => {
       .catch((error) => {
         if (error.response)
           if (error.response.data) setErrors(error.response.data);
-          else setErrors({ main: 'Some Error Occured, Try Again!' });
-        else setErrors({ main: 'Some Error Occured, Try Again!' });
+          else setErrors({ main: "Some Error Occured, Try Again!" });
+        else setErrors({ main: "Some Error Occured, Try Again!" });
       });
   }, []);
 
   const onSubmit = () => {
-    setErrors({})
+    setErrors({});
     const inputErrors = inputValidation(
       inputValues.firstName,
       inputValues.lastName,
@@ -69,8 +69,8 @@ const Register = () => {
       inputValues.securityQuestionAnswer,
       inputValues.password,
       inputValues.confirmPassword
-    )
-    
+    );
+
     if (isEmptyObject(inputErrors))
       // register user using api
       register(
@@ -83,15 +83,15 @@ const Register = () => {
         inputValues.confirmPassword
       )
         .then(() => {
-          navigate('/home');
+          navigate("/home");
         })
         .catch((error) => {
           if (error.response)
             if (error.response.data) setErrors(error.response.data);
-            else setErrors({ main: 'Some Error Occured, Try Again!' });
-          else setErrors({ main: 'Some Error Occured, Try Again!' });
+            else setErrors({ main: "Some Error Occured, Try Again!" });
+          else setErrors({ main: "Some Error Occured, Try Again!" });
         });
-    else setErrors(inputErrors)
+    else setErrors(inputErrors);
   };
 
   return (
@@ -175,7 +175,7 @@ const Register = () => {
               value={inputValues.securityQuestionId}
               onChange={handleInputChange}
             >
-              <option value={0} label='---Select Secret Question---' />
+              <option value={0} label="---Select Secret Question---" />
               {securityQuestions.map((question) => (
                 <option
                   value={question.securityQuestionId}
@@ -190,10 +190,10 @@ const Register = () => {
               </div>
             )}
           </div>
-          <div className="flex justify-center text-center mb-5 pr-22">
+          <div className="flex flex-col items-center text-center mb-5 pr-22">
             <div className="relative w-fit">
               <input
-                type={visibility.securityAnswer ? 'text' : 'password'}
+                type={visibility.securityAnswer ? "text" : "password"}
                 id="securityAnswer"
                 name="securityQuestionAnswer"
                 placeholder="Your answer for the secret question"
@@ -215,10 +215,10 @@ const Register = () => {
               </div>
             )}
           </div>
-          <div className="flex justify-center text-center mb-5">
+          <div className="flex flex-col items-center text-center mb-5">
             <div className="relative w-fit">
               <input
-                type={visibility.password ? 'text' : 'password'}
+                type={visibility.password ? "text" : "password"}
                 id="password"
                 name="password"
                 placeholder="Password"
@@ -242,10 +242,10 @@ const Register = () => {
               </div>
             )}
           </div>
-          <div className="flex justify-center text-center mb-10">
+          <div className="flex flex-col items-center text-center mb-10">
             <div className="relative w-fit">
               <input
-                type={visibility.confirmPassword ? 'text' : 'password'}
+                type={visibility.confirmPassword ? "text" : "password"}
                 id="cpassword"
                 name="confirmPassword"
                 placeholder="Confirm password"
@@ -282,7 +282,7 @@ const Register = () => {
             </button>
           </div>
         </div>
-       
+
         <div className="pl-60 pt-2 ">
           <label
             htmlFor="account"

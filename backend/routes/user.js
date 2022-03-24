@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const validateRegisterParams = require("../utils/validation/register");
 const validateLoginParams = require("../utils/validation/login");
 const passport = require("passport");
-const { isEmptyObject, passwordsValidation } = require("../utils/utils");
+const { isEmptyObject, passwordsValidation, generateCurrentDateTime } = require("../utils/utils");
 const validateForgotPasswordParams = require("../utils/validation/forgotPassword");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
@@ -22,6 +22,7 @@ router.get("/", (req, res) => {
 });
 
 router.post("/register", (req, res) => {
+
   let {
     firstName,
     lastName,
@@ -30,6 +31,7 @@ router.post("/register", (req, res) => {
     securityQuestionId,
     securityQuestionAnswer,
   } = req.body;
+  console.log(req.body);
   const { errors, isValid } = validateRegisterParams(req.body); //validating all parameters before registering user
 
   if (!isValid) return res.status(400).json(errors);
@@ -70,16 +72,7 @@ router.post("/register", (req, res) => {
               parseInt(Math.random() * (999 - 1) + 1); //creates a default username using content before '@' from the email + a random digit from 1 to 999
             userName = userName.replace(/[^a-zA-Z0-9 ]/g, ""); // eliminates special characters, if any
 
-            var currTime = new Date();
-            const newDate = new Date();
-            newDate.setTime(currTime.getTime() + 330 * 60 * 1000);
-
-            const creationDate = new Date(
-              newDate.toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
-            )
-              .toISOString() //2022-09-03T12:12:38.000Z
-              .replace(/T/, " ") // replace T with a space
-              .replace(/\..+/, ""); // delete the dot and everything after => 2022-09-03 12:28:55 => YYYY-MM-DD HH-MM-SS
+            let creationDate = generateCurrentDateTime();
 
             //encrypting security question's answer
             bcrypt.hash(securityQuestionAnswer, salt, (err, ans_hash) => {
@@ -156,7 +149,7 @@ router.post("/login", (req, res) => {
       let user = row[0];
 
       if (!user) {
-        return res.status(404).json({ main: "Email not found" });
+        return res.status(404).json({ main: "User does not exist. Please register and continue" });
       }
 
       //Check password
@@ -196,7 +189,7 @@ router.post("/login", (req, res) => {
               }
             );
           } else {
-            return res.status(400).json({ main: "Password incorrect" });
+            return res.status(400).json({ main: "The password that you've entered is incorrect." });
           }
         })
         .catch((error) => {

@@ -8,8 +8,8 @@ import { isEmptyObject } from "../utilities/utils";
 import { inputValidation } from "../utilities/validation/login";
 
 initialInputValues = {
-  email: '',
-  password: ''
+  email: "",
+  password: "",
 };
 
 const Login = () => {
@@ -23,25 +23,28 @@ const Login = () => {
 
     setInputValues({
       ...inputValues,
-      [name]: value
+      [name]: value,
     });
   };
-  
+
   const onClick = () => {
     setErrors({});
-    const inputErrors = inputValidation(inputValues.email, inputValues.password);
+    const inputErrors = inputValidation(
+      inputValues.email,
+      inputValues.password
+    );
 
     if (isEmptyObject(inputErrors))
       // signin using api
       login(inputValues.email, inputValues.password)
-        .then(() => navigate('/home'))
+        .then(() => navigate("/home"))
         .catch((error) => {
           if (error.response)
             if (error.response.data) setErrors(error.response.data);
-            else setErrors({ main: 'Some Error Occured, Try Again!' });
-          else setErrors({ main: 'Some Error Occured, Try Again!' });
+            else setErrors({ main: "Some Error Occured, Try Again!" });
+          else setErrors({ main: "Some Error Occured, Try Again!" });
         });
-    else setErrors(inputErrors)
+    else setErrors(inputErrors);
   };
 
   return (
@@ -88,10 +91,10 @@ const Login = () => {
               </div>
             )}
           </div>
-          <div className="flex justify-center text-center mb-10">
+          <div className="flex flex-col items-center text-center mb-10">
             <div className="relative w-fit">
               <input
-                type={passwordVisibility ? 'text' : 'password'}
+                type={passwordVisibility ? "text" : "password"}
                 id="password"
                 name="password"
                 placeholder="Enter your password"
