@@ -17,6 +17,7 @@ app.use(cors());
 app.use("/api/user", require("./routes/user"));
 app.use("/api/idea", require("./routes/idea"));
 app.use("/api/challenge", require("./routes/challenge"));
+app.use("/api/offering", require("./routes/offering"));
 
 // Passport Middleware
 app.use(passport.initialize());
