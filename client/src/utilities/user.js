@@ -2,11 +2,11 @@ import axios from "axios";
 import { apiURL } from "../../constants";
 
 export const login = async (email, password) => {
-  const endpoint = new URL("/user/login", apiURL).href;
+  const endpoint = new URL("/api/user/login", apiURL).href;
   return await axios
     .post(endpoint, {
-      email: email,
-      password: password,
+      email,
+      password,
     })
     .then((response) => {
       sessionStorage.setItem("Access Token", response.data.token);
@@ -14,23 +14,29 @@ export const login = async (email, password) => {
 };
 
 export const register = async (
-  firstName,
-  lastName,
+  employeeId,
+  employeeName,
   email,
+  accountName,
+  contact,
+  username,
   securityQuestionId,
   securityQuestionAnswer,
   password,
-  confirmPassword
+  confirmPassword,
 ) => {
-  const endpoint = new URL("http://localhost:4000/user/register", apiURL).href;
+  const endpoint = new URL("/api/user/register", apiURL).href;
   return await axios.post(endpoint, {
-    firstName: firstName,
-    lastName: lastName,
-    email: email,
-    securityQuestionId: securityQuestionId,
-    securityQuestionAnswer: securityQuestionAnswer,
-    password: password,
-    confirmPassword: confirmPassword,
+    employeeId,
+    employeeName,
+    email,
+    accountName,
+    contact,
+    username,
+    securityQuestionId,
+    securityQuestionAnswer,
+    password,
+    confirmPassword,
   });
 };
 
@@ -39,25 +45,25 @@ export const forgotPassword = async (
   securityQuestionId,
   securityQuestionAnswer
 ) => {
-  const endpoint = new URL("/user/forgot-password", apiURL).href;
+  const endpoint = new URL("/api/user/forgot-password", apiURL).href;
   return await axios.post(endpoint, {
-    email: email,
-    securityQuestionId: securityQuestionId,
-    securityQuestionAnswer: securityQuestionAnswer,
+    email,
+    securityQuestionId,
+    securityQuestionAnswer,
   });
 };
 
 export const resetPassword = async (token, password, confirmPassword) => {
-  const endpoint = new URL(`/user/reset-password/${token}`, apiURL).href;
+  const endpoint = new URL(`/api/user/reset-password/${token}`, apiURL).href;
   return await axios.post(endpoint, {
-    password: password,
-    confirmPassword: confirmPassword,
+    password,
+    confirmPassword,
   });
 };
 
 export const getSecurityQuestions = async () => {
   const endpoint = new URL(
-    "http://localhost:4000/user/get-security-questions",
+    "/api/user/get-security-questions",
     apiURL
   ).href;
   return await axios.get(endpoint);

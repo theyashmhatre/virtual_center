@@ -8,9 +8,12 @@ import { isEmptyObject } from "../utilities/utils";
 import { inputValidation } from "../utilities/validation/register";
 
 const initialInputValues = {
-  firstName: "",
-  lastName: "",
+  employeeId: 0,
+  employeeName: "",
   email: "",
+  contact: 0,
+  accountName: 0,
+  username: '',
   securityQuestionId: 0,
   securityQuestionAnswer: "",
   password: "",
@@ -20,7 +23,7 @@ const initialInputValues = {
 const initialVisibility = {
   password: false,
   confirmPassword: false,
-  securityAnswer: false,
+  securityAnswer: false
 };
 
 const Register = () => {
@@ -31,11 +34,11 @@ const Register = () => {
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
-    let { name, value } = e.target;
+    let { name, value, type } = e.target;
 
     setInputValues({
       ...inputValues,
-      [name]: value,
+      [name]: type == 'number' ? Number(value) : value,
     });
   };
 
@@ -62,10 +65,13 @@ const Register = () => {
   const onSubmit = () => {
     setErrors({});
     const inputErrors = inputValidation(
-      inputValues.firstName,
-      inputValues.lastName,
+      inputValues.employeeId,
+      inputValues.employeeName,
       inputValues.email,
-      Number(inputValues.securityQuestionId),
+      inputValues.accountName,
+      inputValues.contact,
+      inputValues.username,
+      inputValues.securityQuestionId,
       inputValues.securityQuestionAnswer,
       inputValues.password,
       inputValues.confirmPassword
@@ -74,10 +80,13 @@ const Register = () => {
     if (isEmptyObject(inputErrors))
       // register user using api
       register(
-        inputValues.firstName,
-        inputValues.lastName,
+        inputValues.employeeId,
+        inputValues.employeeName,
         inputValues.email,
-        Number(inputValues.securityQuestionId),
+        inputValues.accountName,
+        inputValues.contact,
+        inputValues.username,
+        inputValues.securityQuestionId,
         inputValues.securityQuestionAnswer,
         inputValues.password,
         inputValues.confirmPassword
@@ -124,31 +133,31 @@ const Register = () => {
           </h2>
           <div className="text-center mb-5 pr-22">
             <input
-              type="text"
-              name="firstName"
-              placeholder="First Name"
-              value={inputValues.firstName}
+              type="number"
+              name="employeeId"
+              placeholder="Employee Id"
+              value={!inputValues.employeeId ? '' : inputValues.employeeId}
               onChange={handleInputChange}
               className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
             />
-            {!errors.firstName ? null : (
+            {!errors.employeeId ? null : (
               <div className="text-center text-pink-700 text-lg mt-2">
-                <p>{errors.firstName}</p>
+                <p>{errors.employeeId}</p>
               </div>
             )}
           </div>
           <div className="text-center mb-5">
             <input
               type="text"
-              name="lastName"
-              placeholder="Last Name"
-              value={inputValues.lastName}
+              name="employeeName"
+              placeholder="Employee Name"
+              value={inputValues.employeeName}
               onChange={handleInputChange}
               className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
             />
-            {!errors.lastName ? null : (
+            {!errors.employeeName ? null : (
               <div className="text-center text-pink-700 text-lg mt-2">
-                <p>{errors.lastName}</p>
+                <p>{errors.employeeName}</p>
               </div>
             )}
           </div>
@@ -165,6 +174,54 @@ const Register = () => {
             {!errors.email ? null : (
               <div className="text-center text-pink-700 text-lg mt-2">
                 <p>{errors.email}</p>
+              </div>
+            )}
+          </div>
+          <div className="text-center mb-5">
+            <select
+              className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
+              name="accountName"
+              value={inputValues.accountName}
+              onChange={handleInputChange}
+            >
+              <option value={0} label="---Select Account Name---" />
+              <option value={1} label="Type 1" />
+              <option value={2} label="Type 2" />
+              <option value={3} label="Type 3" />
+            </select>
+            {!errors.accountName ? null : (
+              <div className="text-center text-pink-700 text-lg mt-2">
+                <p>{errors.accountName}</p>
+              </div>
+            )}
+          </div>
+          <div className="text-center mb-5">
+            <input
+              type="number"
+              name="contact"
+              placeholder="Contact Number"
+              value={!inputValues.contact ? '' : inputValues.contact}
+              onChange={handleInputChange}
+              className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
+            />
+            {!errors.contact ? null : (
+              <div className="text-center text-pink-700 text-lg mt-2">
+                <p>{errors.contact}</p>
+              </div>
+            )}
+          </div>
+          <div className="text-center mb-5">
+            <input
+              type="text"
+              name="username"
+              placeholder="Username"
+              value={inputValues.username}
+              onChange={handleInputChange}
+              className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
+            />
+            {!errors.username ? null : (
+              <div className="text-center text-pink-700 text-lg mt-2">
+                <p>{errors.username}</p>
               </div>
             )}
           </div>
