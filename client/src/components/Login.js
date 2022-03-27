@@ -8,7 +8,7 @@ import { isEmptyObject } from "../utilities/utils";
 import { inputValidation } from "../utilities/validation/login";
 
 initialInputValues = {
-  email: "",
+  username: "",
   password: "",
 };
 
@@ -30,13 +30,13 @@ const Login = () => {
   const onClick = () => {
     setErrors({});
     const inputErrors = inputValidation(
-      inputValues.email,
+      inputValues.username,
       inputValues.password
     );
 
     if (isEmptyObject(inputErrors))
       // signin using api
-      login(inputValues.email, inputValues.password)
+      login(inputValues.username, inputValues.password)
         .then(() => navigate("/home"))
         .catch((error) => {
           if (error.response)
@@ -77,17 +77,17 @@ const Login = () => {
           </h2>
           <div className="text-center mb-5">
             <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Enter your email-id"
-              value={inputValues.email}
+              type="text"
+              id="username"
+              name="username"
+              placeholder="Enter your Employee Id or Username"
+              value={inputValues.username}
               onChange={handleInputChange}
               className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
             />
-            {!errors.email ? null : (
+            {!errors.username ? null : (
               <div className="text-center text-pink-700 text-lg mt-2">
-                <p>{errors.email}</p>
+                <p>{errors.username}</p>
               </div>
             )}
           </div>

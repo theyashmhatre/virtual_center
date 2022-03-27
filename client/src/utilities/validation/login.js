@@ -1,9 +1,7 @@
-import { emailValidation } from "../utils";
-
-export const inputValidation = (email, password) => {
+export const inputValidation = (username, password) => {
   errors = {};
   
-  errors = emailValidation(email);
+  if (!username) errors.username = "Username is required"
 
   if (!password) errors.password = "Password is required";
 
