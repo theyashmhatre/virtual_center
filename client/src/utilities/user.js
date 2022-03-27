@@ -1,4 +1,5 @@
 import axios from "axios";
+import jwt from "jsonwebtoken";
 import { apiURL } from "../../constants";
 
 export const login = async (email, password) => {
@@ -68,3 +69,16 @@ export const getSecurityQuestions = async () => {
   ).href;
   return await axios.get(endpoint);
 };
+
+export const isLoggedIn = () => {
+  const token = sessionStorage.getItem('Access Token');
+  
+  if (token) {
+    try {
+      jwt.verify(token, process.env.REACT_APP_JWT_SECRET)
+      return true;
+    } catch(err) {
+      return false;
+    }
+  } else return false;
+}

@@ -7,7 +7,8 @@ import ResetPassword from "./components/ResetPassword";
 import Challenges from "./components/Challenges";
 import Home from "./components/Home";
 import Challenge from "./components/Challenge";
-import Solutions from "./components/Solutions";
+import Idea from "./components/Idea";
+import AuthRequired from "./components/AuthRequired";
 
 const App = () => {
   return (
@@ -15,14 +16,13 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="register" element={<Register />} />
-        <Route path="home" element={<Home />} />
-        <Route path="challenges" element={<Challenges />} />
-        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="home" element={<AuthRequired><Home /></AuthRequired>} />
+        <Route path="challenges" element={<AuthRequired><Challenges /></AuthRequired>} />
+        <Route path="dashboard" element={<AuthRequired><Dashboard /></AuthRequired>} />
         <Route path="forgot-password" element={<ForgotPassword />} />
         <Route path="reset-password/:token" element={<ResetPassword />} />
-        <Route path="home" element={<Dashboard />} />
-        <Route path="challenge" element={<Challenge />} />
-        <Route path="solutions" element={<Solutions />} />
+        <Route path="challenge" element={<AuthRequired><Challenge /></AuthRequired>} />
+        <Route path="solutions" element={<AuthRequired><Idea /></AuthRequired>} />
       </Routes>
     </div>
   );
