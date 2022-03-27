@@ -7,7 +7,10 @@ import ResetPassword from "./components/ResetPassword";
 import Challenges from "./components/Challenges";
 import Home from "./components/Home";
 import Challenge from "./components/Challenge";
-import Solutions from "./components/Solutions";
+import Solutions from "./components/Idea";
+import Offerings from "./components/Offerings";
+import Offering from "./components/Offering";
+import Solvers from "./components/Solvers";
 
 const App = () => {
   return (
@@ -23,6 +26,9 @@ const App = () => {
         <Route path="home" element={<Dashboard />} />
         <Route path="challenge" element={<Challenge />} />
         <Route path="solutions" element={<Solutions />} />
+        <Route path="offerings" element={<Offerings />} />
+        <Route path="offering" element={<Offering />} />
+        <Route path="solvers" element={<Solvers />} />
       </Routes>
     </div>
   );
