@@ -13,7 +13,6 @@ const initialInputValues = {
   email: "",
   contact: 0,
   accountName: 0,
-  username: '',
   securityQuestionId: 0,
   securityQuestionAnswer: "",
   password: "",
@@ -70,7 +69,7 @@ const Register = () => {
       inputValues.email,
       inputValues.accountName,
       inputValues.contact,
-      inputValues.username,
+      inputValues.employeeId,
       inputValues.securityQuestionId,
       inputValues.securityQuestionAnswer,
       inputValues.password,
@@ -85,7 +84,7 @@ const Register = () => {
         inputValues.email,
         inputValues.accountName,
         inputValues.contact,
-        inputValues.username,
+        inputValues.employeeId,
         inputValues.securityQuestionId,
         inputValues.securityQuestionAnswer,
         inputValues.password,
@@ -215,9 +214,9 @@ const Register = () => {
               type="text"
               name="username"
               placeholder="Username"
-              value={inputValues.username}
-              onChange={handleInputChange}
-              className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
+              value={!inputValues.employeeId ? '' : inputValues.employeeId}
+              disabled
+              className="flex-1 py-2 border-b-2 border-gray-300 text-gray-400 placeholder-zinc-300 outline-none w-96 cursor-not-allowed"
             />
             {!errors.username ? null : (
               <div className="text-center text-pink-700 text-lg mt-2">
