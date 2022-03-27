@@ -6,7 +6,7 @@ const Home = () => {
     <div>
       <Navbar />
       <div className="flex flex-col ">
-        <div className="flex bg-[url('../public/tempCover.jpg')] h-80  ">
+        <div className="flex bg-[url('../public/home_cover.png')] h-80  ">
           <div className=" flex-1 bg-blue-bg-lite/80  pt-8  ">
             <h1 className=" text-4xl text-center text-white font-semibold ">
               Lorem ipsum dolor, sit amet consectetur{" "}
