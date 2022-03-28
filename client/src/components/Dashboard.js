@@ -1,4 +1,5 @@
 import "./Bottom.css";
+import DoughnutChart from "./DoughnutChart";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 
@@ -6,195 +7,250 @@ const Dashboard = () => {
   return (
     <div>
       <Navbar />
-      <div className="grid grid-cols-3 divide-x">
-        <div className="pl-8 pt-14 pb-40 ">
-          <div className="text-left mb-5 space-x-24">
-            <label
-              htmlFor="top"
-              className=" w-20  text-left
-                                    font-bold text-gray-600"
-            >
-              {" "}
-              Top Challenges - Most Challenges Won{" "}
+      <div className="grid grid-cols-3 m-10">
+        <div className="m-5 p-5 bg-gray-100 border-t-4 border-pink-700 h-fit">
+          <div className="flex justify-between items-center">
+            <label className="font-bold text-gray-600">
+              Top Challenges - Most Challenges Won
             </label>
-            <select className="flex-1  py-1 p-2 border-b-2  mt-2 w-20  rounded shadow bg-white ring-1">
+            <select className="py-1 px-2 border-b-2 rounded shadow bg-white ring-1">
               <option>2018</option>
               <option>2019</option>
               <option>2020</option>
               <option>2021</option>
             </select>
           </div>
-          <table className="fixed">
-            <div className="bg-gray-300 border-b-2 border-gray-200">
-              <tr>
-                <th className=" pb-2 pl-8 text-sm font-semibold tracking-wide text-left">
-                  Rank
-                </th>
-                <th className=" pb-2 pl-32 p-1 text-sm font-semibold tracking-wide text-left">
-                  Name
-                </th>
-                <th className=" pb-2 pl-32 p-1 text-sm font-semibold tracking-wide text-left">
-                  Challenges Won
-                </th>
-              </tr>
-            </div>
 
-            {/* body of the table starts */}
-            <div className="bg-gray-100 divide-y  divide-gray-400 px-6 space-y-1 max-h-72 overflow-auto ">
-              <div className="flex">
-                <div className="pt-4 pb-4 pl-2 w-1/2">1</div>
-                <div className="pt-4 pb-4 pl-2 w-1/2">Name 01</div>
-                <div className="pt-4 pb-4 pl-10 w-1/4 ">07</div>
-              </div>
-              <div className="flex">
-                <div className="pt-4 pb-4 pl-2 w-1/2">2</div>
-                <div className="pt-4 pb-4 pl-2 w-1/2">Name 02</div>
-                <div className="pt-4 pb-4 pl-10 w-1/4">05</div>
-              </div>
-              <div className="flex">
-                <div className="pt-4 pb-4 pl-2 w-1/2">3</div>
-                <div className="pt-4 pb-4 pl-2 w-1/2">Name 03</div>
-                <div className="pt-4 pb-4 pl-10 w-1/4">08</div>
-              </div>
-              <div className="flex">
-                <div className="pt-4 pb-4 pl-2 w-1/2">4</div>
-                <div className="pt-4 pb-4 pl-2 w-1/2">Name 04</div>
-                <div className="pt-4 pb-4 pl-10 w-1/4">12</div>
-              </div>
-              <div className="flex">
-                <div className="pt-4 pb-4 pl-2 w-1/2">5</div>
-                <div className="pt-4 pb-4 pl-2 w-1/2">Name 05</div>
-                <div className="pt-4 pb-4 pl-10 w-1/4">06</div>
-              </div>
-              <div className="flex">
-                <div className="pt-4 pb-4 pl-2 w-1/2">6</div>
-                <div className="pt-4 pb-4 pl-2 w-1/2">Name 06</div>
-                <div className="pt-4 pb-4 pl-10 w-1/4">04</div>
-              </div>
-              <div className="flex">
-                <div className="pt-4 pb-4 pl-2 w-1/2">7</div>
-                <div className="pt-4 pb-4 pl-2 w-1/2">Name 07</div>
-                <div className="pt-4 pb-4 pl-10 w-1/4">10</div>
-              </div>
-              <div className="flex">
-                <div className="pt-4 pb-4 pl-2 w-1/2">8</div>
-                <div className="pt-4 pb-4 pl-2 w-1/2">Name 08</div>
-                <div className="pt-4 pb-4 pl-10 w-1/4">05</div>
-              </div>
-              <div className="flex">
-                <div className="pt-4 pb-4 pl-2 w-1/2">9</div>
-                <div className="pt-4 pb-4 pl-2 w-1/2">Name 09</div>
-                <div className="pt-4 pb-4 pl-10 w-1/4">09</div>
-              </div>
-            </div>
-          </table>
+          <div className="overflow-y-auto whitespace-nowrap h-80 mt-4">
+            <table className="text-sm w-full">
+              <thead className="bg-gray-200 sticky top-0 z-10">
+                <tr>
+                  <th className="py-1 text-left pl-4">
+                    Rank
+                  </th>
+                  <th className="py-1 text-left pl-4">
+                    Name
+                  </th>
+                  <th className="py-1">
+                    Challenges Won
+                  </th>
+                </tr>
+              </thead>
+
+              {/* body of the table starts */}
+              <tbody>
+                <tr className="border-0 border-b-2 border-gray-300">
+                  <td className="pl-4 py-2">1</td>
+                  <td className="pl-4 py-2">Name 01</td>
+                  <td className="text-center py-2">07</td>
+                </tr>
+                <tr className="border-0 border-b-2 border-gray-300">
+                  <td className="pl-4 py-2">2</td>
+                  <td className="pl-4 py-2">Name 02</td>
+                  <td className="text-center py-2">05</td>
+                </tr>
+                <tr className="border-0 border-b-2 border-gray-300">
+                  <td className="pl-4 py-2">3</td>
+                  <td className="pl-4 py-2">Name 03</td>
+                  <td className="text-center py-2">08</td>
+                </tr>
+                <tr className="border-0 border-b-2 border-gray-300">
+                  <td className="pl-4 py-2">4</td>
+                  <td className="pl-4 py-2">Name 04</td>
+                  <td className="text-center py-2">12</td>
+                </tr>
+                <tr className="border-0 border-b-2 border-gray-300">
+                  <td className="pl-4 py-2">5</td>
+                  <td className="pl-4 py-2">Name 05</td>
+                  <td className="text-center py-2">06</td>
+                </tr>
+                <tr className="border-0 border-b-2 border-gray-300">
+                  <td className="pl-4 py-2">6</td>
+                  <td className="pl-4 py-2">Name 06</td>
+                  <td className="text-center py-2">04</td>
+                </tr>
+                <tr className="border-0 border-b-2 border-gray-300">
+                  <td className="pl-4 py-2">7</td>
+                  <td className="pl-4 py-2">Name 07</td>
+                  <td className="text-center py-2">10</td>
+                </tr>
+                <tr className="border-0 border-b-2 border-gray-300">
+                  <td className="pl-4 py-2">8</td>
+                  <td className="pl-4 py-2">Name 08</td>
+                  <td className="text-center py-2">05</td>
+                </tr>
+                <tr>
+                  <td className="pl-4 py-2">9</td>
+                  <td className="pl-4 py-2">Name 09</td>
+                  <td className="text-center py-2">09</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* second table starts */}
-        <div className="pl-8 pt-14 pb-40 ">
-          <div className="text-left mb-5 space-x-24">
-            <label
-              for="top"
-              className=" w-20  text-left
-                                 font-bold text-gray-600"
-            >
-              {" "}
-              Top Challenges - Most Submissions
+        <div className="m-5 p-5 bg-gray-100 border-t-4 border-pink-700 h-fit">
+          <div className="flex justify-between items-center">
+            <label className="font-bold text-gray-600">
+              Top Challenges - Most Challenges Won
             </label>
-            <select className="flex-1  py-1 p-2 border-b-2  mt-2 w-20  rounded shadow bg-white ring-1">
+            <select className="py-1 px-2 border-b-2 rounded shadow bg-white ring-1">
               <option>2018</option>
               <option>2019</option>
               <option>2020</option>
               <option>2021</option>
             </select>
           </div>
-          {/* harshitha */}
-          <table className="fixed">
-            <div className="bg-gray-300 border-b-2 border-gray-200">
-              <tr>
-                <th className="pt-2 pb-2 pl-8 text-sm font-semibold tracking-wide text-left">
-                  Rank
-                </th>
-                <th className="pt-2 pb-2 pl-28  p-1 text-sm font-semibold tracking-wide text-left">
-                  Name
-                </th>
-                <th className="pt-2 pb-2 pl-28  p-1 text-sm font-semibold tracking-wide text-left">
-                  Challenges Won
-                </th>
-              </tr>
-            </div>
 
-            {/* body of the table starts */}
-            <div className="bg-gray-100 divide-y  divide-gray-400 px-6 space-y-1 max-h-72 overflow-auto ">
-              <div className="flex">
-                <div className="pt-4 pb-4 pl-2 w-1/2">1</div>
-                <div className="pt-4 pb-4 pl-2 w-1/2">Name 01</div>
-                <div className="pt-4 pb-4 pl-10 w-1/4 ">12</div>
+          <div className="overflow-y-auto whitespace-nowrap h-80 mt-4">
+            <table className="text-sm w-full">
+              <thead className="bg-gray-200 sticky top-0 z-10">
+                <tr>
+                  <th className="py-1 text-left pl-4">
+                    Rank
+                  </th>
+                  <th className="py-1 text-left pl-4">
+                    Name
+                  </th>
+                  <th className="py-1">
+                    Challenges Won
+                  </th>
+                </tr>
+              </thead>
+
+              {/* body of the table starts */}
+              <tbody>
+                <tr className="border-0 border-b-2 border-gray-300">
+                  <td className="pl-4 py-2">1</td>
+                  <td className="pl-4 py-2">Name 01</td>
+                  <td className="text-center py-2">07</td>
+                </tr>
+                <tr className="border-0 border-b-2 border-gray-300">
+                  <td className="pl-4 py-2">2</td>
+                  <td className="pl-4 py-2">Name 02</td>
+                  <td className="text-center py-2">05</td>
+                </tr>
+                <tr className="border-0 border-b-2 border-gray-300">
+                  <td className="pl-4 py-2">3</td>
+                  <td className="pl-4 py-2">Name 03</td>
+                  <td className="text-center py-2">08</td>
+                </tr>
+                <tr className="border-0 border-b-2 border-gray-300">
+                  <td className="pl-4 py-2">4</td>
+                  <td className="pl-4 py-2">Name 04</td>
+                  <td className="text-center py-2">12</td>
+                </tr>
+                <tr className="border-0 border-b-2 border-gray-300">
+                  <td className="pl-4 py-2">5</td>
+                  <td className="pl-4 py-2">Name 05</td>
+                  <td className="text-center py-2">06</td>
+                </tr>
+                <tr className="border-0 border-b-2 border-gray-300">
+                  <td className="pl-4 py-2">6</td>
+                  <td className="pl-4 py-2">Name 06</td>
+                  <td className="text-center py-2">04</td>
+                </tr>
+                <tr className="border-0 border-b-2 border-gray-300">
+                  <td className="pl-4 py-2">7</td>
+                  <td className="pl-4 py-2">Name 07</td>
+                  <td className="text-center py-2">10</td>
+                </tr>
+                <tr className="border-0 border-b-2 border-gray-300">
+                  <td className="pl-4 py-2">8</td>
+                  <td className="pl-4 py-2">Name 08</td>
+                  <td className="text-center py-2">05</td>
+                </tr>
+                <tr>
+                  <td className="pl-4 py-2">9</td>
+                  <td className="pl-4 py-2">Name 09</td>
+                  <td className="text-center py-2">09</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* doughnut chart */}
+        <div className="m-5 p-5 bg-gray-100 border-t-4 border-pink-700 h-fit">
+          <div>
+            <label className="font-bold text-gray-600">
+              Lorem Ipsum
+            </label>
+          </div>
+
+          <div className="flex justify-center">
+            <div className="relative h-52 w-52 mt-4">
+              <DoughnutChart
+                chartData={{
+                  labels: [
+                    'Red',
+                    'Blue',
+                    'Yellow'
+                  ],
+                  datasets: [{
+                    label: 'My First Dataset',
+                    data: [300, 50, 100],
+                    backgroundColor: [
+                      'red',
+                      'blue',
+                      'yellow'
+                    ],
+                    hoverOffset: 4
+                  }]
+                }}
+                options={{
+                  plugins: {
+                    legend: {
+                      display: false
+                    }
+                  }
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="h-28 mt-6">
+            <div className="flex flex-wrap items-center">
+              <div className="flex items-center space-x-1 px-2 py-1">
+                <div className="border-2 bg-red-600 rounded-full h-5 w-5" />
+                <p className="text-sm">Red Color</p>
               </div>
-              <div className="flex">
-                <div className="pt-4 pb-4 pl-2 w-1/2">2</div>
-                <div className="pt-4 pb-4 pl-2 w-1/2">Name 02</div>
-                <div className="pt-4 pb-4 pl-10 w-1/4">15</div>
+              <div className="flex items-center space-x-1 px-2 py-1">
+                <div className="border-2 bg-blue-600 rounded-full h-5 w-5" />
+                <p className="text-sm">Blue Color</p>
               </div>
-              <div className="flex">
-                <div className="pt-4 pb-4 pl-2 w-1/2">3</div>
-                <div className="pt-4 pb-4 pl-2 w-1/2">Name 03</div>
-                <div className="pt-4 pb-4 pl-10 w-1/4">09</div>
-              </div>
-              <div className="flex">
-                <div className="pt-4 pb-4 pl-2 w-1/2">4</div>
-                <div className="pt-4 pb-4 pl-2 w-1/2">Name 04</div>
-                <div className="pt-4 pb-4 pl-10 w-1/4">11</div>
-              </div>
-              <div className="flex">
-                <div className="pt-4 pb-4 pl-2 w-1/2">5</div>
-                <div className="pt-4 pb-4 pl-2 w-1/2">Name 05</div>
-                <div className="pt-4 pb-4 pl-10 w-1/4">10</div>
-              </div>
-              <div className="flex">
-                <div className="pt-4 pb-4 pl-2 w-1/2">6</div>
-                <div className="pt-4 pb-4 pl-2 w-1/2">Name 06</div>
-                <div className="pt-4 pb-4 pl-10 w-1/4">06</div>
-              </div>
-              <div className="flex">
-                <div className="pt-4 pb-4 pl-2 w-1/2">7</div>
-                <div className="pt-4 pb-4 pl-2 w-1/2">Name 07</div>
-                <div className="pt-4 pb-4 pl-10 w-1/4">10</div>
-              </div>
-              <div className="flex">
-                <div className="pt-4 pb-4 pl-2 w-1/2">8</div>
-                <div className="pt-4 pb-4 pl-2 w-1/2">Name 08</div>
-                <div className="pt-4 pb-4 pl-10 w-1/4">05</div>
-              </div>
-              <div className="flex">
-                <div className="pt-4 pb-4 pl-2 w-1/2">9</div>
-                <div className="pt-4 pb-4 pl-2 w-1/2">Name 09</div>
-                <div className="pt-4 pb-4 pl-10 w-1/4">09</div>
+              <div className="flex items-center space-x-1 px-2 py-1">
+                <div className="border-2 bg-yellow-600 rounded-full h-5 w-5" />
+                <p className="text-sm">Yellow Color</p>
               </div>
             </div>
-          </table>
-        </div>
-        {/* content at bottom */}
-        {/* <div id="bottom">
-          <div className="pl-10 pt-20 pr-20">
-            <h2 className="text-2xl">
-              Lorem Ipsum Dolor, Sit Amet Consectetur
-            </h2>
-            <br></br>
-            <h3 className=" text-zinc-700 ">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est
-              laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Sed id imperdiet lectus, nec consectetur purus.
-            </h3>
           </div>
-        </div> */}
+        </div>
       </div>
+      
+      {/* content at bottom */}
+      <div className="m-10">
+        <div className="pl-5 pr-20 pb-5">
+          <h2 className="text-2xl">
+            Lorem Ipsum Dolor, Sit Amet Consectetur
+          </h2>
+          <br></br>
+          <h3 className="text-zinc-700 text-justify">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+            enim ad minim veniam, quis nostrud exercitation ullamco laboris
+            nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+            reprehenderit in voluptate velit esse cillum dolore eu fugiat
+            nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+            sunt in culpa qui officia deserunt mollit anim id est
+            laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Sed id imperdiet lectus, nec consectetur purus.
+          </h3>
+        </div>
+      </div>
+
+      <Footer />
     </div>
   );
 };
