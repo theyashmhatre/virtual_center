@@ -15,11 +15,10 @@ export const login = async (username, password) => {
 };
 
 export const register = async (
-  employeeId,
   employeeName,
   email,
-  accountName,
-  contact,
+  accountType,
+  contactNumber,
   username,
   securityQuestionId,
   securityQuestionAnswer,
@@ -28,11 +27,10 @@ export const register = async (
 ) => {
   const endpoint = new URL("/api/user/register", apiURL).href;
   return await axios.post(endpoint, {
-    employeeId,
     employeeName,
     email,
-    accountName,
-    contact,
+    accountType,
+    contactNumber,
     username,
     securityQuestionId,
     securityQuestionAnswer,
@@ -65,6 +63,14 @@ export const resetPassword = async (token, password, confirmPassword) => {
 export const getSecurityQuestions = async () => {
   const endpoint = new URL(
     "/api/user/get-security-questions",
+    apiURL
+  ).href;
+  return await axios.get(endpoint);
+};
+
+export const getAccountTypes = async () => {
+  const endpoint = new URL(
+    "/api/user/get-account-types",
     apiURL
   ).href;
   return await axios.get(endpoint);

@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-import { getSecurityQuestions, register } from "../utilities/user";
+import { getAccountTypes, getSecurityQuestions, register } from "../utilities/user";
 import { isEmptyObject } from "../utilities/utils";
 import { inputValidation } from "../utilities/validation/register";
 
@@ -11,8 +11,8 @@ const initialInputValues = {
   employeeId: 0,
   employeeName: "",
   email: "",
-  contact: 0,
-  accountName: 0,
+  contactNumber: 0,
+  accountType: 0,
   securityQuestionId: 0,
   securityQuestionAnswer: "",
   password: "",
@@ -26,6 +26,7 @@ const initialVisibility = {
 };
 
 const Register = () => {
+  const [accountTypes, setAccountTypes] = useState([]);
   const [inputValues, setInputValues] = useState(initialInputValues);
   const [visibility, setVisibility] = useState(initialVisibility);
   const [securityQuestions, setSecurityQuestions] = useState([]);
@@ -59,6 +60,17 @@ const Register = () => {
           else setErrors({ main: "Some Error Occured, Try Again!" });
         else setErrors({ main: "Some Error Occured, Try Again!" });
       });
+    
+    getAccountTypes()
+      .then(({ data }) => {
+        setAccountTypes(data);
+      })
+      .catch((error) => {
+        if (error.response)
+          if (error.response.data) setErrors(error.response.data);
+          else setErrors({ main: "Some Error Occured, Try Again!" });
+        else setErrors({ main: "Some Error Occured, Try Again!" });
+      });
   }, []);
 
   const onSubmit = () => {
@@ -67,9 +79,9 @@ const Register = () => {
       inputValues.employeeId,
       inputValues.employeeName,
       inputValues.email,
-      inputValues.accountName,
-      inputValues.contact,
-      inputValues.employeeId,
+      inputValues.accountType,
+      inputValues.contactNumber,
+      inputValues.employeeId, // username is same as employee id
       inputValues.securityQuestionId,
       inputValues.securityQuestionAnswer,
       inputValues.password,
@@ -79,12 +91,11 @@ const Register = () => {
     if (isEmptyObject(inputErrors))
       // register user using api
       register(
-        inputValues.employeeId,
         inputValues.employeeName,
         inputValues.email,
-        inputValues.accountName,
-        inputValues.contact,
-        inputValues.employeeId,
+        inputValues.accountType,
+        inputValues.contactNumber,
+        inputValues.employeeId, // username is same as employee id
         inputValues.securityQuestionId,
         inputValues.securityQuestionAnswer,
         inputValues.password,
@@ -179,33 +190,37 @@ const Register = () => {
           <div className="text-center mb-5">
             <select
               className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
-              name="accountName"
-              value={inputValues.accountName}
+              name="accountType"
+              value={inputValues.accountType}
               onChange={handleInputChange}
             >
-              <option value={0} label="---Select Account Name---" />
-              <option value={1} label="Type 1" />
-              <option value={2} label="Type 2" />
-              <option value={3} label="Type 3" />
+              <option value={0} label="---Select Account Type---" />
+              {accountTypes.map((type) => (
+                <option
+                  value={type.accountId}
+                  label={type.accountName}
+                  key={type.accountId}
+                />
+              ))}
             </select>
-            {!errors.accountName ? null : (
+            {!errors.accountType ? null : (
               <div className="text-center text-pink-700 text-lg mt-2">
-                <p>{errors.accountName}</p>
+                <p>{errors.accountType}</p>
               </div>
             )}
           </div>
           <div className="text-center mb-5">
             <input
               type="number"
-              name="contact"
+              name="contactNumber"
               placeholder="Contact Number"
-              value={!inputValues.contact ? '' : inputValues.contact}
+              value={!inputValues.contactNumber ? '' : inputValues.contactNumber}
               onChange={handleInputChange}
               className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
             />
-            {!errors.contact ? null : (
+            {!errors.contactNumber ? null : (
               <div className="text-center text-pink-700 text-lg mt-2">
-                <p>{errors.contact}</p>
+                <p>{errors.contactNumber}</p>
               </div>
             )}
           </div>
@@ -214,7 +229,7 @@ const Register = () => {
               type="text"
               name="username"
               placeholder="Username"
-              value={!inputValues.employeeId ? '' : inputValues.employeeId}
+              value={!inputValues.employeeId ? '' : inputValues.employeeId} // username is same as employee id
               disabled
               className="flex-1 py-2 border-b-2 border-gray-300 text-gray-400 placeholder-zinc-300 outline-none w-96 cursor-not-allowed"
             />
