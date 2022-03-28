@@ -21,11 +21,11 @@ router.get("/", (req, res) => {
 router.post("/register", (req, res) => {
 
   let {
-    firstName,
-    lastName,
+    employeeName,
     email,
     password,
     username,
+    contactNumber,
     securityQuestionId,
     securityQuestionAnswer,
     accountTypeId
@@ -85,12 +85,12 @@ router.post("/register", (req, res) => {
               }
 
               const user = {
-                first_name: firstName,
-                last_name: lastName,
+                employee_name: employeeName,
                 email: email,
                 password: hash,
                 creation_date: creationDate,
                 username: username,
+                contact_number: contactNumber,
                 security_question_id: securityQuestionId,
                 security_question_answer: ans_hash,
                 account_type_id: accountTypeId
@@ -160,7 +160,7 @@ router.post("/login", (req, res) => {
             const payload = {
               username: username,
               email: user.email,
-              name: user.first_name + " " + user.last_name,
+              name: user.employee_name,
             };
 
             //Sign token
