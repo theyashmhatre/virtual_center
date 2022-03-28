@@ -1,5 +1,6 @@
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import challenge_cover from "../../public/challenge_cover.png";
 
 const Challenges = () => {
   return (
@@ -31,8 +32,12 @@ const Challenges = () => {
           </div>
           <div className="lg:h-70v flex md:flex-col md:items-center sm:items-center sm:flex-col justify-between">
             <div className="border-2  h-70v lg:mb-0 mb-4 w-24per  md:w-1/2 sm:w-2/3 xs:w-5/6">
-              <div className="h-40per bg-gray-300">
-                <img src="" />
+              <div className="h-40per ">
+                <img
+                  className=" object-fill h-full w-full   "
+                  src={challenge_cover}
+                  alt="challenge cover"
+                />
               </div>
               <div className="h-60per border-gray-500 border-2 flex flex-col justify-between p-3">
                 <div className="h-25per  flex items-center">
@@ -75,7 +80,11 @@ const Challenges = () => {
             </div>
             <div className="border-2  h-70v lg:mb-0 mb-4 w-24per  md:w-1/2 sm:w-2/3 xs:w-5/6">
               <div className="h-40per bg-gray-300">
-                <img src="" />
+                <img
+                  className=" object-fill h-full w-full   "
+                  src={challenge_cover}
+                  alt="challenge cover"
+                />
               </div>
               <div className="h-60per border-gray-500 border-2 flex flex-col justify-between p-3">
                 <div className="h-25per  flex items-center">
@@ -118,7 +127,11 @@ const Challenges = () => {
             </div>
             <div className="border-2  h-70v lg:mb-0 mb-4 w-24per  md:w-1/2 sm:w-2/3 xs:w-5/6">
               <div className="h-40per bg-gray-300">
-                <img src="" />
+                <img
+                  className=" object-fill h-full w-full   "
+                  src={challenge_cover}
+                  alt="challenge cover"
+                />
               </div>
               <div className="h-60per border-gray-500 border-2 flex flex-col justify-between p-3">
                 <div className="h-25per  flex items-center">
@@ -161,7 +174,11 @@ const Challenges = () => {
             </div>
             <div className="border-2  h-70v lg:mb-0 mb-4 w-24per  md:w-1/2 sm:w-2/3 xs:w-5/6">
               <div className="h-40per bg-gray-300">
-                <img src="" />
+                <img
+                  className=" object-fill h-full w-full   "
+                  src={challenge_cover}
+                  alt="challenge cover"
+                />
               </div>
               <div className="h-60per border-gray-500 border-2 flex flex-col justify-between p-3">
                 <div className="h-25per  flex items-center">

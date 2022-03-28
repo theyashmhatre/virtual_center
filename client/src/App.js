@@ -7,8 +7,11 @@ import ResetPassword from "./components/ResetPassword";
 import Challenges from "./components/Challenges";
 import Home from "./components/Home";
 import Challenge from "./components/Challenge";
-import Idea from "./components/Idea";
 import AuthRequired from "./components/AuthRequired";
+import Solutions from "./components/Idea";
+import Offerings from "./components/Offerings";
+import Offering from "./components/Offering";
+import Solvers from "./components/Solvers";
 
 const App = () => {
   return (
@@ -22,7 +25,10 @@ const App = () => {
         <Route path="forgot-password" element={<ForgotPassword />} />
         <Route path="reset-password/:token" element={<ResetPassword />} />
         <Route path="challenge" element={<AuthRequired><Challenge /></AuthRequired>} />
-        <Route path="solutions" element={<AuthRequired><Idea /></AuthRequired>} />
+        <Route path="solutions" element={<AuthRequired><Solutions /></AuthRequired>} />
+        <Route path="offerings" element={<AuthRequired><Offerings /></AuthRequired>} />
+        <Route path="offering" element={<AuthRequired><Offering /></AuthRequired>} />
+        <Route path="solvers" element={<AuthRequired><Solvers /></AuthRequired>} />
       </Routes>
     </div>
   );

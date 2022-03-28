@@ -2,11 +2,9 @@ const router = require("express").Router();
 const mysqlConnection = require("../config/dbConnection");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const validateRegisterParams = require("../utils/validation/register");
-const validateLoginParams = require("../utils/validation/login");
+const {validateRegisterParams, validateLoginParams, validateForgotPasswordParams} = require("../utils/validation/user");
 const passport = require("passport");
 const { isEmptyObject, passwordsValidation, generateCurrentDateTime } = require("../utils/utils");
-const validateForgotPasswordParams = require("../utils/validation/forgotPassword");
 const nodemailer = require("nodemailer");
 
 router.get("/", (req, res) => {
@@ -27,8 +25,10 @@ router.post("/register", (req, res) => {
     lastName,
     email,
     password,
+    username,
     securityQuestionId,
     securityQuestionAnswer,
+    accountTypeId
   } = req.body;
   console.log(req.body);
   const { errors, isValid } = validateRegisterParams(req.body); //validating all parameters before registering user
@@ -36,7 +36,7 @@ router.post("/register", (req, res) => {
   if (!isValid) return res.status(400).json(errors);
 
   mysqlConnection.query(
-    `SELECT * from user where email="${email}"`,
+    `SELECT * from user where email="${email}" OR username=${username}`,
     function (error, result, fields) {
       if (error) {
         console.log(error.code, error.sqlMessage);
@@ -48,9 +48,13 @@ router.post("/register", (req, res) => {
       }
 
       if (!isEmptyObject(result)) {
-        //check if user email already exists
 
-        return res.status(400).json({ email: "Email already exists" });
+        //check if user email already exists
+        if (result[0].email === email) return res.status(400).json({ email: "Email already exists" });
+
+        //check if username already exists
+        if (result[0].username === username) return res.status(400).json({ username: "Username already exists" });
+
       } else {
         //generate passwordHash and create user on database
 
@@ -60,16 +64,11 @@ router.post("/register", (req, res) => {
             if (err) {
               console.log("bcrypt error for password", err);
               res.status(500).json({
-                main: "Something went wrong",
+                main: "Something went wrong. Please try again.",
                 devError: err,
                 devMsg: "Error while encrypting password using bcrypt library",
               });
             }
-
-            let userName =
-              email.substring(0, email.indexOf("@")) +
-              parseInt(Math.random() * (999 - 1) + 1); //creates a default username using content before '@' from the email + a random digit from 1 to 999
-            userName = userName.replace(/[^a-zA-Z0-9 ]/g, ""); // eliminates special characters, if any
 
             let creationDate = generateCurrentDateTime();
 
@@ -78,7 +77,7 @@ router.post("/register", (req, res) => {
               if (err) {
                 console.log("bcrypt error for password", err);
                 res.status(500).json({
-                  main: "Something went wrong",
+                  main: "Something went wrong. Please try again.",
                   devError: err,
                   devMsg:
                     "Error while encrypting security answer using bcrypt library",
@@ -91,9 +90,10 @@ router.post("/register", (req, res) => {
                 email: email,
                 password: hash,
                 creation_date: creationDate,
-                username: userName,
+                username: username,
                 security_question_id: securityQuestionId,
                 security_question_answer: ans_hash,
+                account_type_id: accountTypeId
               };
 
               //adding user to database
@@ -104,7 +104,7 @@ router.post("/register", (req, res) => {
                   if (sqlErr) {
                     console.log(sqlErr);
                     res.status(500).json({
-                      main: "Something went wrong",
+                      main: "Something went wrong. Please try again.",
                       devError: sqlErr,
                       devMsg: "Error occured while adding user into db",
                     });
@@ -125,7 +125,7 @@ router.post("/register", (req, res) => {
 });
 
 router.post("/login", (req, res) => {
-  const { email, password } = req.body;
+  const { username, password } = req.body;
 
   //validating email and password
   const { errors, isValid } = validateLoginParams(req.body);
@@ -134,7 +134,7 @@ router.post("/login", (req, res) => {
   if (!isValid) return res.status(400).json(errors);
 
   mysqlConnection.query(
-    `SELECT * from user where email = "${email}"`,
+    `SELECT * from user where username = ${username}`,
     function (error, row, fields) {
       if (error) {
         console.log(error.code, error.sqlMessage);
@@ -158,7 +158,7 @@ router.post("/login", (req, res) => {
           if (isMatch) {
             // user password verified, Create JWT Payload
             const payload = {
-              id: user.user_id,
+              username: username,
               email: user.email,
               name: user.first_name + " " + user.last_name,
             };
@@ -285,7 +285,7 @@ router.post("/forgot-password", (req, res) => {
               if (err) {
                 console.log(err);
                 return res.status(400).json({
-                  main: "Something went wrong ",
+                  main: "Something went wrong. Please try again. ",
                   devError: err,
                   devMsg: "Error while sending the mail",
                 });
@@ -297,7 +297,7 @@ router.post("/forgot-password", (req, res) => {
           })
           .catch((err) => {
             return res.status(400).json({
-              main: "Something went wrong ",
+              main: "Something went wrong. Please try again. ",
               devError: err,
               devMsg: "Error occured while comparing user's answers",
             });
@@ -317,7 +317,7 @@ router.post("/reset-password/:token", (req, res) => {
   jwt.verify(token, key, (err, payload) => {
     if (err) {
       console.error(err);
-      return res.status(400).json({ main: 'Something went wrong' });
+      return res.status(400).json({ main: 'Something went wrong. Please try again.' });
     } else {
       let errors = {};
 
@@ -361,11 +361,31 @@ router.get("/get-security-questions", (req, res) => {
           devMsg: "MySql query error",
         });
       } else {
-        //return list containing multiple objects having securityQuestionId and securityQuestionText as keys
+        //return list containing multiple objects having securityQuestionId and securityQuestionText
         res.status(200).send(rows);
       }
     }
   );
 });
+
+router.get("/get-account-types", (req, res) => {
+  mysqlConnection.query(
+    "Select account_type_id as accountId, account_name as accountName from account_type",
+    (err, rows, fields) => {
+      if (err) {
+        console.log(err);
+        res.status(500).json({
+          main: "Something went wrong. Please try again",
+          devError: error,
+          devMsg: "MySql query error",
+        });
+      } else {
+        //return list containing multiple objects having accountId and accountName
+        res.status(200).send(rows);
+      }
+    }
+  );
+});
+
 
 module.exports = router;
