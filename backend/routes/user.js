@@ -2,9 +2,17 @@ const router = require("express").Router();
 const mysqlConnection = require("../config/dbConnection");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const {validateRegisterParams, validateLoginParams, validateForgotPasswordParams} = require("../utils/validation/user");
+const {
+  validateRegisterParams,
+  validateLoginParams,
+  validateForgotPasswordParams,
+} = require("../utils/validation/user");
 const passport = require("passport");
-const { isEmptyObject, passwordsValidation, generateCurrentDateTime } = require("../utils/utils");
+const {
+  isEmptyObject,
+  passwordsValidation,
+  generateCurrentDateTime,
+} = require("../utils/utils");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 
@@ -20,7 +28,6 @@ router.get("/", (req, res) => {
 });
 
 router.post("/register", (req, res) => {
-
   let {
     firstName,
     lastName,
@@ -29,7 +36,7 @@ router.post("/register", (req, res) => {
     username,
     securityQuestionId,
     securityQuestionAnswer,
-    accountTypeId
+    accountTypeId,
   } = req.body;
   console.log(req.body);
   const { errors, isValid } = validateRegisterParams(req.body); //validating all parameters before registering user
@@ -49,13 +56,13 @@ router.post("/register", (req, res) => {
       }
 
       if (!isEmptyObject(result)) {
-
         //check if user email already exists
-        if (result[0].email === email) return res.status(400).json({ email: "Email already exists" });
+        if (result[0].email === email)
+          return res.status(400).json({ email: "Email already exists" });
 
         //check if username already exists
-        if (result[0].username === username) return res.status(400).json({ username: "Username already exists" });
-
+        if (result[0].username === username)
+          return res.status(400).json({ username: "Username already exists" });
       } else {
         //generate passwordHash and create user on database
 
@@ -94,7 +101,7 @@ router.post("/register", (req, res) => {
                 username: username,
                 security_question_id: securityQuestionId,
                 security_question_answer: ans_hash,
-                account_type_id: accountTypeId
+                account_type_id: accountTypeId,
               };
 
               //adding user to database
@@ -149,7 +156,9 @@ router.post("/login", (req, res) => {
       let user = row[0];
 
       if (!user) {
-        return res.status(404).json({ main: "User does not exist. Please register and continue" });
+        return res
+          .status(404)
+          .json({ main: "User does not exist. Please register and continue" });
       }
 
       //Check password
@@ -189,7 +198,9 @@ router.post("/login", (req, res) => {
               }
             );
           } else {
-            return res.status(400).json({ main: "The password that you've entered is incorrect." });
+            return res
+              .status(400)
+              .json({ main: "The password that you've entered is incorrect." });
           }
         })
         .catch((error) => {
@@ -263,7 +274,10 @@ router.post("/forgot-password", (req, res) => {
               const newTime = new Date();
               newTime.setTime(currTime.getTime() + 15 * 60000); //Expiry time will be 15 minutes
 
-              const expiryTime = newTime.toISOString().slice(0, 19).replace('T', ' ');
+              const expiryTime = newTime
+                .toISOString()
+                .slice(0, 19)
+                .replace("T", " ");
 
               mysqlConnection.query(
                 `UPDATE user SET token="${token}", expiry_time="${expiryTime}" WHERE email="${email}"`,
@@ -427,5 +441,23 @@ router.get("/get-account-types", (req, res) => {
   );
 });
 
+router.get("/get-account-types", (req, res) => {
+  mysqlConnection.query(
+    "Select account_type_id as accountId, account_name as accountName from account_type",
+    (err, rows, fields) => {
+      if (err) {
+        console.log(err);
+        res.status(500).json({
+          main: "Something went wrong. Please try again",
+          devError: error,
+          devMsg: "MySql query error",
+        });
+      } else {
+        //return list containing multiple objects having accountId and accountName
+        res.status(200).send(rows);
+      }
+    }
+  );
+});
 
 module.exports = router;
