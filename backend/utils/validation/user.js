@@ -4,23 +4,23 @@ const { isEmptyObject, emailValidation, passwordsValidation } = require("../util
 function validateRegisterParams(data) {
     let errors = {};
 
-    let { firstName, lastName, email, password, confirmPassword, username, securityQuestionId, securityQuestionAnswer, accountTypeId } = data;
+    let { employeeName, email, password, confirmPassword, username, contactNumber, securityQuestionId, securityQuestionAnswer, accountTypeId } = data;
 
 
     //Name validation
-    if (!firstName) errors.firstName = "First Name cannot be empty";
-    if (!lastName) errors.lastName = "Last Name cannot be empty";
-
+    if (!employeeName) errors.employeeName = "Employee name cannot be empty";
 
     //email validation
     errors = emailValidation(email, errors);
-
 
     // Password validation
     errors = passwordsValidation(password, confirmPassword, errors);
 
     //username validation
     if (!username || isNaN(username)) errors.username = "Please enter a valid username i.e. Your employee ID";
+
+    //contact number validation
+    if (isNaN(contactNumber)) errors.contactNumber = "Please enter a valid contact number"; 
 
     if (!securityQuestionId || isNaN(securityQuestionId)) errors.securityQuestionId = "Please select a valid Security Question";
     if (!securityQuestionAnswer) errors.securityQuestionAnswer = "Please enter an answer to your Security Question";
