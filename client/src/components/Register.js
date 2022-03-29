@@ -12,7 +12,7 @@ const initialInputValues = {
   employeeName: "",
   email: "",
   contactNumber: 0,
-  accountType: 0,
+  accountTypeId: 0,
   securityQuestionId: 0,
   securityQuestionAnswer: "",
   password: "",
@@ -38,7 +38,7 @@ const Register = () => {
 
     setInputValues({
       ...inputValues,
-      [name]: type == 'number' ? Number(value) : value,
+      [name]: type == 'number' || type == 'select-one' ? Number(value) : value,
     });
   };
 
@@ -79,7 +79,7 @@ const Register = () => {
       inputValues.employeeId,
       inputValues.employeeName,
       inputValues.email,
-      inputValues.accountType,
+      inputValues.accountTypeId,
       inputValues.contactNumber,
       inputValues.employeeId, // username is same as employee id
       inputValues.securityQuestionId,
@@ -93,7 +93,7 @@ const Register = () => {
       register(
         inputValues.employeeName,
         inputValues.email,
-        inputValues.accountType,
+        inputValues.accountTypeId,
         inputValues.contactNumber,
         inputValues.employeeId, // username is same as employee id
         inputValues.securityQuestionId,
@@ -190,8 +190,8 @@ const Register = () => {
           <div className="text-center mb-5">
             <select
               className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
-              name="accountType"
-              value={inputValues.accountType}
+              name="accountTypeId"
+              value={inputValues.accountTypeId}
               onChange={handleInputChange}
             >
               <option value={0} label="---Select Account Type---" />
@@ -203,9 +203,9 @@ const Register = () => {
                 />
               ))}
             </select>
-            {!errors.accountType ? null : (
+            {!errors.accountTypeId ? null : (
               <div className="text-center text-pink-700 text-lg mt-2">
-                <p>{errors.accountType}</p>
+                <p>{errors.accountTypeId}</p>
               </div>
             )}
           </div>

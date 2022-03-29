@@ -17,7 +17,7 @@ export const login = async (username, password) => {
 export const register = async (
   employeeName,
   email,
-  accountType,
+  accountTypeId,
   contactNumber,
   username,
   securityQuestionId,
@@ -29,7 +29,7 @@ export const register = async (
   return await axios.post(endpoint, {
     employeeName,
     email,
-    accountType,
+    accountTypeId,
     contactNumber,
     username,
     securityQuestionId,
@@ -52,8 +52,8 @@ export const forgotPassword = async (
   });
 };
 
-export const resetPassword = async (token, password, confirmPassword) => {
-  const endpoint = new URL(`/api/user/reset-password/${token}`, apiURL).href;
+export const resetPassword = async (username, token, password, confirmPassword) => {
+  const endpoint = new URL(`/api/user/reset-password/${username}/${token}`, apiURL).href;
   return await axios.post(endpoint, {
     password,
     confirmPassword,

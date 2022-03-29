@@ -23,7 +23,7 @@ const App = () => {
         <Route path="challenges" element={<AuthRequired><Challenges /></AuthRequired>} />
         <Route path="dashboard" element={<AuthRequired><Dashboard /></AuthRequired>} />
         <Route path="forgot-password" element={<ForgotPassword />} />
-        <Route path="reset-password/:token" element={<ResetPassword />} />
+        <Route path="reset-password/:username/:token" element={<ResetPassword />} />
         <Route path="challenge" element={<AuthRequired><Challenge /></AuthRequired>} />
         <Route path="solutions" element={<AuthRequired><Solutions /></AuthRequired>} />
         <Route path="offerings" element={<AuthRequired><Offerings /></AuthRequired>} />

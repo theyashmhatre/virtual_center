@@ -4,7 +4,7 @@ export const inputValidation = (
   employeeId,
   employeeName,
   email,
-  accountType,
+  accountTypeId,
   contactNumber,
   username,
   securityQuestionId,
@@ -20,7 +20,7 @@ export const inputValidation = (
   
   errors = emailValidation(email, errors);
 
-  if (!accountType) errors.accountType = "Account Name is required";
+  if (!accountTypeId) errors.accountTypeId = "Account Name is required";
   
   if (!contactNumber) errors.contactNumber = "Contact Number is required";
 
