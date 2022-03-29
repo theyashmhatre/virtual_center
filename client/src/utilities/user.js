@@ -81,9 +81,10 @@ export const isLoggedIn = () => {
   
   if (token) {
     try {
-      jwt.verify(token, process.env.REACT_APP_JWT_SECRET)
+      jwt.verify(token, process.env.REACT_APP_JWT_SECRET);
       return true;
     } catch(err) {
+      sessionStorage.removeItem('Access Token');
       return false;
     }
   } else return false;

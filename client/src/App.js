@@ -12,18 +12,19 @@ import Solutions from "./components/Idea";
 import Offerings from "./components/Offerings";
 import Offering from "./components/Offering";
 import Solvers from "./components/Solvers";
+import AuthNotRequired from "./components/AuthNotRequired";
 
 const App = () => {
   return (
     <div>
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="register" element={<Register />} />
+        <Route path="/" element={<AuthNotRequired><Login /></AuthNotRequired>} />
+        <Route path="register" element={<AuthNotRequired><Register /></AuthNotRequired>} />
         <Route path="home" element={<AuthRequired><Home /></AuthRequired>} />
         <Route path="challenges" element={<AuthRequired><Challenges /></AuthRequired>} />
         <Route path="dashboard" element={<AuthRequired><Dashboard /></AuthRequired>} />
-        <Route path="forgot-password" element={<ForgotPassword />} />
-        <Route path="reset-password/:username/:token" element={<ResetPassword />} />
+        <Route path="forgot-password" element={<AuthNotRequired><ForgotPassword /></AuthNotRequired>} />
+        <Route path="reset-password/:username/:token" element={<AuthNotRequired><ResetPassword /></AuthNotRequired>} />
         <Route path="challenge" element={<AuthRequired><Challenge /></AuthRequired>} />
         <Route path="solutions" element={<AuthRequired><Solutions /></AuthRequired>} />
         <Route path="offerings" element={<AuthRequired><Offerings /></AuthRequired>} />
