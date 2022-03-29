@@ -3,14 +3,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-import { getSecurityQuestions, register } from "../utilities/user";
+import { getAccountTypes, getSecurityQuestions, register } from "../utilities/user";
 import { isEmptyObject } from "../utilities/utils";
 import { inputValidation } from "../utilities/validation/register";
 
 const initialInputValues = {
-  firstName: "",
-  lastName: "",
+  employeeId: 0,
+  employeeName: "",
   email: "",
+  contactNumber: 0,
+  accountTypeId: 0,
   securityQuestionId: 0,
   securityQuestionAnswer: "",
   password: "",
@@ -20,10 +22,11 @@ const initialInputValues = {
 const initialVisibility = {
   password: false,
   confirmPassword: false,
-  securityAnswer: false,
+  securityAnswer: false
 };
 
 const Register = () => {
+  const [accountTypes, setAccountTypes] = useState([]);
   const [inputValues, setInputValues] = useState(initialInputValues);
   const [visibility, setVisibility] = useState(initialVisibility);
   const [securityQuestions, setSecurityQuestions] = useState([]);
@@ -31,11 +34,11 @@ const Register = () => {
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
-    let { name, value } = e.target;
+    let { name, value, type } = e.target;
 
     setInputValues({
       ...inputValues,
-      [name]: value,
+      [name]: type == 'number' || type == 'select-one' ? Number(value) : value,
     });
   };
 
@@ -57,15 +60,29 @@ const Register = () => {
           else setErrors({ main: "Some Error Occured, Try Again!" });
         else setErrors({ main: "Some Error Occured, Try Again!" });
       });
+    
+    getAccountTypes()
+      .then(({ data }) => {
+        setAccountTypes(data);
+      })
+      .catch((error) => {
+        if (error.response)
+          if (error.response.data) setErrors(error.response.data);
+          else setErrors({ main: "Some Error Occured, Try Again!" });
+        else setErrors({ main: "Some Error Occured, Try Again!" });
+      });
   }, []);
 
   const onSubmit = () => {
     setErrors({});
     const inputErrors = inputValidation(
-      inputValues.firstName,
-      inputValues.lastName,
+      inputValues.employeeId,
+      inputValues.employeeName,
       inputValues.email,
-      Number(inputValues.securityQuestionId),
+      inputValues.accountTypeId,
+      inputValues.contactNumber,
+      inputValues.employeeId, // username is same as employee id
+      inputValues.securityQuestionId,
       inputValues.securityQuestionAnswer,
       inputValues.password,
       inputValues.confirmPassword
@@ -74,10 +91,12 @@ const Register = () => {
     if (isEmptyObject(inputErrors))
       // register user using api
       register(
-        inputValues.firstName,
-        inputValues.lastName,
+        inputValues.employeeName,
         inputValues.email,
-        Number(inputValues.securityQuestionId),
+        inputValues.accountTypeId,
+        inputValues.contactNumber,
+        inputValues.employeeId, // username is same as employee id
+        inputValues.securityQuestionId,
         inputValues.securityQuestionAnswer,
         inputValues.password,
         inputValues.confirmPassword
@@ -124,31 +143,31 @@ const Register = () => {
           </h2>
           <div className="text-center mb-5 pr-22">
             <input
-              type="text"
-              name="firstName"
-              placeholder="First Name"
-              value={inputValues.firstName}
+              type="number"
+              name="employeeId"
+              placeholder="Employee Id"
+              value={!inputValues.employeeId ? '' : inputValues.employeeId}
               onChange={handleInputChange}
               className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
             />
-            {!errors.firstName ? null : (
+            {!errors.employeeId ? null : (
               <div className="text-center text-pink-700 text-lg mt-2">
-                <p>{errors.firstName}</p>
+                <p>{errors.employeeId}</p>
               </div>
             )}
           </div>
           <div className="text-center mb-5">
             <input
               type="text"
-              name="lastName"
-              placeholder="Last Name"
-              value={inputValues.lastName}
+              name="employeeName"
+              placeholder="Employee Name"
+              value={inputValues.employeeName}
               onChange={handleInputChange}
               className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
             />
-            {!errors.lastName ? null : (
+            {!errors.employeeName ? null : (
               <div className="text-center text-pink-700 text-lg mt-2">
-                <p>{errors.lastName}</p>
+                <p>{errors.employeeName}</p>
               </div>
             )}
           </div>
@@ -165,6 +184,58 @@ const Register = () => {
             {!errors.email ? null : (
               <div className="text-center text-pink-700 text-lg mt-2">
                 <p>{errors.email}</p>
+              </div>
+            )}
+          </div>
+          <div className="text-center mb-5">
+            <select
+              className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
+              name="accountTypeId"
+              value={inputValues.accountTypeId}
+              onChange={handleInputChange}
+            >
+              <option value={0} label="---Select Account Type---" />
+              {accountTypes.map((type) => (
+                <option
+                  value={type.accountId}
+                  label={type.accountName}
+                  key={type.accountId}
+                />
+              ))}
+            </select>
+            {!errors.accountTypeId ? null : (
+              <div className="text-center text-pink-700 text-lg mt-2">
+                <p>{errors.accountTypeId}</p>
+              </div>
+            )}
+          </div>
+          <div className="text-center mb-5">
+            <input
+              type="number"
+              name="contactNumber"
+              placeholder="Contact Number"
+              value={!inputValues.contactNumber ? '' : inputValues.contactNumber}
+              onChange={handleInputChange}
+              className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
+            />
+            {!errors.contactNumber ? null : (
+              <div className="text-center text-pink-700 text-lg mt-2">
+                <p>{errors.contactNumber}</p>
+              </div>
+            )}
+          </div>
+          <div className="text-center mb-5">
+            <input
+              type="text"
+              name="username"
+              placeholder="Username"
+              value={!inputValues.employeeId ? '' : inputValues.employeeId} // username is same as employee id
+              disabled
+              className="flex-1 py-2 border-b-2 border-gray-300 text-gray-400 placeholder-zinc-300 outline-none w-96 cursor-not-allowed"
+            />
+            {!errors.username ? null : (
+              <div className="text-center text-pink-700 text-lg mt-2">
+                <p>{errors.username}</p>
               </div>
             )}
           </div>

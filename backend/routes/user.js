@@ -268,7 +268,7 @@ router.post("/forgot-password", (req, res) => {
               //User exists and now create a One Time Link which is valid for 15minutes
               const token = crypto.randomBytes(32).toString("hex");
               console.log(token);
-              const link = `http://localhost:4000/user/reset-password/${user.username}/${token}`;
+              const link = `http://localhost:1234/user/reset-password/${user.username}/${token}`;
 
               var currTime = new Date();
               const newTime = new Date();

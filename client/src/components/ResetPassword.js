@@ -20,7 +20,7 @@ const ResetPassword = () => {
   const [visibility, setVisibility] = useState(initialVisibility);
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
-  const { token } = useParams();
+  const { username, token } = useParams();
 
   const handleInputChange = (e) => {
     let { name, value } = e.target;
@@ -46,6 +46,7 @@ const ResetPassword = () => {
     if (isEmptyObject(inputErrors))
       // register user using api
       resetPassword(
+        username,
         token,
         inputValues.password,
         inputValues.confirmPassword
