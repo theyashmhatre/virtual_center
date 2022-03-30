@@ -104,26 +104,43 @@ router.post("/register", (req, res) => {
                 account_type_id: accountTypeId,
               };
 
-              //adding user to database
-              mysqlConnection.query(
-                `INSERT INTO user SET ?`,
-                user,
-                function (sqlErr, result, fields) {
-                  if (sqlErr) {
-                    console.log(sqlErr);
-                    res.status(500).json({
-                      main: "Something went wrong. Please try again.",
-                      devError: sqlErr,
-                      devMsg: "Error occured while adding user into db",
-                    });
-                  } else {
-                    console.log("User Created");
-                    return res
-                      .status(201)
-                      .json({ devMsg: "New user created successfully" });
-                  }
+              mysqlConnection.query(`SELECT * from user where account_type_id = ${accountTypeId}`, (sqlErr, result, fields) => {
+                if (sqlErr) {
+                  console.log(sqlErr);
+                  res.status(500).json({
+                    main: "Something went wrong. Please try again.",
+                    devError: sqlErr,
+                    devMsg: "Error occured while adding user into db",
+                  });
+                } else if (!result[0]) {
+                  user.role = "admin";
+                } else {
+                  user.role = "employee";
                 }
-              );
+
+                console.log(result);
+
+                //adding user to database
+                mysqlConnection.query(
+                  `INSERT INTO user SET ?`,
+                  user,
+                  (sqlErr, result, fields) => {
+                    if (sqlErr) {
+                      console.log(sqlErr);
+                      res.status(500).json({
+                        main: "Something went wrong. Please try again.",
+                        devError: sqlErr,
+                        devMsg: "Error occured while adding user into db",
+                      });
+                    } else {
+                      console.log("User Created");
+                      return res
+                        .status(201)
+                        .json({ devMsg: "New user created successfully" });
+                    }
+                  }
+                );
+              });              
             });
           });
         });
