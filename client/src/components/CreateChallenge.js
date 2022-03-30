@@ -11,6 +11,7 @@ import TagsInput from "./TagsInput";
 const initialInputValues = {
   title: '',
   description: EditorState.createEmpty(),
+  coverImage: '',
   tags: [],
   endDate: '',
   privacyCheck: false,
@@ -22,11 +23,11 @@ const CreateChallenge = () => {
   const [successMessage, setSuccessMessage] = useState('');
 
   const handleInputChange = (e) => {
-    let { name, value } = e.target;
+    let { name, value, type, files } = e.target;
 
     setInputValues({
       ...inputValues,
-      [name]: value,
+      [name]: type == "file" ? files[0] : value,
     });
   };
 
@@ -43,7 +44,6 @@ const CreateChallenge = () => {
       })
         .then(() => setSuccessMessage("Challenge is created!!"))
         .catch((error) => {
-          console.log(1, error)
           if (error.response)
             if (error.response.data) setErrors(error.response.data);
             else setErrors({ main: "Some Error Occured, Try Again!" });
@@ -95,6 +95,22 @@ const CreateChallenge = () => {
             {!errors.description ? null : (
               <div className="text-center text-red-700 text-lg mb-5">
                 <p>{errors.description}</p>
+              </div>
+            )}
+          </div>
+          <div>
+            <label className="block mb-1 font-bold text-gray-500">Cover Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              name="coverImage"
+              onChange={handleInputChange}
+              placeholder="Upload photo for cover image"
+              className="border-2 rounded-lg w-full"
+            />
+            {!errors.coverImage ? null : (
+              <div className="text-center text-red-700 text-lg mb-5">
+                <p>{errors.coverImage}</p>
               </div>
             )}
           </div>

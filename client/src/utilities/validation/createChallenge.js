@@ -1,6 +1,7 @@
 export const inputValidation = ({
   title,
   description,
+  coverImage,
   tags,
   endDate,
   privacyCheck,
@@ -10,6 +11,8 @@ export const inputValidation = ({
   if (!title) errors.title = "Title for creating a new challenge is required";
 
   if (!description.getCurrentContent().hasText()) errors.description = "Provide some description to understand challenge";
+
+  if (!coverImage) errors.coverImage = "Provide a cover image for challenge";
 
   if (!tags.length) errors.tags = "Provide some tags to search challenge easily";
 
