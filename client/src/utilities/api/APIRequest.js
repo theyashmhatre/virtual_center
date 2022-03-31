@@ -1,5 +1,5 @@
 import axios from "axios";
-import { apiURL } from "../../constants";
+import { apiURL } from "../../../constants";
 
 class APIRequest {
   // Send GET requests with Authorization headers

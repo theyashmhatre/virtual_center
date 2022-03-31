@@ -1,8 +1,8 @@
 import { EditorState, convertToRaw } from "draft-js";
 import { useState } from "react";
-import { createChallenge } from "../utilities/challenge";
+import { createChallenge } from "../utilities/api/challenge";
 import { isEmptyObject } from "../utilities/utils";
-import { inputValidation } from "../utilities/validation/createChallenge";
+import { createChallengeInputValidation } from "../utilities/validation/challenge";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 import RichTextEditor from "./RichTextEditor";
@@ -35,7 +35,7 @@ const CreateChallenge = () => {
     e.preventDefault();
     setErrors({});
     setSuccessMessage('');
-    const inputErrors = inputValidation(inputValues);
+    const inputErrors = createChallengeInputValidation(inputValues);
 
     if (isEmptyObject(inputErrors))
       createChallenge({

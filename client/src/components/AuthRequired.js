@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import { isLoggedIn } from "../utilities/user";
+import { isLoggedIn } from "../utilities/api/user";
 
 const AuthRequired = ({children}) => {
   const isUserLoggedIn = isLoggedIn()

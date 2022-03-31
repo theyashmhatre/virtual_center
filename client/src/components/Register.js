@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-import { getAccountTypes, getSecurityQuestions, register } from "../utilities/user";
+import { getAccountTypes, getSecurityQuestions, register } from "../utilities/api/user";
 import { isEmptyObject } from "../utilities/utils";
-import { inputValidation } from "../utilities/validation/register";
+import { registerInputValidation } from "../utilities/validation/user";
 
 const initialInputValues = {
   employeeId: 0,
@@ -31,6 +31,7 @@ const Register = () => {
   const [visibility, setVisibility] = useState(initialVisibility);
   const [securityQuestions, setSecurityQuestions] = useState([]);
   const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -74,35 +75,21 @@ const Register = () => {
   }, []);
 
   const onSubmit = () => {
+    setSuccessMessage('');
     setErrors({});
-    const inputErrors = inputValidation(
-      inputValues.employeeId,
-      inputValues.employeeName,
-      inputValues.email,
-      inputValues.accountTypeId,
-      inputValues.contactNumber,
-      inputValues.employeeId, // username is same as employee id
-      inputValues.securityQuestionId,
-      inputValues.securityQuestionAnswer,
-      inputValues.password,
-      inputValues.confirmPassword
-    );
+    const inputErrors = registerInputValidation({
+      ...inputValues,
+      username: inputValues.employeeId
+    });
 
     if (isEmptyObject(inputErrors))
       // register user using api
-      register(
-        inputValues.employeeName,
-        inputValues.email,
-        inputValues.accountTypeId,
-        inputValues.contactNumber,
-        inputValues.employeeId, // username is same as employee id
-        inputValues.securityQuestionId,
-        inputValues.securityQuestionAnswer,
-        inputValues.password,
-        inputValues.confirmPassword
-      )
+      register({
+        ...inputValues,
+        username: inputValues.employeeId
+      })
         .then(() => {
-          navigate("/home");
+          setSuccessMessage('You are registered successfully, now you can login.');
         })
         .catch((error) => {
           if (error.response)
@@ -342,6 +329,11 @@ const Register = () => {
           {!errors.main ? null : (
             <div className="text-center text-pink-700 text-lg mb-5">
               <p>{errors.main}</p>
+            </div>
+          )}
+          {!successMessage ? null : (
+            <div className="text-center text-green-700 text-lg mb-5">
+              <p>{successMessage}</p>
             </div>
           )}
           <div className="text-center">
