@@ -12,8 +12,8 @@ export const createChallenge = async ({
 }) => {
   const formData = new FormData();
   formData.append('coverImage', coverImage);
-  formData.append('title', title);
-  formData.append('description', description);
+  formData.append('challengeTitle', title);
+  formData.append('challengeDescription', description);
   formData.append('tags', tags);
   formData.append('endDate', endDate);
 

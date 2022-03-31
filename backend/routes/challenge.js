@@ -48,8 +48,8 @@ router.post(
         status: true,
       };
 
-      tags = tags.map((tag) => {
-        return [tag];
+      tags = tags.split(",").map(function (tag) {
+        return [tag.trim()];
       });
 
       //MySQL transaction begins
