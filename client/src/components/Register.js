@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-import { getAccountTypes, getSecurityQuestions, register } from "../utilities/user";
+import { getAccountTypes, getSecurityQuestions, register } from "../utilities/api/user";
 import { isEmptyObject } from "../utilities/utils";
 import { registerInputValidation } from "../utilities/validation/user";
 

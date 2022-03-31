@@ -2,7 +2,7 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { forgotPassword, getSecurityQuestions } from "../utilities/user";
+import { forgotPassword, getSecurityQuestions } from "../utilities/api/user";
 import { isEmptyObject } from "../utilities/utils";
 import { forgotPasswordInputValidation } from "../utilities/validation/user";
 

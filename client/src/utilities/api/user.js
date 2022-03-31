@@ -1,6 +1,6 @@
 import axios from "axios";
 import jwt from "jsonwebtoken";
-import { apiURL } from "../../constants";
+import { apiURL } from "../../../constants";
 
 export const login = async ({username, password}) => {
   const endpoint = new URL("/api/user/login", apiURL).href;

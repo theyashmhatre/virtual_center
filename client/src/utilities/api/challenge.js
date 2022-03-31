@@ -1,4 +1,4 @@
-import { apiURL } from "../../constants";
+import { apiURL } from "../../../constants";
 import APIRequest from "./APIRequest";
 
 const api = new APIRequest();

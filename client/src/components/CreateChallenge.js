@@ -1,6 +1,6 @@
 import { EditorState, convertToRaw } from "draft-js";
 import { useState } from "react";
-import { createChallenge } from "../utilities/challenge";
+import { createChallenge } from "../utilities/api/challenge";
 import { isEmptyObject } from "../utilities/utils";
 import { createChallengeInputValidation } from "../utilities/validation/challenge";
 import Footer from "./Footer";
