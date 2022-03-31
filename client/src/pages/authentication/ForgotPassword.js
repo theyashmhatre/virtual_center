@@ -2,9 +2,9 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { forgotPassword, getSecurityQuestions } from "../utilities/api/user";
-import { isEmptyObject } from "../utilities/utils";
-import { forgotPasswordInputValidation } from "../utilities/validation/user";
+import { forgotPassword, getSecurityQuestions } from "../../utilities/api/user";
+import { isEmptyObject } from "../../utilities/utils";
+import { forgotPasswordInputValidation } from "../../utilities/validation/user";
 
 initialInputValues = {
   email: '',
@@ -180,7 +180,7 @@ const ForgotPassword = () => {
           </label>
 
           <Link
-            to="/"
+            to="/login"
             className="self-end mr-6 text-pink-600 font-bold"
           >
             Login

@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-import { login } from "../utilities/api/user";
-import { isEmptyObject } from "../utilities/utils";
-import { loginInputValidation } from "../utilities/validation/user";
+import { login } from "../../utilities/api/user";
+import { isEmptyObject } from "../../utilities/utils";
+import { loginInputValidation } from "../../utilities/validation/user";
 
 initialInputValues = {
   username: "",
@@ -34,7 +34,7 @@ const Login = () => {
     if (isEmptyObject(inputErrors))
       // signin using api
       login(inputValues)
-        .then(() => navigate("/home"))
+        .then(() => navigate("/"))
         .catch((error) => {
           if (error.response)
             if (error.response.data) setErrors(error.response.data);

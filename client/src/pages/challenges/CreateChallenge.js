@@ -1,12 +1,12 @@
 import { EditorState, convertToRaw } from "draft-js";
 import { useState } from "react";
-import { createChallenge } from "../utilities/api/challenge";
-import { isEmptyObject } from "../utilities/utils";
-import { createChallengeInputValidation } from "../utilities/validation/challenge";
-import Footer from "./Footer";
-import Navbar from "./Navbar";
-import RichTextEditor from "./RichTextEditor";
-import TagsInput from "./TagsInput";
+import Footer from "../../components/Footer";
+import Navbar from "../../components/Navbar";
+import RichTextEditor from "../../components/Challenges/RichTextEditor";
+import TagsInput from "../../components/Challenges/TagsInput";
+import { createChallenge } from "../../utilities/api/challenge";
+import { isEmptyObject } from "../../utilities/utils";
+import { createChallengeInputValidation } from "../../utilities/validation/challenge";
 
 const initialInputValues = {
   title: '',

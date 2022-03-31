@@ -1,5 +1,4 @@
 const TagsInput = ({ tags, setTags }) => {
-
   const handleKeyDown = (e) => {
     if(e.key !== 'Enter') return;
     

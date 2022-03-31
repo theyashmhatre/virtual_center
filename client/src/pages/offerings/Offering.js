@@ -1,6 +1,4 @@
-import Navbar from "./Navbar";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
+import Navbar from "../../components/Navbar";
 
 const Offering = () => {
   return (
