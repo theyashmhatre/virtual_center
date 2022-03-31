@@ -1,6 +1,6 @@
 import { emailValidation, passwordValidation } from "../utils";
 
-export const inputValidation = (
+export const registerInputValidation = ({
   employeeId,
   employeeName,
   email,
@@ -11,7 +11,7 @@ export const inputValidation = (
   securityQuestionAnswer,
   password,
   confirmPassword,
-) => {
+}) => {
   errors = {};
 
   if (!employeeId) errors.employeeId = "Employee Id is required";
@@ -27,7 +27,8 @@ export const inputValidation = (
   if (!username) errors.username = "Username is required";
   else if (username != employeeId) errors.username = "Username is incorrect";
 
-  if (!securityQuestionId) errors.securityQuestionId = "Please Select one security question";
+  if (!securityQuestionId)
+    errors.securityQuestionId = "Please Select one security question";
   
   if (!securityQuestionAnswer) 
     errors.securityQuestionAnswer = "Answer for security question can not be empty";
@@ -35,4 +36,32 @@ export const inputValidation = (
   errors = passwordValidation(password, confirmPassword, errors);
 
   return errors;
-}
+};
+
+export const loginInputValidation = ({username, password}) => {
+  errors = {};
+  
+  if (!username) errors.username = "Username is required"
+
+  if (!password) errors.password = "Password is required";
+
+  return errors;
+};
+
+export const forgotPasswordInputValidation = ({
+  email,
+  securityQuestionId,
+  securityQuestionAnswer
+}) => {
+  errors = {};
+
+  errors = emailValidation(email, errors);
+  
+  if (!securityQuestionId)
+    errors.securityQuestionId = "Please Select one security question";
+  
+  if (!securityQuestionAnswer) 
+    errors.securityQuestionAnswer = "Answer for security question can not be empty";
+  
+  return errors;
+};

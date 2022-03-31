@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { forgotPassword, getSecurityQuestions } from "../utilities/user";
 import { isEmptyObject } from "../utilities/utils";
-import { inputValidation } from "../utilities/validation/forgotPassword";
+import { forgotPasswordInputValidation } from "../utilities/validation/user";
 
 initialInputValues = {
   email: '',
@@ -20,11 +20,11 @@ const ForgotPassword = () => {
   const [successMessage, setSuccessMessage] = useState('');
 
   const handleInputChange = (e) => {
-    let { name, value } = e.target;
+    let { name, value, type } = e.target;
 
     setInputValues({
       ...inputValues,
-      [name]: value
+      [name]: type == 'select-one' ? Number(value) : value
     });
   };
   
@@ -42,21 +42,13 @@ const ForgotPassword = () => {
   }, []);
 
   const onSubmit = () => {
-    setSuccessMessage('')
-    setErrors({})
-    const inputErrors = inputValidation(
-      inputValues.email,
-      Number(inputValues.securityQuestionId),
-      inputValues.securityQuestionAnswer
-    )
+    setSuccessMessage('');
+    setErrors({});
+    const inputErrors = forgotPasswordInputValidation(inputValues);
     
     if (isEmptyObject(inputErrors))
       // register user using api
-      forgotPassword(
-        inputValues.email,
-        Number(inputValues.securityQuestionId),
-        inputValues.securityQuestionAnswer,
-      )
+      forgotPassword(inputValues)
         .then(() => {
           setSuccessMessage('Your request to reset password is successfull. Check your email and click on the provided link to reset password.')
         })
@@ -66,7 +58,7 @@ const ForgotPassword = () => {
             else setErrors({ main: 'Some Error Occured, Try Again!' });
           else setErrors({ main: 'Some Error Occured, Try Again!' });
         });
-    else setErrors(inputErrors)
+    else setErrors(inputErrors);
   };
 
   return (
