@@ -1,4 +1,4 @@
-export const inputValidation = ({
+export const createChallengeInputValidation = ({
   title,
   description,
   coverImage,
