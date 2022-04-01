@@ -170,7 +170,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* doughnut chart */}
+        {/* doughnut chart using chartjs  */}
         <div className="m-5 p-5 bg-gray-100 border-t-4 border-pink-700 h-fit">
           <div>
             <label className="font-bold text-gray-600">
