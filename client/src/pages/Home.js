@@ -21,6 +21,7 @@ const Home = () => {
             <h1></h1>
           </div>
         </div>
+        {/* home */}
         <div className="pl-10 pt-8 pr-8">
           <h2 className="text-2xl">Lorem ipsum dolor, sit amet consectetur</h2>
           <h3 className=" text-zinc-700 ">
