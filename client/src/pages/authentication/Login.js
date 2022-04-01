@@ -108,6 +108,7 @@ const Login = () => {
                 onClick={() => setPasswordVisibility(!passwordVisibility)}
               />
             </div>
+            {/* flex end */}
             {!errors.password ? null : (
               <div className="text-center text-pink-700 text-lg mt-2">
                 <p>{errors.password}</p>
