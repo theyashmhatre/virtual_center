@@ -12,7 +12,7 @@ function createChallengeValidation(req, res) {
 
   const errors = {};
 
-  if (!challengeTitle) errors.challengeName = "Challenge name cannot be empty";
+  if (!challengeTitle) errors.challengeTitle = "Challenge name cannot be empty";
 
   if (!challengeDescription)
     errors.challengeDescription = "Description cannot be empty";
