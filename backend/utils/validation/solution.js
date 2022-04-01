@@ -1,6 +1,6 @@
 const { isEmptyObject } = require("../utils");
 
-function createIdeaValidation(req) {
+function createSolutionValidation(req) {
   const { challengeId, userId, ideaTitle, ideaDescription } = req.body;
 
   const errors = {};
@@ -22,4 +22,4 @@ function createIdeaValidation(req) {
   };
 }
 
-module.exports = createIdeaValidation;
+module.exports = createSolutionValidation;

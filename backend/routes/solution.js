@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const express = require("express");
 const mysqlConnection = require("../config/dbConnection");
-const createIdeaValidation = require("../utils/validation/create-idea");
+const createSolutionValidation = require("../utils/validation/solution");
 const { generateCurrentDateTime } = require("../utils/utils");
 const passport = require("passport");
 
@@ -14,10 +14,9 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     try {
+      console.log(req.body);
 
-console.log(req.body);
-
-      const { errors, isValid } = createIdeaValidation(req);
+      const { errors, isValid } = createSolutionValidation(req);
 
       if (!isValid) return res.status(400).json(errors);
 
@@ -66,30 +65,22 @@ console.log(req.body);
 );
 
 router.get(
-  "/get-single-idea/:challengeId/:ideaId",
+  "/get-single-idea/:ideaId",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     try {
-      let { challengeId, ideaId } = req.params;
-      if (!challengeId && !ideaId)
+      let { ideaId } = req.params;
+      if (!ideaId)
         return res.status(400).json({
           main: "Invalid Request",
-          devMsg: "No challenge id and No Idea id found",
+          devMsg: "No Idea id found",
         });
-      else if (!challengeId && ideaId)
-        return res
-          .status(400)
-          .json({ main: "Invalid Request", devMsg: "No challenge id found" });
-      else if (challengeId && !ideaId)
-        return res
-          .status(400)
-          .json({ main: "Invalid Request", devMsg: "No Idea id found" });
 
       //query to find single idea
       //Selects all the fields from the idea
       //checks for the common records in idea(Table) with challenge_id & idea_id
       mysqlConnection.query(
-        `SELECT * FROM idea WHERE idea_id="${ideaId}" AND challenge_id="${challengeId}"`,
+        `SELECT * FROM idea WHERE idea_id="${ideaId}"`,
         (sqlErr, result, fields) => {
           if (sqlErr) {
             console.log(sqlErr);
@@ -102,7 +93,7 @@ router.get(
             console.log("No idea found");
             return res.status(200).json({
               main: "Idea you were looking for doesn't exist.",
-              devError: "Challenge not found in database",
+              devError: "Idea not found in database",
             });
           } else {
             let idea = result[0];
@@ -163,5 +154,96 @@ router.get(
     }
   }
 );
+
+router.get(
+  "/get-ideas/:challengeId/:pageNum",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    try {
+      const { challengeId, pageNum } = req.params; //current page number
+
+      const limit = 5; //number of items to be sent per request
+
+      const offset = (pageNum - 1) * limit; //number of rows to skip before selecting records
+
+      mysqlConnection.query(
+        `SELECT * from idea WHERE challenge_id=${challengeId} LIMIT ? OFFSET ? `,
+        [limit, offset],
+        (sqlErr, result, fields) => {
+          if (sqlErr) {
+            console.log(sqlErr);
+            return res.status(500).json({
+              main: "Something went wrong. Please try again.",
+              devError: sqlErr,
+              devMsg: "Error occured while fetching challenges from db",
+            });
+          } else if (!result.length) {
+            return res.status(200).json({ main: "No ideas found." });
+          } else {
+            let data = {
+              ideas_count: result.length,
+              page_number: pageNum,
+              idea_list: result,
+            };
+
+            res.status(200).json(data);
+          }
+        }
+      );
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        main: "Something went wrong. Please try again.",
+        devError: error,
+        devMsg: "Error occured while fetching ideas",
+      });
+    }
+  }
+);
+
+router.get(
+  "/get-solvers/:accountId",
+  passport.authenticate("jwt", { sessoin: false }),
+  (req, res) => {
+    try {
+      let { accountId } = req.params;
+      if (!accountId)
+        return res.status(400).json({
+          main: "Invalid Request",
+          devMsg: "There is no account type for given ID",
+        });
+
+      mysqlConnection.query(
+        `SELECT u.email from user u, account_type a, idea i 
+        WHERE u.account_type_id = a.account_type_id
+        AND u.user_id = i.idea_id 
+        GROUP BY u.user_id`,
+        (sqlErr, result, fields) => {
+          if (sqlErr) {
+            console.log(sqlErr);
+            return res.status(500).json({
+              main: "Something went wrong. Please try again.",
+              devError: sqlErr,
+              devMsg: "Error occured while fetching solvers from db",
+            });
+          } else if (!result.length) {
+            return res.status(200).json({ main: "No solvers found." });
+          } else {
+            console.log(result)
+            let solvers = result;
+            return res.status(200).json(solvers);
+          }
+        }
+      );
+    } catch (error) {
+      return res.status(500).json({
+        main: "Something went wrong. Please try again.",
+        devError: error,
+        devMsg: "Error occured while fetching solvers using accountId",
+      });
+    }
+  }
+);
+
 
 module.exports = router;

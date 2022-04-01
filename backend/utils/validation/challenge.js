@@ -2,7 +2,7 @@ const { isEmptyObject } = require("../utils");
 
 function createChallengeValidation(req) {
   const {
-    challengeName,
+    challengeTitle,
     challengeDescription,
     userId,
     endDate,
@@ -14,7 +14,7 @@ function createChallengeValidation(req) {
 
   const errors = {};
 
-  if (!challengeName) errors.challengeName = "Challenge name cannot be empty";
+  if (!challengeTitle) errors.challengeTitle = "Challenge title cannot be empty";
 
   if (!challengeDescription)
     errors.challengeDescription = "Description cannot be empty";
