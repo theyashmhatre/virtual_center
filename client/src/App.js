@@ -23,7 +23,7 @@ const App = () => {
         <Route path="dashboard" element={<AuthRequired><Dashboard /></AuthRequired>} />
         <Route path="challenges" element={<AuthRequired><Challenges /></AuthRequired>} />
         <Route path="create-challenge" element={<AuthRequired><CreateChallenge /></AuthRequired>} />
-        <Route path="challenge/:chaallengeId" element={<AuthRequired><Challenge /></AuthRequired>} />
+        <Route path="challenge/:challengeId" element={<AuthRequired><Challenge /></AuthRequired>} />
         <Route path="solutions" element={<AuthRequired><Solutions /></AuthRequired>} />
         <Route path="solvers" element={<AuthRequired><Solvers /></AuthRequired>} />
         <Route path="offerings" element={<AuthRequired><Offerings /></AuthRequired>} />

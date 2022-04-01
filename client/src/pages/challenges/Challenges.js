@@ -18,7 +18,7 @@ const Challenges = () => {
         setChallenges([...challenges, ...data.challenge_list])
       })
       .catch(() => {});
-  }, [pageNo])
+  }, [pageNo]);
   
   return (
     <div>
@@ -69,7 +69,7 @@ const Challenges = () => {
                   <div className="h-40per">
                     <img
                       className="object-fill h-full w-full"
-                      src={challenge_cover}
+                      src={challenge_cover} // change it to challenge.cover_image
                       alt="challenge cover"
                     />
                   </div>
