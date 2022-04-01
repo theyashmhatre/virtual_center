@@ -156,6 +156,7 @@ const ForgotPassword = () => {
               </div>
             )}
           </div>
+          {/* flex parent end*/}
           {!errors.main ? null : (
             <div className="text-center text-pink-700 text-lg mb-5">
               <p>{errors.main}</p>
