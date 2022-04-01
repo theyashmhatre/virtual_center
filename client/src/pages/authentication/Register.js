@@ -318,6 +318,8 @@ const Register = () => {
                 onClick={() => handleVisibilityChange("confirmPassword")}
               />
             </div>
+              {/* flex end */}
+
             {!errors.confirmPassword ? null : (
               <div className="text-center text-pink-700 text-lg mt-2">
                 <p>{errors.confirmPassword}</p>
