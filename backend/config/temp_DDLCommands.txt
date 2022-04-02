@@ -1,0 +1,97 @@
+user table
+
+CREATE TABLE `user` (
+  `user_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `employee_name` varchar(200) NOT NULL,
+  `email` varchar(200) NOT NULL,
+  `password` varchar(200) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `display_picture` varchar(200) DEFAULT NULL,
+  `location` varchar(100) DEFAULT NULL,
+  `contact_number` varchar(20) NOT NULL,
+  `creation_date` datetime(1) NOT NULL,
+  `account_type_id` int NOT NULL,
+  `security_question_id` int NOT NULL,
+  `security_question_answer` varchar(200) NOT NULL,
+  `reset_token` varchar(200) DEFAULT NULL,
+  `token_expiry_time` datetime(1) DEFAULT NULL,
+  `status` tinyint NOT NULL DEFAULT '1',
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `userId_UNIQUE` (`user_id`),
+  UNIQUE KEY `email_UNIQUE` (`email`),
+  UNIQUE KEY `UserName_UNIQUE` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+challenge table
+CREATE TABLE `challenge` (
+  `challenge_id` int NOT NULL AUTO_INCREMENT,
+  `title` varchar(200) NOT NULL,
+  `description` varchar(300) NOT NULL,
+  `user_id` int DEFAULT NULL,
+  `posted_on` datetime(1) DEFAULT NULL,
+  `end_date` datetime(1) DEFAULT NULL,
+  `status` tinyint DEFAULT NULL,
+  `cover_image` varchar(100) NOT NULL,
+  PRIMARY KEY (`challenge_id`),
+  UNIQUE KEY `challenge_id_UNIQUE` (`challenge_id`),
+  UNIQUE KEY `cover_image_UNIQUE` (`cover_image`)
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+offering table
+CREATE TABLE `offering` (
+  `offering_id` int NOT NULL,
+  `title` varchar(100) NOT NULL,
+  `description` varchar(300) NOT NULL,
+  `owner_name` varchar(100) NOT NULL,
+  `owner_email` varchar(100) NOT NULL,
+  `attachment` varchar(100) NOT NULL,
+  `industry_name` varchar(100) NOT NULL,
+  PRIMARY KEY (`offering_id`),
+  UNIQUE KEY `offering_id_UNIQUE` (`offering_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+offering_comment
+CREATE TABLE `offering_comment` (
+  `offering_comment_id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `offering_id` int NOT NULL,
+  `comment_text` varchar(300) NOT NULL,
+  `posted_on` datetime(1) NOT NULL,
+  PRIMARY KEY (`offering_comment_id`),
+  UNIQUE KEY `offering_comment_id_UNIQUE` (`offering_comment_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+offering_like
+CREATE TABLE `offering_like` (
+  `offering_like_id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `offering_id` int NOT NULL,
+  PRIMARY KEY (`offering_like_id`),
+  UNIQUE KEY `idoffering_like_id_UNIQUE` (`offering_like_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+tag table
+CREATE TABLE `tag` (
+  `tag_id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  PRIMARY KEY (`tag_id`),
+  UNIQUE KEY `tag_id_UNIQUE` (`tag_id`),
+  UNIQUE KEY `name_UNIQUE` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=99 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+tag_map table
+CREATE TABLE `tag_map` (
+  `tag_map_id` int NOT NULL AUTO_INCREMENT,
+  `challenge_id` int NOT NULL,
+  `tag_id` int NOT NULL,
+  PRIMARY KEY (`tag_map_id`),
+  UNIQUE KEY `tag_map_id_UNIQUE` (`tag_map_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+account table
+CREATE TABLE `account_type` (
+  `account_type_id` int NOT NULL,
+  `account_name` varchar(50) NOT NULL,
+  PRIMARY KEY (`account_type_id`),
+  UNIQUE KEY `account_type_id_UNIQUE` (`account_type_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
