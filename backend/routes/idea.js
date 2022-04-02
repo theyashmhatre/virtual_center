@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const express = require("express");
 const mysqlConnection = require("../config/dbConnection");
-const createIdeaValidation = require("../utils/validation/create-idea");
+const createIdeaValidation = require("../utils/validation/idea");
 const { generateCurrentDateTime } = require("../utils/utils");
 const passport = require("passport");
 

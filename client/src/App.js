@@ -19,19 +19,110 @@ const App = () => {
   return (
     <div>
       <Routes>
-        <Route path="/" element={<AuthRequired><Home /></AuthRequired>} />
-        <Route path="dashboard" element={<AuthRequired><Dashboard /></AuthRequired>} />
-        <Route path="challenges" element={<AuthRequired><Challenges /></AuthRequired>} />
-        <Route path="create-challenge" element={<AuthRequired><CreateChallenge /></AuthRequired>} />
-        <Route path="challenge" element={<AuthRequired><Challenge /></AuthRequired>} />
-        <Route path="solutions" element={<AuthRequired><Solutions /></AuthRequired>} />
-        <Route path="solvers" element={<AuthRequired><Solvers /></AuthRequired>} />
-        <Route path="offerings" element={<AuthRequired><Offerings /></AuthRequired>} />
-        <Route path="offering" element={<AuthRequired><Offering /></AuthRequired>} />
-        <Route path="login" element={<AuthNotRequired><Login /></AuthNotRequired>} />
-        <Route path="register" element={<AuthNotRequired><Register /></AuthNotRequired>} />
-        <Route path="forgot-password" element={<AuthNotRequired><ForgotPassword /></AuthNotRequired>} />
-        <Route path="reset-password/:username/:token" element={<AuthNotRequired><ResetPassword /></AuthNotRequired>} />
+        <Route
+          path="/"
+          element={
+            <AuthRequired>
+              <Home />
+            </AuthRequired>
+          }
+        />
+        <Route
+          path="dashboard"
+          element={
+            <AuthRequired>
+              <Dashboard />
+            </AuthRequired>
+          }
+        />
+        <Route
+          path="challenges"
+          element={
+            <AuthRequired>
+              <Challenges />
+            </AuthRequired>
+          }
+        />
+        <Route
+          path="create-challenge"
+          element={
+            <AuthRequired>
+              <CreateChallenge />
+            </AuthRequired>
+          }
+        />
+        <Route
+          path="challenge"
+          element={
+            <AuthRequired>
+              <Challenge />
+            </AuthRequired>
+          }
+        />
+        <Route
+          path="solutions"
+          element={
+            <AuthRequired>
+              <Solutions />
+            </AuthRequired>
+          }
+        />
+        <Route
+          path="solvers"
+          element={
+            <AuthRequired>
+              <Solvers />
+            </AuthRequired>
+          }
+        />
+        <Route
+          path="offerings"
+          element={
+            <AuthRequired>
+              <Offerings />
+            </AuthRequired>
+          }
+        />
+        <Route
+          path="offering"
+          element={
+            <AuthRequired>
+              <Offering />
+            </AuthRequired>
+          }
+        />
+        <Route
+          path="login"
+          element={
+            <AuthNotRequired>
+              <Login />
+            </AuthNotRequired>
+          }
+        />
+        <Route
+          path="register"
+          element={
+            <AuthNotRequired>
+              <Register />
+            </AuthNotRequired>
+          }
+        />
+        <Route
+          path="forgot-password"
+          element={
+            <AuthNotRequired>
+              <ForgotPassword />
+            </AuthNotRequired>
+          }
+        />
+        <Route
+          path="reset-password/:username/:token"
+          element={
+            <AuthNotRequired>
+              <ResetPassword />
+            </AuthNotRequired>
+          }
+        />
       </Routes>
     </div>
   );
