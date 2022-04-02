@@ -24,3 +24,13 @@ export const createChallenge = async ({
   const endpoint = new URL("/api/challenge/create-challenge", apiURL).href;
   return await api.post(endpoint, formData, customHeaders);
 };
+
+export const getChallenges = async (pageNo) => {
+  const endpoint = new URL(`/api/challenge/get-challenges/${pageNo}`, apiURL).href;
+  return await api.get(endpoint);
+};
+
+export const getSingleChallenge = async (challengeId) => {
+  const endpoint = new URL(`/api/challenge/get-single-challenge/${challengeId}`, apiURL).href;
+  return await api.get(endpoint);
+}
