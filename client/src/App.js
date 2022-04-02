@@ -52,7 +52,7 @@ const App = () => {
           }
         />
         <Route
-          path="challenge"
+          path="challenge/:challengeId"
           element={
             <AuthRequired>
               <Challenge />

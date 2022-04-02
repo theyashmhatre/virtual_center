@@ -49,19 +49,19 @@ const Login = () => {
     <div className="grid grid-cols-2 divide-x">
       {/* grid child_1 start*/}
       <div className="min-h-screen bg-blue-500 bg-opacity-100 bg-gradient-to-tr from-blue-grd to-green-grd">
-        <li className="text-center pl-4 pt-16">
+        <div className="text-center pl-4 pt-16">
           <h1 className="font-normal text-slate-50 text-l">
             TATA CONSULTANCY SERVICES
           </h1>
-        </li>
-        <li className="text-center pl-4 pt-60">
+        </div>
+        <div className="text-center pl-4 pt-60">
           <h1 className="font-bold text-slate-50 text-4xl">TCS Virtual</h1>
-        </li>
-        <li className="text-center pl-4 pt-1">
+        </div>
+        <div className="text-center pl-4 pt-1">
           <h1 className="font-bold text-slate-50 text-4xl">
             Innovation Center
           </h1>
-        </li>
+        </div>
       </div>
 
       {/* grid child_1 end*/}
@@ -108,6 +108,7 @@ const Login = () => {
                 onClick={() => setPasswordVisibility(!passwordVisibility)}
               />
             </div>
+            {/* flex end */}
             {!errors.password ? null : (
               <div className="text-center text-pink-700 text-lg mt-2">
                 <p>{errors.password}</p>

@@ -92,6 +92,9 @@ const CreateChallenge = () => {
                 })
               }}
             />
+            {/* <label htmlFor="agree" className="ml-2 text-gray-400 text-sm">
+              Describe the challenge in max 200 words.
+            </label> */}
             {!errors.description ? null : (
               <div className="text-center text-red-700 text-lg mb-5">
                 <p>{errors.description}</p>
