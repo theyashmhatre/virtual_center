@@ -13,7 +13,7 @@ router.get("/get-offerings/:pageNum", passport.authenticate("jwt", { session: fa
 
         const { pageNum } = req.params;      //current page number
 
-        const limit = 6;        //number of items to be sent per request
+        const limit = 12;        //number of items to be sent per request
 
         const offset = (pageNum - 1) * limit;       //number of rows to skip before selecting records
 

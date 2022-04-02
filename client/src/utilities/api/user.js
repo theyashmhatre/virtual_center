@@ -2,7 +2,7 @@ import axios from "axios";
 import jwt from "jsonwebtoken";
 import { apiURL } from "../../../constants";
 
-export const login = async ({username, password}) => {
+export const login = async ({ username, password }) => {
   const endpoint = new URL("/api/user/login", apiURL).href;
   return await axios
     .post(endpoint, {
@@ -42,7 +42,7 @@ export const register = async ({
 export const forgotPassword = async ({
   email,
   securityQuestionId,
-  securityQuestionAnswer
+  securityQuestionAnswer,
 }) => {
   const endpoint = new URL("/api/user/forgot-password", apiURL).href;
   return await axios.post(endpoint, {
@@ -56,9 +56,12 @@ export const resetPassword = async ({
   username,
   token,
   password,
-  confirmPassword
+  confirmPassword,
 }) => {
-  const endpoint = new URL(`/api/user/reset-password/${username}/${token}`, apiURL).href;
+  const endpoint = new URL(
+    `/api/user/reset-password/${username}/${token}`,
+    apiURL
+  ).href;
   return await axios.post(endpoint, {
     password,
     confirmPassword,
@@ -66,36 +69,30 @@ export const resetPassword = async ({
 };
 
 export const getSecurityQuestions = async () => {
-  const endpoint = new URL(
-    "/api/user/get-security-questions",
-    apiURL
-  ).href;
+  const endpoint = new URL("/api/user/get-security-questions", apiURL).href;
   return await axios.get(endpoint);
 };
 
 export const getAccountTypes = async () => {
-  const endpoint = new URL(
-    "/api/user/get-account-types",
-    apiURL
-  ).href;
+  const endpoint = new URL("/api/user/get-account-types", apiURL).href;
   return await axios.get(endpoint);
 };
 
 export const isLoggedIn = () => {
-  const token = sessionStorage.getItem('Access Token');
-  
+  const token = sessionStorage.getItem("Access Token");
+
   if (token) {
     try {
       user = jwt.decode(token);
       expiryDateTime = new Date(user.exp * 1000);
       currentDateTime = new Date();
-      
+
       if (!user || expiryDateTime < currentDateTime)
-        sessionStorage.removeItem('Access Token');
+        sessionStorage.removeItem("Access Token");
       else return true;
-    } catch(err) {
-      sessionStorage.removeItem('Access Token');
+    } catch (err) {
+      sessionStorage.removeItem("Access Token");
     }
   }
   return false;
-}
+};
