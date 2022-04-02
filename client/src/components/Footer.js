@@ -1,6 +1,3 @@
-import tata from "../../public/tata_logo.png";
-import { Link } from "react-router-dom";
-
 const Footer = () => {
   return (
     <div className=" bg-pink-800 p-3 pl-5  text-white">

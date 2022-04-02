@@ -216,8 +216,8 @@ router.get(
       mysqlConnection.query(
         `SELECT u.email from user u, account_type a, idea i 
         WHERE u.account_type_id = a.account_type_id
-        AND u.user_id = i.idea_id 
-        GROUP BY u.user_id`,
+        AND u.user_id = i.user_id
+        GROUP BY u.user_id;`,
         (sqlErr, result, fields) => {
           if (sqlErr) {
             console.log(sqlErr);

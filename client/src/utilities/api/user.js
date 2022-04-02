@@ -1,8 +1,8 @@
 import axios from "axios";
 import jwt from "jsonwebtoken";
-import { apiURL } from "../../constants";
+import { apiURL } from "../../../constants";
 
-export const login = async (username, password) => {
+export const login = async ({username, password}) => {
   const endpoint = new URL("/api/user/login", apiURL).href;
   return await axios
     .post(endpoint, {
@@ -14,7 +14,7 @@ export const login = async (username, password) => {
     });
 };
 
-export const register = async (
+export const register = async ({
   employeeName,
   email,
   accountTypeId,
@@ -24,7 +24,7 @@ export const register = async (
   securityQuestionAnswer,
   password,
   confirmPassword,
-) => {
+}) => {
   const endpoint = new URL("/api/user/register", apiURL).href;
   return await axios.post(endpoint, {
     employeeName,
@@ -39,11 +39,11 @@ export const register = async (
   });
 };
 
-export const forgotPassword = async (
+export const forgotPassword = async ({
   email,
   securityQuestionId,
   securityQuestionAnswer
-) => {
+}) => {
   const endpoint = new URL("/api/user/forgot-password", apiURL).href;
   return await axios.post(endpoint, {
     email,
@@ -52,7 +52,12 @@ export const forgotPassword = async (
   });
 };
 
-export const resetPassword = async (username, token, password, confirmPassword) => {
+export const resetPassword = async ({
+  username,
+  token,
+  password,
+  confirmPassword
+}) => {
   const endpoint = new URL(`/api/user/reset-password/${username}/${token}`, apiURL).href;
   return await axios.post(endpoint, {
     password,
@@ -81,11 +86,16 @@ export const isLoggedIn = () => {
   
   if (token) {
     try {
-      jwt.verify(token, process.env.REACT_APP_JWT_SECRET);
-      return true;
+      user = jwt.decode(token);
+      expiryDateTime = new Date(user.exp * 1000);
+      currentDateTime = new Date();
+      
+      if (!user || expiryDateTime < currentDateTime)
+        sessionStorage.removeItem('Access Token');
+      else return true;
     } catch(err) {
       sessionStorage.removeItem('Access Token');
-      return false;
     }
-  } else return false;
+  }
+  return false;
 }

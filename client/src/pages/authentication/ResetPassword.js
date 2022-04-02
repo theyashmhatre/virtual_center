@@ -2,8 +2,8 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { useParams } from "react-router";
-import { resetPassword } from "../utilities/user";
-import { isEmptyObject, passwordValidation } from "../utilities/utils";
+import { resetPassword } from "../../utilities/api/user";
+import { isEmptyObject, passwordValidation } from "../../utilities/utils";
 
 initialInputValues = {
   password: '',
@@ -142,6 +142,8 @@ const ResetPassword = () => {
                 onClick={() => handleVisibilityChange("confirmPassword")}
               />
             </div>
+                {/* flex end */}
+
             {!errors.confirmPassword ? null : (
               <div className="text-center text-pink-700 text-lg mt-2">
                 <p>{errors.confirmPassword}</p>

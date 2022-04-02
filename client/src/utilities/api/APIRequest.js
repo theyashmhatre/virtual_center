@@ -1,5 +1,5 @@
 import axios from "axios";
-import { apiURL } from "../../constants";
+import { apiURL } from "../../../constants";
 
 class APIRequest {
   // Send GET requests with Authorization headers
@@ -15,13 +15,14 @@ class APIRequest {
   };
 
   // Send POST requests with Authorization headers
-  async post(endpoint, body=null) {
+  async post(endpoint, body=null, customHeaders={}) {
     const url = new URL(endpoint, apiURL).href;
     const token = sessionStorage.getItem('Access Token');
 
     return await axios.post(url, body, {
       headers: {
-        Authorization: 'Bearer ' + token
+        Authorization: 'Bearer ' + token,
+        ...customHeaders
       }
     });
   };
