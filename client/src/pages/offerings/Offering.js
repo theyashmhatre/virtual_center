@@ -1,4 +1,5 @@
 import Navbar from "../../components/Navbar";
+import Footer from "../../components/Footer";
 
 const Offering = () => {
   return (
@@ -12,15 +13,20 @@ const Offering = () => {
           </div>
 
           <div className="mt-10">
-            <h1 className="font-bold">Offering name : </h1>
-            <h1>username</h1>
+            <h1 className=" font-mono font-semibold text-4xl ">
+              TCS OFFERINGS
+            </h1>
           </div>
 
-          <div className="mt-10">
-            <h1 className="font-bold">Offering description : </h1>
+          <div className="mt-5">
             <div className="border-4 mt-2 p-3">
               <p>
                 some decription will be here. some decription will be here. some
+                decription will be here. some decription will be here. some
+                decription will be here. some decription will be here. some
+                decription will be here. some decription will be here. some
+                decription will be here. some decription will be here. some
+                decription will be here. some decription will be here. some
                 decription will be here. some decription will be here. some
                 decription will be here. some decription will be here. some
                 decription will be here. some decription will be here. some
@@ -63,6 +69,7 @@ const Offering = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

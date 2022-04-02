@@ -84,7 +84,7 @@ const App = () => {
           }
         />
         <Route
-          path="offering"
+          path="offering/:id"
           element={
             <AuthRequired>
               <Offering />
