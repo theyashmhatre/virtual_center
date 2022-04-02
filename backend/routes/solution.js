@@ -4,42 +4,43 @@ const mysqlConnection = require("../config/dbConnection");
 const createSolutionValidation = require("../utils/validation/solution");
 const { generateCurrentDateTime } = require("../utils/utils");
 const passport = require("passport");
+const { fields } = require("../config/multerConfig");
 
 router.get("/", (req, res) => {
-  res.status(200).send("Idea");
+  res.status(200).send("Solution");
 });
 
 router.post(
-  "/create-idea",
+  "/create-solution",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     try {
       console.log(req.body);
 
-      const { errors, isValid } = createSolutionValidation(req);
+      const { errors, isValid } = createSolutionValidation(req, res);
 
       if (!isValid) return res.status(400).json(errors);
 
       const {
         challengeId,
-        userId,
-        ideaTitle,
-        ideaDescription,
+        solutionTitle,
+        solutionDescription,
         supportingMedia,
       } = req.body;
 
+      console.log(res.req.user)
       const postedOn = generateCurrentDateTime();
 
       const newIdea = {
         challenge_id: challengeId,
-        user_id: userId,
-        title: ideaTitle,
-        description: ideaDescription,
+        user_id: res.req.user.user_id,
+        title: solutionTitle,
+        description: solutionDescription,
         posted_on: postedOn,
       };
 
       mysqlConnection.query(
-        `INSERT INTO idea SET ?`,
+        `INSERT INTO solution SET ?`,
         newIdea,
         (sqlErr, result, fields) => {
           if (sqlErr) {
@@ -50,7 +51,7 @@ router.post(
 
           return res
             .status(201)
-            .json({ devMsg: "New idea created successfully" });
+            .json({ devMsg: "New solution created successfully" });
         }
       );
     } catch (error) {
@@ -58,46 +59,46 @@ router.post(
       return res.status(500).json({
         main: "Something went wrong",
         devError: error,
-        devMsg: "Error occured while creating challenge",
+        devMsg: "Error occured while creating solution",
       });
     }
   }
 );
 
 router.get(
-  "/get-single-idea/:ideaId",
+  "/get-single-solution/:solutionId",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     try {
-      let { ideaId } = req.params;
-      if (!ideaId)
+      let { solutionId } = req.params;
+      if (!solutionId)
         return res.status(400).json({
           main: "Invalid Request",
-          devMsg: "No Idea id found",
+          devMsg: "No Solution id found",
         });
 
-      //query to find single idea
-      //Selects all the fields from the idea
-      //checks for the common records in idea(Table) with challenge_id & idea_id
+      //query to find single solution
+      //Selects all the fields from the solution
+      //checks for the common records in solution(Table) with challenge_id & solution_id
       mysqlConnection.query(
-        `SELECT * FROM idea WHERE idea_id="${ideaId}"`,
+        `SELECT * FROM solution WHERE solution_id="${solutionId}"`,
         (sqlErr, result, fields) => {
           if (sqlErr) {
             console.log(sqlErr);
             return res.status(500).json({
               main: "Something went wrong",
               devError: sqlErr,
-              devMsg: "Error occured while fetching idea from db",
+              devMsg: "Error occured while fetching solution from db",
             });
           } else if (!result[0]) {
             console.log("No idea found");
             return res.status(200).json({
-              main: "Idea you were looking for doesn't exist.",
-              devError: "Idea not found in database",
+              main: "Solution you were looking for doesn't exist.",
+              devError: "Solution not found in database",
             });
           } else {
             let idea = result[0];
-            console.log("Idea fetched", result);
+            console.log("Solution fetched", result);
             return res.status(200).json(idea);
           }
         }
@@ -107,14 +108,14 @@ router.get(
       return res.status(500).json({
         main: "Something went wrong",
         devError: error,
-        devMsg: "Error occured while fetching challenge",
+        devMsg: "Error occured while fetching solution",
       });
     }
   }
 );
 
 router.get(
-  "/get-ideas/:challengeId",
+  "/get-solutions/:challengeId",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     try {
@@ -128,20 +129,20 @@ router.get(
 
       //Selects all fields from the challenges
       mysqlConnection.query(
-        `SELECT * FROM idea WHERE challenge_id=${challengeId}`,
+        `SELECT * FROM solution WHERE challenge_id=${challengeId}`,
         (sqlErr, result, fields) => {
           if (sqlErr) {
             console.log(sqlErr);
             return res.status(500).json({
               main: "Something went wrong",
               devError: sqlErr,
-              devMsg: "Error occured while fetching idea from db",
+              devMsg: "Error occured while fetching solution from db",
             });
           } else if (!result.length) {
-            return res.status(200).json({ main: "No ideas found" });
+            return res.status(200).json({ main: "No solutions found" });
           } else {
-            let ideas = result;
-            return res.status(200).json(ideas);
+            let solutions = result;
+            return res.status(200).json(solutions);
           }
         }
       );
@@ -149,14 +150,14 @@ router.get(
       return res.status(500).json({
         main: "Something went wrong",
         devError: error,
-        devMsg: "Error occured while fetching ideas",
+        devMsg: "Error occured while fetching solutions",
       });
     }
   }
 );
 
 router.get(
-  "/get-ideas/:challengeId/:pageNum",
+  "/get-solutions/:challengeId/:pageNum",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     try {
@@ -167,7 +168,7 @@ router.get(
       const offset = (pageNum - 1) * limit; //number of rows to skip before selecting records
 
       mysqlConnection.query(
-        `SELECT * from idea WHERE challenge_id=${challengeId} LIMIT ? OFFSET ? `,
+        `SELECT * from solution WHERE challenge_id=${challengeId} LIMIT ? OFFSET ? `,
         [limit, offset],
         (sqlErr, result, fields) => {
           if (sqlErr) {
@@ -175,10 +176,10 @@ router.get(
             return res.status(500).json({
               main: "Something went wrong. Please try again.",
               devError: sqlErr,
-              devMsg: "Error occured while fetching challenges from db",
+              devMsg: "Error occured while fetching solutions from db",
             });
           } else if (!result.length) {
-            return res.status(200).json({ main: "No ideas found." });
+            return res.status(200).json({ main: "No solutions found." });
           } else {
             let data = {
               ideas_count: result.length,
@@ -195,11 +196,267 @@ router.get(
       return res.status(500).json({
         main: "Something went wrong. Please try again.",
         devError: error,
-        devMsg: "Error occured while fetching ideas",
+        devMsg: "Error occured while fetching solutions",
       });
     }
   }
 );
+
+router.post("/:solutionId/like",
+ passport.authenticate("jwt", {session:false}),
+  (req,res) =>{
+    try{
+      const { solutionId } = req.params;
+      const userId = res.req.user.user_id;
+
+      if (!solutionId || !userId || solutionId == null || userId == null) 
+      return res.status(400).json({ 
+        main: "Something went wrong. Please try again", 
+        devMsg: `Either offeringId or userId is invalid. 
+        OfferingId: ${offeringId} userId: ${userId}` })
+
+      const newLike = {
+        solution_id: solutionId,
+        user_id: userId
+      };
+
+      mysqlConnection.query(`INSERT INTO solution_like SET ?`,
+      newLike, 
+      (sqlErr, result, fields) => {
+        if (sqlErr) {
+          return res.status(500).json({
+              main: "Something went wrong. Please try again.",
+              devError: sqlErr,
+              devMsg: "Error occured while inserting like into db",
+          });
+      } else {
+        res.status(200).json({main: "Solution Liked Successfully"});
+        }
+      });
+    }catch(error){
+      return res.status(500).json({
+        main:"Something went wrong. Please try again.",
+        devError:error,
+        devMsg:"Error occured while adding like"
+      });
+    }
+});
+
+router.post("/:solutionId/comment", 
+passport.authenticate("jwt", { session: false }), 
+(req, res) => {
+  try{
+    const { solutionId } = req.params;
+    const { commentText } = req.body;
+    const userId = res.req.user.user_id;
+
+    if (!solutionId || !userId || solutionId == null || userId == null || !commentText) 
+    return res.status(400).json({ 
+      main: "Something went wrong. Please try again", 
+      devMsg: `Either solutionId, userId, commentText is invalid. 
+      SolutionId: ${solutionId} userId: ${userId} commentText: ${commentText}` })
+
+      const newComment = {
+        user_id: userId,
+        solution_id: solutionId,
+        comment_text: commentText,
+        posted_on: generateCurrentDateTime()
+      };
+
+      mysqlConnection.query(`SELECT * FROM solution_comment WHERE user_id=${userId} AND solution_id=${solutionId}`,
+      (sqlErr, result, fields) => {
+        if(sqlErr){
+          return res.status(500).json({
+            main: "Something went wrong. Please try again.",
+            devError: sqlErr,
+            devMsg: "Error occured while adding comment to db",
+        });
+        } else if (!result[0]){
+          mysqlConnection.query(`INSERT INTO solution_comment SET ?`, 
+      newComment,
+      (sqlErr, result, fields) => {
+        if(sqlErr) {
+          return res.status(500).json({
+            main: "Something went wrong. Please try again.",
+            devError: sqlErr,
+            devMsg: "Error occured while adding comment to db",
+        });
+        } else {
+          return res.status(201).json({ main: "Comment added successfully" });
+        }
+      });
+        } else {
+          mysqlConnection.query(`UPDATE solution_comment SET comment_text="${commentText}" WHERE user_id=${userId} AND solution_id=${solutionId}`,
+        (sqlErr, result, fields) => {
+          if(sqlErr) {
+            return res.status(500).json({
+              main: "Something went wrong. Please try again.",
+              devError: sqlErr,
+              devMsg: "Error occured while adding comment to db",
+          });
+          } else {
+            return res.status(201).json({ main: "Comment added successfully" });
+          }
+        });
+        }
+      })
+  }catch(error){
+    return res.status(500).json({
+      main: "Something went wrong. Please try again.",
+      devError: error,
+      devMsg: "Error occured while adding comment to db",
+  });
+  }
+});
+
+router.post("/:solutionId/upvote",
+passport.authenticate("jwt", { session: false }), 
+(req, res) => {
+  try{
+    const { solutionId } = req.params;
+    const userId = res.req.user.user_id;
+
+    const newUpvote = {
+      user_id: userId,
+      solution_id: solutionId,
+      upvotes:1
+    }
+
+    mysqlConnection.query(`SELECT * FROM solution_upvote WHERE user_id=${userId} AND solution_id=${solutionId}`,
+    (sqlErr, result, fields) => {
+      if(sqlErr) {
+        return res.status(500).json({
+          main: "Something went wrong. Please try again.",
+          devError: sqlErr,
+          devMsg: "Error occured while adding upvotes to db",
+      });
+      } else if(!result[0]) {
+        mysqlConnection.query(`INSERT INTO solution_upvote SET ?`,
+        newUpvote,
+        (sqlErr, result, fields) => {
+          if(sqlErr) {
+            return res.status(500).json({
+              main: "Something went wrong. Please try again.",
+              devError: sqlErr,
+              devMsg: "Error occured while adding upvotes to db",
+          });
+          } else {
+            return res.status(201).json({ main: "Upvoted successfully" });
+          }
+        });
+      } else {
+        mysqlConnection.query(`UPDATE solution_upvote SET upvotes=1 WHERE user_id=${userId} AND solution_id=${solutionId}`,
+        (sqlErr, result, fields) => {
+          if(sqlErr) {
+            return res.status(500).json({
+              main: "Something went wrong. Please try again.",
+              devError: sqlErr,
+              devMsg: "Error occured while adding upvotes to db",
+          });
+          } else {
+            return res.status(201).json({ main: "Upvoted successfully" });
+          }
+        });
+      }
+    })
+  } catch(error){
+    return res.status(500).json({
+      main: "Something went wrong. Please try again.",
+      devError: error,
+      devMsg: "Error occured while adding upvotes to db",
+  });
+  }
+});
+
+router.post("/:solutionId/downvote",
+passport.authenticate("jwt", { session: false }), 
+(req, res) => {
+  try{
+    const { solutionId } = req.params;
+    const userId = res.req.user.user_id;
+
+    const newDownvote = {
+      user_id: userId,
+      solution_id: solutionId,
+      upvotes:-1
+    }
+
+    mysqlConnection.query(`SELECT * FROM solution_upvote WHERE user_id="${userId}" AND solution_id="${solutionId}"`,
+    (sqlErr, result, fields) => {
+      if(sqlErr) {
+        return res.status(500).json({
+          main: "Something went wrong. Please try again.",
+          devError: sqlErr,
+          devMsg: "Error occured while adding downvotes to db",
+      });
+      } else if(!result[0]) {
+        mysqlConnection.query(`INSERT INTO solution_upvote SET ?`,
+        newDownvote,
+        (sqlErr, result, fields) => {
+          if(sqlErr) {
+            return res.status(500).json({
+              main: "Something went wrong. Please try again.",
+              devError: sqlErr,
+              devMsg: "Error occured while adding downvotes to db",
+          });
+          } else {
+            return res.status(201).json({ main: "Downvoted successfully" });
+          }
+        });
+      } else {
+        mysqlConnection.query(`UPDATE solution_upvote SET upvotes=-1 WHERE user_id="${userId}" AND solution_id="${solutionId}"`,
+        (sqlErr, result, fields) => {
+          if(sqlErr) {
+            return res.status(500).json({
+              main: "Something went wrong. Please try again.",
+              devError: sqlErr,
+              devMsg: "Error occured while adding downvotes to db",
+          });
+          } else {
+            return res.status(201).json({ main: "Downvoted successfully" });
+          }
+        });
+      }
+    })
+  } catch(error){
+    return res.status(500).json({
+      main: "Something went wrong. Please try again.",
+      devError: error,
+      devMsg: "Error occured while adding Downvotes to db",
+  });
+  }
+});
+
+router.get("/upvotes",
+ passport.authenticate("jwt", { sessoin: false }),
+ (req,res) => {
+   const { userId } = res.req.user.user_id;
+   try{
+      mysqlConnection.query(`SELECT * FROM solution_upvote WHERE user_id=${userId}`,
+      (sqlErr, result, fields) => {
+        if(sqlErr){
+          return res.status(500).json({
+            main: "Something went wrong. Please try again.",
+            devError: sqlErr,
+            devMsg: "Error occured while fetching upvotes from db",
+        });
+        } else if (!result[0]){
+          return res.status(200).json({
+            main:"No upvotes found",
+            devMsg:"No upvotes found with the userId from db"
+          })
+        }
+      })
+
+   } catch(err){
+    return res.status(500).json({
+      main: "Something went wrong. Please try again.",
+      devError: error,
+      devMsg: "Error occured while fetching upvotes from db",
+  });
+   }
+ })
+
 
 router.get(
   "/get-solvers/:accountId",
