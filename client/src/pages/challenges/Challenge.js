@@ -4,7 +4,7 @@ import { useParams } from "react-router";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
 import { getSingleChallenge } from "../../utilities/api/challenge";
-import challenge_cover from "../../../public/challenge_cover.png";
+import { apiURL } from "../../../constants";
 
 const Challenge = () => {
   const [challenge, setChallenge] = useState({});
@@ -25,7 +25,7 @@ const Challenge = () => {
           <div className="bg-red-500 h-30v flex items-center justify-center">
             <img
               className="object-fill h-full w-full"
-              src={challenge_cover} // change it to challenge.cover_image
+              src={apiURL + "/public/images/" + challenge.cover_image}
               alt="challenge cover"
             />
           </div>

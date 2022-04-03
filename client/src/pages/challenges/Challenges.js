@@ -5,8 +5,7 @@ import { Link } from "react-router-dom";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
 import { getChallenges } from "../../utilities/api/challenge";
-import { monthNames } from "../../../constants";
-import challenge_cover from "../../../public/challenge_cover.png";
+import { apiURL, monthNames } from "../../../constants";
 
 const Challenges = () => {
   const [challenges, setChallenges] = useState([]);
@@ -69,7 +68,7 @@ const Challenges = () => {
                   <div className="h-40per">
                     <img
                       className="object-fill h-full w-full"
-                      src={challenge_cover} // change it to challenge.cover_image
+                      src={apiURL + "/public/images/" + challenge.cover_image}
                       alt="challenge cover"
                     />
                   </div>

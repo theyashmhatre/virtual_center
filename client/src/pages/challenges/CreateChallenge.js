@@ -4,6 +4,8 @@ import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
 import RichTextEditor from "../../components/Challenges/RichTextEditor";
 import TagsInput from "../../components/Challenges/TagsInput";
+import Footer from "../../components/Footer";
+import Navbar from "../../components/Navbar";
 import { createChallenge } from "../../utilities/api/challenge";
 import { isEmptyObject } from "../../utilities/utils";
 import { createChallengeInputValidation } from "../../utilities/validation/challenge";
