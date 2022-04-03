@@ -1,7 +1,11 @@
-import Footer from "../components/Footer";
-import Navbar from "../components/Navbar";
+import { useParams } from "react-router";
+import { Link } from 'react-router-dom';
+import Footer from "../../components/Footer";
+import Navbar from "../../components/Navbar";
 
-const Idea = () => {
+const Solutions = () => {
+  const { challengeId } = useParams();
+  
   return (
     <div>
       <Navbar />
@@ -12,16 +16,21 @@ const Idea = () => {
           </div>
         </div>
 
-        <div className="flex  w-80v flex-wrap  md:w-95v sm:w-95v">
+        <div className="flex w-80v flex-wrap md:w-95v sm:w-95v">
           <button className="bg-gray-300 p-2 mr-4 mb-5">
             Challenge overview
           </button>
-          <button className="bg-gray-300 p-2 mr-4 mb-5">Solution</button>
+          <Link
+            to={`/challenge/${challengeId}/solutions`}
+            className="bg-gray-300 p-2 mr-4 mb-5"
+          >
+            Solutions
+          </Link>
           <button className="bg-gray-300 p-2 mb-5">button3</button>
         </div>
 
-        <div className=" w-80v md:w-95v sm:w-95v  flex flex-col items-center justify-center">
-          <div className="border-4 rounded  w-70per md:w-full sm:w-full flex  p-4 md:flex-col sm:flex-col mb-4">
+        <div className=" w-80v md:w-95v sm:w-95v flex flex-col items-center justify-center">
+          <div className="border-4 rounded w-70per md:w-full sm:w-full flex p-4 md:flex-col sm:flex-col mb-4">
             <div className="flex flex-col mb-2 mr-1">
               <div className="border h-50 w-50 bg-red-600 text-center mb-1">
                 image
@@ -53,7 +62,7 @@ const Idea = () => {
             </div>
           </div>
 
-          <div className="border-4 rounded  w-70per md:w-full sm:w-full flex  p-4 md:flex-col sm:flex-col mb-4 ">
+          <div className="border-4 rounded w-70per md:w-full sm:w-full flex p-4 md:flex-col sm:flex-col mb-4">
             <div className="flex flex-col mb-2 mr-1">
               <div className="border h-50 w-50 bg-red-600 text-center mb-1">
                 image
@@ -91,4 +100,4 @@ const Idea = () => {
   );
 };
 
-export default Idea;
+export default Solutions;

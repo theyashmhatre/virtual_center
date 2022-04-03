@@ -1,6 +1,7 @@
 import draftToHtml from 'draftjs-to-html';
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { Link } from 'react-router-dom';
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
 import { getSingleChallenge } from "../../utilities/api/challenge";
@@ -35,7 +36,12 @@ const Challenge = () => {
           <button className="bg-gray-300 p-2 mr-4 mb-5">
             Challenge overview
           </button>
-          <button className="bg-gray-300 p-2 mr-4 mb-5">Solution</button>
+          <Link
+            to={`/challenge/${challengeId}/solutions`}
+            className="bg-gray-300 p-2 mr-4 mb-5"
+          >
+            Solutions
+          </Link>
           <button className="bg-gray-300 p-2 mb-5">button3</button>
         </div>
 
