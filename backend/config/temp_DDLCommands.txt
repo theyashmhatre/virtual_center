@@ -95,3 +95,45 @@ CREATE TABLE `account_type` (
   PRIMARY KEY (`account_type_id`),
   UNIQUE KEY `account_type_id_UNIQUE` (`account_type_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+solution table
+CREATE TABLE `solution` (
+  `solution_id` int NOT NULL AUTO_INCREMENT,
+  `challenge_id` int NOT NULL,
+  `user_id` int NOT NULL,
+`title` varchar(200) NOT NULL,
+  `description` varchar(300) NOT NULL,
+  `posted_on` datetime(1) DEFAULT NULL,
+  PRIMARY KEY (`solution_id`),
+  UNIQUE KEY `solution_id_UNIQUE` (`solution_id`),
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+solution_like
+CREATE TABLE `solution_like` (
+  `solution_like_id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `solution_id` int NOT NULL,
+  PRIMARY KEY (`solution_like_id`),
+  UNIQUE KEY `solution_like_id_UNIQUE` (`solution_like_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+solution_comment
+CREATE TABLE `solution_comment` (
+  `solution_comment_id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `solution_id` int NOT NULL,
+  `comment_text` varchar(300) NOT NULL,
+  `posted_on` datetime(1) NOT NULL,
+  PRIMARY KEY (`solution_comment_id`),
+  UNIQUE KEY `solution_comment_id_UNIQUE` (`solution_comment_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+solution_upvotes
+CREATE TABLE `solution_upvote` (
+  `solution_upvote_id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `solution_id` int NOT NULL,
+  `upvotes` int DEFAULT 0,
+  PRIMARY KEY(`solution_upvote_id`),
+  UNIQUE KEY `solution_upvote_id_UNIQUE` (`solution_upvote_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

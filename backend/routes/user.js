@@ -297,7 +297,7 @@ router.post("/forgot-password", (req, res) => {
                 .replace("T", " ");
 
               mysqlConnection.query(
-                `UPDATE user SET token="${token}", expiry_time="${expiryTime}" WHERE email="${email}"`,
+                `UPDATE user SET reset_token="${token}", token_expiry_time="${expiryTime}" WHERE email="${email}"`,
                 (err, result, fields) => {
                   if (err) {
                     console.log(err);
