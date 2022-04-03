@@ -182,9 +182,9 @@ router.get(
             return res.status(200).json({ main: "No solutions found." });
           } else {
             let data = {
-              ideas_count: result.length,
+              solutions_count: result.length,
               page_number: pageNum,
-              idea_list: result,
+              solution_list: result,
             };
 
             res.status(200).json(data);

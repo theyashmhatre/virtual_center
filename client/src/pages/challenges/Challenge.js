@@ -33,9 +33,12 @@ const Challenge = () => {
         </div>
 
         <div className="flex w-80v flex-wrap md:w-95v sm:w-95v">
-          <button className="bg-gray-300 p-2 mr-4 mb-5">
+          <Link
+            to={`/challenges/${challengeId}`}
+            className="bg-gray-300 p-2 mr-4 mb-5"
+          >
             Challenge overview
-          </button>
+          </Link>
           <Link
             to={`/challenge/${challengeId}/solutions`}
             className="bg-gray-300 p-2 mr-4 mb-5"

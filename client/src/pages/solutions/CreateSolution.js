@@ -8,6 +8,7 @@ import RichTextEditor from "../../components/RichTextEditor";
 import { createSolution } from "../../utilities/api/solution";
 import { isEmptyObject } from "../../utilities/utils";
 import { createSolutionInputValidation } from "../../utilities/validation/solution";
+import { apiURL } from "../../../constants";
 
 const initialInputValues = {
   solutionTitle: '',
@@ -15,10 +16,18 @@ const initialInputValues = {
 };
 
 const CreateSolution = () => {
+  const [challenge, setChallenge] = useState({});
   const [inputValues, setInputValues] = useState(initialInputValues);
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
   const { challengeId } = useParams();
+
+  useEffect(() => {
+    if (challengeId)
+      getSingleChallenge(challengeId)
+        .then(({ data }) => setChallenge(data))
+        .catch(() => {});
+  }, []);
 
   const handleInputChange = (e) => {
     let { name, value } = e.target;
@@ -55,16 +64,23 @@ const CreateSolution = () => {
     <div>
       <Navbar />
       <div className="flex items-center flex-col">
-        <div className="flex flex-col lg:w-80v md:w-full sm:w-full mb-5 w-screen">
+        <div className="flex flex-col sm:w-full mb-5">
           <div className="bg-red-500 h-30v flex items-center justify-center">
-            <h1 className="text-center bg-yellow-400">Insert image here</h1>
+            <img
+              className="object-fill h-full w-full"
+              src={apiURL + "/public/images/" + challenge.cover_image}
+              alt="challenge cover"
+            />
           </div>
         </div>
 
         <div className="flex w-80v flex-wrap  md:w-95v sm:w-95v">
-          <button className="bg-gray-300 p-2 mr-4 mb-5">
+          <Link
+            to={`/challenges/${challengeId}`}
+            className="bg-gray-300 p-2 mr-4 mb-5"
+          >
             Challenge overview
-          </button>
+          </Link>
           <Link
             to={`/challenge/${challengeId}/solutions`}
             className="bg-gray-300 p-2 mr-4 mb-5"

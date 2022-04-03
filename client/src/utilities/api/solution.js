@@ -15,3 +15,12 @@ export const createSolution = async ({
     solutionDescription,
   });
 };
+
+
+export const getSolutions = async (challengeId, pageNo) => {
+  const endpoint = new URL(
+    `/api/solution/get-solutions/${challengeId}/${pageNo}`,
+    apiURL
+  ).href;
+  return await api.get(endpoint, { challengeId });
+};
