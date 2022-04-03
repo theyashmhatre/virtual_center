@@ -6,6 +6,7 @@ import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
 import { getSingleChallenge } from "../../utilities/api/challenge";
 import { getSolutions } from "../../utilities/api/solution";
+import { getTruncatedContentState } from '../../utilities/utils';
 import { apiURL } from "../../../constants";
 
 const Solutions = () => {
@@ -79,7 +80,11 @@ const Solutions = () => {
                     {!solution.description ? null : (
                       <div
                         dangerouslySetInnerHTML={{
-                          __html: draftToHtml(JSON.parse(solution.description))
+                          __html: draftToHtml(
+                            getTruncatedContentState(
+                              JSON.parse(solution.description)
+                            )
+                          )
                         }}
                       />
                     )}

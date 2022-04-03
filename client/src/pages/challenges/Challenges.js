@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
 import { getChallenges } from "../../utilities/api/challenge";
+import { getTruncatedContentState } from '../../utilities/utils';
 import { apiURL, monthNames } from "../../../constants";
 
 const Challenges = () => {
@@ -81,7 +82,15 @@ const Challenges = () => {
                       </h2>
                     </div>
                     <div className="h-10per flex items-center">
-                      <p>Lorem Lpsum Dolor Sit Amet</p>
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: draftToHtml(
+                            getTruncatedContentState(
+                              JSON.parse(challenge.description)
+                            )
+                          )
+                        }}
+                      />
                     </div>
                     <div className="flex flex-col">
                       <div className=" flex items-center mb-1">
