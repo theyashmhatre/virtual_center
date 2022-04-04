@@ -8,6 +8,7 @@ import { getSingleChallenge } from "../../utilities/api/challenge";
 import { getSolutions } from "../../utilities/api/solution";
 import { getTruncatedContentState } from '../../utilities/utils';
 import { apiURL } from "../../../constants";
+import challenge_cover from "../../../public/challenge_cover.png";
 
 const Solutions = () => {
   const [challenge, setChallenge] = useState({});
@@ -37,7 +38,10 @@ const Solutions = () => {
           <div className="bg-red-500 h-30v flex items-center justify-center">
             <img
               className="object-fill h-full w-full"
-              src={apiURL + "/public/images/" + challenge.cover_image}
+              src={!challenge.cover_image
+                ? challenge_cover
+                : apiURL + "/public/images/" + challenge.cover_image
+              }
               alt="challenge cover"
             />
           </div>
@@ -45,7 +49,7 @@ const Solutions = () => {
 
         <div className="flex w-80v flex-wrap md:w-95v sm:w-95v">
           <Link
-            to={`/challenges/${challengeId}`}
+            to={`/challenge/${challengeId}`}
             className="bg-gray-300 p-2 mr-4 mb-5"
           >
             Challenge overview
