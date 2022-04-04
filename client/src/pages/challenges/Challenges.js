@@ -5,21 +5,38 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
-import { getChallenges } from "../../utilities/api/challenge";
+import { getChallenges, searchChallenges } from "../../utilities/api/challenge";
 import { getTruncatedContentState } from '../../utilities/utils';
 import { apiURL, monthNames } from "../../../constants";
 
 const Challenges = () => {
   const [challenges, setChallenges] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [pageNo, setPageNo] = useState(1);
 
   useEffect(() => {
-    getChallenges(pageNo)
-      .then(({ data }) => {
-        setChallenges([...challenges, ...data.challenge_list])
-      })
-      .catch(() => {});
+    if (!searchQuery)
+      getChallenges(pageNo)
+        .then(({ data }) => {
+          setChallenges([...challenges, ...data.challenge_list])
+        })
+        .catch(() => {});
+    else
+      searchChallenges(searchQuery, pageNo)
+        .then(({ data }) => {
+          setChallenges([...challenges, ...data.challenge_list])
+        })
+        .catch(() => {});
   }, [pageNo]);
+
+  const onSearch = () => {
+    if (searchQuery) {
+      setPageNo(1);
+      searchChallenges(searchQuery, 1)
+        .then(({ data }) => setChallenges(data.challenge_list || []))
+        .catch(() => {});
+    }
+  };
   
   return (
     <div>
@@ -30,14 +47,17 @@ const Challenges = () => {
         >
           <input
             type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="px-4 py-2 w-90per"
             placeholder="what are you looking for?"
-          ></input>
+          />
           <div className="absolute top-2 right-3">
             <FontAwesomeIcon
               icon={faSearch}
               size='lg'
-              className="text-gray-400 z-20 hover:text-gray-500"
+              className="text-gray-400 z-20 hover:text-gray-500 cursor-pointer"
+              onClick={onSearch}
             />
           </div>
         </div>
