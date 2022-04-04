@@ -16,11 +16,18 @@ export const createSolution = async ({
   });
 };
 
-
 export const getSolutions = async (challengeId, pageNo) => {
   const endpoint = new URL(
     `/api/solution/get-solutions/${challengeId}/${pageNo}`,
     apiURL
   ).href;
   return await api.get(endpoint, { challengeId });
+};
+
+export const getSingleSolution = async (solutionId) => {
+  const endpoint = new URL(
+    `/api/solution/get-single-solution/${solutionId}`,
+    apiURL
+  ).href;
+  return await api.get(endpoint, { solutionId });
 };

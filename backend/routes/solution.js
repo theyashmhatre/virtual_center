@@ -91,15 +91,15 @@ router.get(
               devMsg: "Error occured while fetching solution from db",
             });
           } else if (!result[0]) {
-            console.log("No idea found");
+            console.log("No solution found");
             return res.status(200).json({
               main: "Solution you were looking for doesn't exist.",
               devError: "Solution not found in database",
             });
           } else {
-            let idea = result[0];
+            let solution = result[0];
             console.log("Solution fetched", result);
-            return res.status(200).json(idea);
+            return res.status(200).json(solution);
           }
         }
       );

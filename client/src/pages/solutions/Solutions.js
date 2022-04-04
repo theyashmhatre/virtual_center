@@ -63,38 +63,45 @@ const Solutions = () => {
           {solutions.map(solution => (
             <div
               key={solution.solution_id}
-              className="border-4 rounded w-70per md:w-full sm:w-full flex p-4 md:flex-col sm:flex-col mb-4"
+              className="border-4 rounded w-70per sm:w-full p-4 mb-4"
             >
-              <div className="flex flex-col mb-2 mr-1">
-                <div className="border h-50 w-50 bg-red-600 text-center mb-1">
-                  image
-                </div>
+              <Link
+                to={`/solution/${solution.solution_id}`}
+                className="cursor-pointer"
+              >
+                <div className='flex  md:flex-col sm:flex-col'>
+                  <div className="flex flex-col mb-2 mr-1">
+                    <div className="border h-50 w-50 bg-red-600 text-center mb-1">
+                      image
+                    </div>
 
-                <div>username</div>
-                <div></div>
-              </div>
-              <div className="">
-                <div className="mb-3">
-                  <h1>{solution.title}</h1>
-                  <div className='my-10'>
-                    {!solution.description ? null : (
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html: draftToHtml(
-                            getTruncatedContentState(
-                              JSON.parse(solution.description)
-                            )
-                          )
-                        }}
-                      />
-                    )}
+                    <div>username</div>
+                    <div></div>
+                  </div>
+                  <div className="">
+                    <div className="mb-3">
+                      <h1>{solution.title}</h1>
+                      <div className='my-10'>
+                        {!solution.description ? null : (
+                          <div
+                            dangerouslySetInnerHTML={{
+                              __html: draftToHtml(
+                                getTruncatedContentState(
+                                  JSON.parse(solution.description)
+                                )
+                              )
+                            }}
+                            />
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap justify-center">
+                      <button className="mr-2 bg-gray-300 px-2">update</button>
+                      <button className="bg-gray-300 px-2">comment</button>
+                    </div>
                   </div>
                 </div>
-                <div className="flex flex-wrap justify-center">
-                  <button className="mr-2 bg-gray-300 px-2">update</button>
-                  <button className="bg-gray-300 px-2">comment</button>
-                </div>
-              </div>
+              </Link>
             </div>
           ))}
         </div>
