@@ -1,9 +1,9 @@
 import { EditorState, convertToRaw } from "draft-js";
 import { useState } from "react";
+import TagsInput from "../../components/Challenges/TagsInput";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
-import RichTextEditor from "../../components/Challenges/RichTextEditor";
-import TagsInput from "../../components/Challenges/TagsInput";
+import RichTextEditor from "../../components/RichTextEditor";
 import { createChallenge } from "../../utilities/api/challenge";
 import { isEmptyObject } from "../../utilities/utils";
 import { createChallengeInputValidation } from "../../utilities/validation/challenge";
@@ -91,6 +91,7 @@ const CreateChallenge = () => {
                   description: value
                 })
               }}
+              placeholder="Type challenge description here"
             />
             {/* <label htmlFor="agree" className="ml-2 text-gray-400 text-sm">
               Describe the challenge in max 200 words.
