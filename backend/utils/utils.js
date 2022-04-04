@@ -50,7 +50,7 @@ function passwordsValidation(password, confirmPassword, errors) {
 function generateCurrentDateTime() {
     var currTime = new Date();
     const newDate = new Date();
-    newDate.setTime(currTime.getTime() + 330 * 60 * 1000);
+    newDate.setTime(currTime.getTime());
 
     const creationDate = new Date(
       newDate.toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
