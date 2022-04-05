@@ -10,28 +10,137 @@ import Challenges from "./pages/challenges/Challenges";
 import CreateChallenge from "./pages/challenges/CreateChallenge";
 import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
-import Solutions from "./pages/Idea";
 import Offerings from "./pages/offerings/Offerings";
 import Offering from "./pages/offerings/Offering";
+import CreateSolution from "./pages/solutions/CreateSolution";
+import Solution from "./pages/solutions/Solution";
+import Solutions from "./pages/solutions/Solutions";
 import Solvers from "./pages/Solvers";
 
 const App = () => {
   return (
     <div>
       <Routes>
-        <Route path="/" element={<AuthRequired><Home /></AuthRequired>} />
-        <Route path="dashboard" element={<AuthRequired><Dashboard /></AuthRequired>} />
-        <Route path="challenges" element={<AuthRequired><Challenges /></AuthRequired>} />
-        <Route path="create-challenge" element={<AuthRequired><CreateChallenge /></AuthRequired>} />
-        <Route path="challenge/:challengeId" element={<AuthRequired><Challenge /></AuthRequired>} />
-        <Route path="solutions" element={<AuthRequired><Solutions /></AuthRequired>} />
-        <Route path="solvers" element={<AuthRequired><Solvers /></AuthRequired>} />
-        <Route path="offerings" element={<AuthRequired><Offerings /></AuthRequired>} />
-        <Route path="offering" element={<AuthRequired><Offering /></AuthRequired>} />
-        <Route path="login" element={<AuthNotRequired><Login /></AuthNotRequired>} />
-        <Route path="register" element={<AuthNotRequired><Register /></AuthNotRequired>} />
-        <Route path="forgot-password" element={<AuthNotRequired><ForgotPassword /></AuthNotRequired>} />
-        <Route path="reset-password/:username/:token" element={<AuthNotRequired><ResetPassword /></AuthNotRequired>} />
+        <Route
+          path="/"
+          element={
+            <AuthRequired>
+              <Home />
+            </AuthRequired>
+          }
+        />
+        <Route
+          path="dashboard"
+          element={
+            <AuthRequired>
+              <Dashboard />
+            </AuthRequired>
+          }
+        />
+        <Route
+          path="challenges"
+          element={
+            <AuthRequired>
+              <Challenges />
+            </AuthRequired>
+          }
+        />
+        <Route
+          path="create-challenge"
+          element={
+            <AuthRequired>
+              <CreateChallenge />
+            </AuthRequired>
+          }
+        />
+        <Route
+          path="challenge/:challengeId"
+          element={
+            <AuthRequired>
+              <Challenge />
+            </AuthRequired>
+          }
+        />
+        <Route
+          path="challenge/:challengeId/solutions"
+          element={
+            <AuthRequired>
+              <Solutions />
+            </AuthRequired>
+          }
+        />
+        <Route
+          path="challenge/:challengeId/create-solution"
+          element={
+            <AuthRequired>
+              <CreateSolution />
+            </AuthRequired>
+          }
+        />
+        <Route
+          path="solution/:solutionId"
+          element={
+            <AuthRequired>
+              <Solution />
+            </AuthRequired>
+          }
+        />
+        <Route
+          path="solvers"
+          element={
+            <AuthRequired>
+              <Solvers />
+            </AuthRequired>
+          }
+        />
+        <Route
+          path="offerings"
+          element={
+            <AuthRequired>
+              <Offerings />
+            </AuthRequired>
+          }
+        />
+        <Route
+          path="offering/:id"
+          element={
+            <AuthRequired>
+              <Offering />
+            </AuthRequired>
+          }
+        />
+        <Route
+          path="login"
+          element={
+            <AuthNotRequired>
+              <Login />
+            </AuthNotRequired>
+          }
+        />
+        <Route
+          path="register"
+          element={
+            <AuthNotRequired>
+              <Register />
+            </AuthNotRequired>
+          }
+        />
+        <Route
+          path="forgot-password"
+          element={
+            <AuthNotRequired>
+              <ForgotPassword />
+            </AuthNotRequired>
+          }
+        />
+        <Route
+          path="reset-password/:username/:token"
+          element={
+            <AuthNotRequired>
+              <ResetPassword />
+            </AuthNotRequired>
+          }
+        />
       </Routes>
     </div>
   );

@@ -1,9 +1,11 @@
 import draftToHtml from 'draftjs-to-html';
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { Link } from 'react-router-dom';
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
 import { getSingleChallenge } from "../../utilities/api/challenge";
+import { apiURL } from "../../../constants";
 import challenge_cover from "../../../public/challenge_cover.png";
 
 const Challenge = () => {
@@ -25,17 +27,28 @@ const Challenge = () => {
           <div className="bg-red-500 h-30v flex items-center justify-center">
             <img
               className="object-fill h-full w-full"
-              src={challenge_cover} // change it to challenge.cover_image
+              src={!challenge.cover_image
+                ? challenge_cover
+                : apiURL + "/public/images/" + challenge.cover_image
+              }
               alt="challenge cover"
             />
           </div>
         </div>
 
         <div className="flex w-80v flex-wrap md:w-95v sm:w-95v">
-          <button className="bg-gray-300 p-2 mr-4 mb-5">
+          <Link
+            to={`/challenge/${challengeId}`}
+            className="bg-gray-300 p-2 mr-4 mb-5"
+          >
             Challenge overview
-          </button>
-          <button className="bg-gray-300 p-2 mr-4 mb-5">Solution</button>
+          </Link>
+          <Link
+            to={`/challenge/${challengeId}/solutions`}
+            className="bg-gray-300 p-2 mr-4 mb-5"
+          >
+            Solutions
+          </Link>
           <button className="bg-gray-300 p-2 mb-5">button3</button>
         </div>
 

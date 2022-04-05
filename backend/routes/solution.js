@@ -91,15 +91,15 @@ router.get(
               devMsg: "Error occured while fetching solution from db",
             });
           } else if (!result[0]) {
-            console.log("No idea found");
+            console.log("No solution found");
             return res.status(200).json({
               main: "Solution you were looking for doesn't exist.",
               devError: "Solution not found in database",
             });
           } else {
-            let idea = result[0];
+            let solution = result[0];
             console.log("Solution fetched", result);
-            return res.status(200).json(idea);
+            return res.status(200).json(solution);
           }
         }
       );
@@ -182,9 +182,9 @@ router.get(
             return res.status(200).json({ main: "No solutions found." });
           } else {
             let data = {
-              ideas_count: result.length,
+              solutions_count: result.length,
               page_number: pageNum,
-              idea_list: result,
+              solution_list: result,
             };
 
             res.status(200).json(data);
@@ -263,16 +263,7 @@ passport.authenticate("jwt", { session: false }),
         posted_on: generateCurrentDateTime()
       };
 
-      mysqlConnection.query(`SELECT * FROM solution_comment WHERE user_id=${userId} AND solution_id=${solutionId}`,
-      (sqlErr, result, fields) => {
-        if(sqlErr){
-          return res.status(500).json({
-            main: "Something went wrong. Please try again.",
-            devError: sqlErr,
-            devMsg: "Error occured while adding comment to db",
-        });
-        } else if (!result[0]){
-          mysqlConnection.query(`INSERT INTO solution_comment SET ?`, 
+      mysqlConnection.query(`INSERT INTO solution_comment SET ?`, 
       newComment,
       (sqlErr, result, fields) => {
         if(sqlErr) {
@@ -284,21 +275,6 @@ passport.authenticate("jwt", { session: false }),
         } else {
           return res.status(201).json({ main: "Comment added successfully" });
         }
-      });
-        } else {
-          mysqlConnection.query(`UPDATE solution_comment SET comment_text="${commentText}" WHERE user_id=${userId} AND solution_id=${solutionId}`,
-        (sqlErr, result, fields) => {
-          if(sqlErr) {
-            return res.status(500).json({
-              main: "Something went wrong. Please try again.",
-              devError: sqlErr,
-              devMsg: "Error occured while adding comment to db",
-          });
-          } else {
-            return res.status(201).json({ main: "Comment added successfully" });
-          }
-        });
-        }
       })
   }catch(error){
     return res.status(500).json({
@@ -308,6 +284,38 @@ passport.authenticate("jwt", { session: false }),
   });
   }
 });
+
+router.post(":solutionId/update-comment", 
+passport.authenticate("jwt", { session: false }), 
+(req,res) => {
+  try{
+
+    const { solutionId } = req.params;
+    const { commentText } = req.body;
+
+    if (!solutionId || !userId || solutionId == null || userId == null || !commentText) 
+    return res.status(400).json({ 
+      main: "Something went wrong. Please try again", 
+      devMsg: `Either solutionId, commentText is invalid. 
+      SolutionId: ${solutionId} commentText: ${commentText}` })   
+      
+    mysqlConnection.query(`UPDATE solution_comment SET comment_text = "${commentText}" WHERE solution_id = "${solutionId}`, 
+    (sqlErr, result, fields) => {
+      if(sqlErr){
+        return res.status(500).json({
+          main: "Something went wrong. Please try again.",
+          devError: sqlErr,
+          devMsg: "Error occured while adding comment to db",
+      });
+      } else {
+        return res.status(201).json({ main: "Comment added successfully" });
+      }
+    })  
+  } catch(error){
+
+  }
+})
+
 
 router.post("/:solutionId/upvote",
 passport.authenticate("jwt", { session: false }), 
