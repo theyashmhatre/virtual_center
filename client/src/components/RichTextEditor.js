@@ -1,7 +1,7 @@
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
-const RichTextEditor = ({ editorState, setEditorState }) => {
+const RichTextEditor = ({ editorState, setEditorState, placeholder }) => {
   return (
     <div>
       <Editor
@@ -10,7 +10,7 @@ const RichTextEditor = ({ editorState, setEditorState }) => {
         wrapperClassName="border-2 rounded-lg"
         editorClassName="leading-4 pl-2"
         onEditorStateChange={(e) => setEditorState(e)}
-        placeholder="Type challenge description here"
+        placeholder={placeholder}
       />
     </div>
   );

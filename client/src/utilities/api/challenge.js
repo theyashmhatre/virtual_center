@@ -26,11 +26,25 @@ export const createChallenge = async ({
 };
 
 export const getChallenges = async (pageNo) => {
-  const endpoint = new URL(`/api/challenge/get-challenges/${pageNo}`, apiURL).href;
+  const endpoint = new URL(
+    `/api/challenge/get-challenges/${pageNo}`,
+    apiURL
+  ).href;
   return await api.get(endpoint);
 };
 
 export const getSingleChallenge = async (challengeId) => {
-  const endpoint = new URL(`/api/challenge/get-single-challenge/${challengeId}`, apiURL).href;
+  const endpoint = new URL(
+    `/api/challenge/get-single-challenge/${challengeId}`,
+    apiURL
+  ).href;
   return await api.get(endpoint);
-}
+};
+
+export const searchChallenges = async (searchQuery, pageNo) => {
+  const endpoint = new URL(
+    `/api/challenge/search/${searchQuery}/${pageNo}`,
+    apiURL
+  ).href;
+  return await api.get(endpoint);
+};

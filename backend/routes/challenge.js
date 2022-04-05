@@ -7,7 +7,6 @@ const {
   editChallengeValidation,
 } = require("../utils/validation/challenge");
 const upload = require("../config/multerConfig");
-const { generateCurrentDateTime } = require("../utils/utils");
 const passport = require("passport");
 const { off } = require("../config/dbConnection");
 
@@ -16,7 +15,7 @@ router.get("/", (req, res) => {
 });
 
 router.post(
-  "/create-challenge",
+  "/create",
   [
     passport.authenticate("jwt", { session: false }),
     upload.single("coverImage"),
@@ -36,14 +35,11 @@ router.post(
         reward,
       } = req.body;
 
-      const postedOn = generateCurrentDateTime();
-
       const newChallenge = {
         title: challengeTitle,
         description: challengeDescription,
         user_id: res.req.user.user_id,
         cover_image: req.file.filename,
-        posted_on: postedOn,
         end_date: endDate,
         status: true,
       };
@@ -123,7 +119,7 @@ router.post(
 );
 
 router.post(
-  "/edit-challenge/:challengeId",
+  "/edit/:challengeId",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     try {
@@ -206,7 +202,7 @@ router.post(
 );
 
 router.get(
-  "/get-single-challenge/:challengeId",
+  "/single/:challengeId",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     try {
@@ -238,7 +234,6 @@ router.get(
             });
           } else {
             let challenge = result[0];
-            console.log("Challenge fetched", result);
 
             return res.status(200).json(challenge);
           }
@@ -256,7 +251,7 @@ router.get(
 );
 
 router.get(
-  "/get-challenges/:pageNum",
+  "/multiple/:pageNum",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     try {
@@ -278,7 +273,7 @@ router.get(
               devMsg: "Error occured while fetching challenges from db",
             });
           } else if (!result.length) {
-            return res.status(200).json({ main: "No challenges found." });
+            return res.status(200).json({ challenges_count: result.length, main: "No challenges found." });
           } else {
             let data = {
               challenges_count: result.length,
@@ -302,7 +297,7 @@ router.get(
 );
 
 router.get(
-  "/get-challenges-using-tags/:tagsArray",
+  "/challenges-using-tags/:tagsArray",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     try {
@@ -335,10 +330,14 @@ router.get(
               devMsg: "Error occured while fetching challenge from db",
             });
           } else if (!result.length) {
-            return res.status(200).json({ main: "No challenges found." });
+            return res.status(200).json({ challenges_count: result.length, main: "No challenges found." });
           } else {
-            let challenges = result;
-            return res.status(200).json(challenges);
+            let data = {
+              challenges_count: result.length,
+              page_number: pageNum,
+              challenge_list: result,
+            };
+            return res.status(200).json(data);
           }
         }
       );
@@ -393,7 +392,7 @@ router.get(
                 "Error occured while searching challenges using a query string",
             });
           } else if (!result.length) {
-            return res.status(200).json({ main: "No challenges found" });
+            return res.status(200).json({ challenges_count: result.length, main: "No challenges found" });
           } else {
             let data = {
               challenges_count: result.length,
@@ -464,7 +463,7 @@ router.get(
                 "Error occured while searching challenges using a query string",
             });
           } else if (!result.length) {
-            return res.status(200).json({ main: "No challenges found" });
+            return res.status(200).json({ result_count: result.length, main: "No challenges found" });
           } else {
             let data = {
               result_count: result.length,
@@ -486,7 +485,7 @@ router.get(
 );
 
 router.delete(
-  "/delete-challenge/:challengeId",
+  "/delete/:challengeId",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     try {

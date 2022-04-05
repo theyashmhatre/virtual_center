@@ -63,11 +63,11 @@ router.get("/single/:offeringId", passport.authenticate("jwt", { session: false 
 
         //query to find if the challenge exists
         mysqlConnection.query(
+
             `SELECT * from offering where offering_id = ${offeringId}`,
             (sqlErr, result, fields) => {
                 if (sqlErr) {
                     return res.status(500).json({
-                        
                         main: "Something went wrong. Please try again.",
                         devError: sqlErr,
                         devMsg: "Error occured while fetching offering from db",

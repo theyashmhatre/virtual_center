@@ -11,7 +11,6 @@ const passport = require("passport");
 const {
   isEmptyObject,
   passwordsValidation,
-  generateCurrentDateTime,
 } = require("../utils/utils");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
@@ -78,8 +77,6 @@ router.post("/register", (req, res) => {
               });
             }
 
-            let creationDate = generateCurrentDateTime();
-
             //encrypting security question's answer
             bcrypt.hash(securityQuestionAnswer, salt, (err, ans_hash) => {
               if (err) {
@@ -96,7 +93,6 @@ router.post("/register", (req, res) => {
                 employee_name: employeeName,
                 email: email,
                 password: hash,
-                creation_date: creationDate,
                 username: username,
                 contact_number: contactNumber,
                 security_question_id: securityQuestionId,
@@ -140,7 +136,7 @@ router.post("/register", (req, res) => {
                     }
                   }
                 );
-              });              
+              });
             });
           });
         });
@@ -232,10 +228,53 @@ router.post("/login", (req, res) => {
 });
 
 router.post(
-  "/profile",
+  "/profile/:userId",
   passport.authenticate("jwt", { session: false }),
   function (req, res) {
-    res.status(200).send("Profile page accessed!");
+    try {
+      const { userId } = req.params;
+
+      if (!userId)
+        return res
+          .status(400)
+          .json({ main: "Invalid Request", devMsg: "No user id found" });
+
+
+      mysqlConnection.query(
+        `SELECT user_id, employee_name, email, username, display_picture, location, contact_number, creation_date, account_type_id, security_question_id, role, status from user where user_id = ${userId}`,
+        (sqlErr, result, fields) => {
+        
+          if (sqlErr) {
+
+          return res.status(500).json({
+            main: "Something went wrong. Please try again.",
+            devError: sqlErr,
+            devMsg: "Error occured while fetching user from db",
+          });
+
+        } else if (!result.length) {
+
+          //if no challenge found with the given challengeID
+          console.log("No challenge found");
+          return res.status(200).json({
+            main: "User you were looking for doesn't exist.",
+            devError: "User not found in database",
+          });
+
+        } else {
+          let user = result[0];
+
+          return res.status(200).json(user);
+        }
+      });
+
+    } catch (error) {
+      return res.status(500).json({
+        main: "Something went wrong. Please try again.",
+        devError: error,
+        devMsg: "Error occured while fetching user"
+      });
+    }
   }
 );
 
@@ -297,7 +336,7 @@ router.post("/forgot-password", (req, res) => {
                 .replace("T", " ");
 
               mysqlConnection.query(
-                `UPDATE user SET token="${token}", expiry_time="${expiryTime}" WHERE email="${email}"`,
+                `UPDATE user SET reset_token="${token}", token_expiry_time="${expiryTime}" WHERE email="${email}"`,
                 (err, result, fields) => {
                   if (err) {
                     console.log(err);

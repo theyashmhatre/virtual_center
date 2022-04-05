@@ -1,24 +1,42 @@
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
-import { getChallenges } from "../../utilities/api/challenge";
-import { monthNames } from "../../../constants";
-import challenge_cover from "../../../public/challenge_cover.png";
+import { getChallenges, searchChallenges } from "../../utilities/api/challenge";
+import { getTruncatedContentState } from '../../utilities/utils';
+import { apiURL, monthNames } from "../../../constants";
 
 const Challenges = () => {
   const [challenges, setChallenges] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [pageNo, setPageNo] = useState(1);
 
   useEffect(() => {
-    getChallenges(pageNo)
-      .then(({ data }) => {
-        setChallenges([...challenges, ...data.challenge_list])
-      })
-      .catch(() => {});
+    if (!searchQuery)
+      getChallenges(pageNo)
+        .then(({ data }) => {
+          setChallenges([...challenges, ...data.challenge_list])
+        })
+        .catch(() => {});
+    else
+      searchChallenges(searchQuery, pageNo)
+        .then(({ data }) => {
+          setChallenges([...challenges, ...data.challenge_list])
+        })
+        .catch(() => {});
   }, [pageNo]);
+
+  const onSearch = () => {
+    if (searchQuery) {
+      setPageNo(1);
+      searchChallenges(searchQuery, 1)
+        .then(({ data }) => setChallenges(data.challenge_list || []))
+        .catch(() => {});
+    }
+  };
   
   return (
     <div>
@@ -29,14 +47,17 @@ const Challenges = () => {
         >
           <input
             type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="px-4 py-2 w-90per"
             placeholder="what are you looking for?"
-          ></input>
+          />
           <div className="absolute top-2 right-3">
             <FontAwesomeIcon
               icon={faSearch}
               size='lg'
-              className="text-gray-400 z-20 hover:text-gray-500"
+              className="text-gray-400 z-20 hover:text-gray-500 cursor-pointer"
+              onClick={onSearch}
             />
           </div>
         </div>
@@ -69,7 +90,7 @@ const Challenges = () => {
                   <div className="h-40per">
                     <img
                       className="object-fill h-full w-full"
-                      src={challenge_cover} // change it to challenge.cover_image
+                      src={apiURL + "/public/images/" + challenge.cover_image}
                       alt="challenge cover"
                     />
                   </div>
@@ -82,7 +103,15 @@ const Challenges = () => {
                       </h2>
                     </div>
                     <div className="h-10per flex items-center">
-                      <p>Lorem Lpsum Dolor Sit Amet</p>
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: draftToHtml(
+                            getTruncatedContentState(
+                              JSON.parse(challenge.description)
+                            )
+                          )
+                        }}
+                      />
                     </div>
                     <div className="flex flex-col">
                       <div className=" flex items-center mb-1">

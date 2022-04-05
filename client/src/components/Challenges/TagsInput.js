@@ -4,7 +4,7 @@ const TagsInput = ({ tags, setTags }) => {
     
     const value = e.target.value;
     if(value.trim())
-      setTags([...tags, value]);
+      setTags([...tags, value.toLowerCase()]);
       e.target.value = '';
     
     e.preventDefault();
