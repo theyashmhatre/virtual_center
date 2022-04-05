@@ -21,13 +21,13 @@ export const createChallenge = async ({
     "Content-Type": "multipart/form-data"
   };
 
-  const endpoint = new URL("/api/challenge/create-challenge", apiURL).href;
+  const endpoint = new URL("/api/challenge/create", apiURL).href;
   return await api.post(endpoint, formData, customHeaders);
 };
 
 export const getChallenges = async (pageNo) => {
   const endpoint = new URL(
-    `/api/challenge/get-challenges/${pageNo}`,
+    `/api/challenge/multiple/${pageNo}`,
     apiURL
   ).href;
   return await api.get(endpoint);
@@ -35,7 +35,7 @@ export const getChallenges = async (pageNo) => {
 
 export const getSingleChallenge = async (challengeId) => {
   const endpoint = new URL(
-    `/api/challenge/get-single-challenge/${challengeId}`,
+    `/api/challenge/single/${challengeId}`,
     apiURL
   ).href;
   return await api.get(endpoint);
