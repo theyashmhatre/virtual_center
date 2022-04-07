@@ -3,6 +3,11 @@ module.exports = {
   content: ["./src/**/*.{html,js}"],
   theme: {
     extend: {
+      flexGrow: {
+        2: 2,
+        9: 9,
+        1: 1,
+      },
       colors: {
         "gray-rgb": "rgb(246 246 246)",
         "blue-grd": "rgb(100 110 217)",
@@ -29,6 +34,7 @@ module.exports = {
         "90per": "90%",
       },
       width: {
+        "10per": "10%",
         "70per": "70%",
         "30per": "30%",
         "90v": "90vw",
