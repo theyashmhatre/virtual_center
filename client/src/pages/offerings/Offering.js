@@ -5,6 +5,7 @@ import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { getSingleOffering } from "../../utilities/api/offering";
 import { data } from "autoprefixer";
+import Comments from "../../components/Comments";
 
 const Offering = () => {
   const [offering, setOffering] = useState({});
@@ -68,29 +69,7 @@ const Offering = () => {
             </div>
           </div>
 
-          <div className="mt-10">
-            <h1 className=" text-lg ">Comments : </h1>
-            <div className="border-4 p-2 h-30v overflow-y-scroll">
-              <div className="border-4 mt-2 p-3">
-                <p>comment1</p>
-              </div>
-              <div className="border-4 mt-2 p-3">
-                <p>comment2</p>
-              </div>
-              <div className="border-4 mt-2 p-3">
-                <p>comment3</p>
-              </div>
-              <div className="border-4 mt-2 p-3">
-                <p>comment4</p>
-              </div>
-              <div className="border-4 mt-2 p-3">
-                <p>comment5</p>
-              </div>
-              <div className="border-4 mt-2 p-3">
-                <p>comment6</p>
-              </div>
-            </div>
-          </div>
+          <Comments />
         </div>
       </div>
       <Footer />
