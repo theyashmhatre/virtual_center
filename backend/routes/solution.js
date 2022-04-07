@@ -436,6 +436,39 @@ passport.authenticate("jwt", { session: false }),
   }
 });
 
+
+router.get("/comments/:solutionId",
+  passport.authenticate("jwt", { sessoin: false }),
+  (req,res) => {
+    const { solutionId } = req.params;
+    
+    try{
+      mysqlConnection.query(
+        `SELECT * FROM solution_comment WHERE solution_id=${solutionId}`,
+        (sqlErr, result, fields) => {
+          if(sqlErr){
+            return res.status(500).json({
+              main: "Something went wrong. Please try again.",
+              devError: sqlErr,
+              devMsg: "Error occured while fetching upvotes from db",
+            });
+          }
+          return res.status(500).json({
+            count: result.length,
+            comments: result
+          });
+        }
+      );
+    } catch(err){
+      return res.status(500).json({
+        main: "Something went wrong. Please try again.",
+        devError: error,
+        devMsg: "Error occured while fetching upvotes from db",
+      });
+    }
+  }
+);
+
 router.get("/upvotes",
  passport.authenticate("jwt", { sessoin: false }),
  (req,res) => {
