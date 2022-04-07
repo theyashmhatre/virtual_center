@@ -242,7 +242,7 @@ router.post("/:solutionId/like",
     }
 });
 
-router.post("/:solutionId/comment", 
+router.post("/comment/:solutionId", 
 passport.authenticate("jwt", { session: false }), 
 (req, res) => {
   try{
@@ -292,14 +292,15 @@ passport.authenticate("jwt", { session: false }),
 
     const { solutionId } = req.params;
     const { commentText } = req.body;
+    const userId = res.req.user.user_id;
 
     if (!solutionId || !userId || solutionId == null || userId == null || !commentText) 
     return res.status(400).json({ 
       main: "Something went wrong. Please try again", 
       devMsg: `Either solutionId, commentText is invalid. 
-      SolutionId: ${solutionId} commentText: ${commentText}` })   
+      SolutionId: ${solutionId} userId: ${userId} commentText: ${commentText}` })   
       
-    mysqlConnection.query(`UPDATE solution_comment SET comment_text = "${commentText}" WHERE solution_id = "${solutionId}`, 
+    mysqlConnection.query(`UPDATE solution_comment SET comment_text = "${commentText}" WHERE user_id = "${userId}" AND solution_id = "${solutionId}"`, 
     (sqlErr, result, fields) => {
       if(sqlErr){
         return res.status(500).json({
@@ -317,7 +318,7 @@ passport.authenticate("jwt", { session: false }),
 })
 
 
-router.post("/:solutionId/upvote",
+router.post("/upvote/:solutionId",
 passport.authenticate("jwt", { session: false }), 
 (req, res) => {
   try{
@@ -376,7 +377,7 @@ passport.authenticate("jwt", { session: false }),
   }
 });
 
-router.post("/:solutionId/downvote",
+router.post("/downvote/:solutionId",
 passport.authenticate("jwt", { session: false }), 
 (req, res) => {
   try{
