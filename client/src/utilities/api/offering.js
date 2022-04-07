@@ -14,3 +14,19 @@ export const getSingleOffering = async (id) => {
   const endpoint = new URL(`/api/offering/single/${id}`, apiURL).href;
   return await api.get(endpoint);
 };
+
+export const getComments = async (offeringId, pageNo=1) => {
+  const endpoint = new URL(
+    `/api/offering/get-comments/${offeringId}/${pageNo}`,
+    apiURL
+  ).href;
+  return await api.get(endpoint);
+};
+
+export const postComment = async (offeringId, commentText) => {
+  const endpoint = new URL(
+    `/api/offering/comment`,
+    apiURL
+  ).href;
+  return await api.post(endpoint, { offeringId, commentText });
+};
