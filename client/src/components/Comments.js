@@ -32,9 +32,9 @@ const Comments = ({ comments, commentText, setCommentText, onClick }) => {
               </div>
             </div>
             <div className=" w-90per  flex flex-col ">
-              <div className="m-2 mb-1 border-2 h-14 ">{comment.commentText}</div>
+              <div className="m-2 mb-1 border-2 h-14 ">{comment.comment_text}</div>
               <div className="ml-2 text-xs text-gray-600">
-                Posted on {comment.postedOn}
+                Posted on {comment.posted_on}
               </div>
               <div>
                 {/* <FontAwesomeIcon icon={faThumbsUp} size="2x" className=" p-1" /> */}
