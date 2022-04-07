@@ -1,7 +1,7 @@
 import { EditorState, convertToRaw } from "draft-js";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
 import RichTextEditor from "../../components/RichTextEditor";
@@ -13,7 +13,7 @@ import { apiURL } from "../../../constants";
 import challenge_cover from "../../../public/challenge_cover.png";
 
 const initialInputValues = {
-  solutionTitle: '',
+  solutionTitle: "",
   solutionDescription: EditorState.createEmpty(),
 };
 
@@ -21,7 +21,7 @@ const CreateSolution = () => {
   const [challenge, setChallenge] = useState({});
   const [inputValues, setInputValues] = useState(initialInputValues);
   const [errors, setErrors] = useState({});
-  const [successMessage, setSuccessMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState("");
   const { challengeId } = useParams();
 
   useEffect(() => {
@@ -43,14 +43,16 @@ const CreateSolution = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     setErrors({});
-    setSuccessMessage('');
+    setSuccessMessage("");
     const inputErrors = createSolutionInputValidation(inputValues);
 
     if (isEmptyObject(inputErrors))
       createSolution({
         challengeId,
         solutionTitle: inputValues.solutionTitle,
-        solutionDescription: JSON.stringify(convertToRaw(inputValues.solutionDescription.getCurrentContent()))
+        solutionDescription: JSON.stringify(
+          convertToRaw(inputValues.solutionDescription.getCurrentContent())
+        ),
       })
         .then(() => setSuccessMessage("Solution submitted!!"))
         .catch((error) => {
@@ -66,33 +68,18 @@ const CreateSolution = () => {
     <div>
       <Navbar />
       <div className="flex items-center flex-col">
-        <div className="flex flex-col sm:w-full mb-5">
-          <div className="bg-red-500 h-30v flex items-center justify-center">
+        <div className="flex flex-col sm:w-full w-full mb-5">
+          <div className="bg-red-500 h-30v flex w-full  mx-2 items-center justify-center">
             <img
               className="object-fill h-full w-full"
-              src={!challenge.cover_image
-                ? challenge_cover
-                : apiURL + "/public/images/" + challenge.cover_image
+              src={
+                !challenge.cover_image
+                  ? challenge_cover
+                  : apiURL + "/public/images/" + challenge.cover_image
               }
               alt="challenge cover"
             />
           </div>
-        </div>
-
-        <div className="flex w-80v flex-wrap  md:w-95v sm:w-95v">
-          <Link
-            to={`/challenge/${challengeId}`}
-            className="bg-gray-300 p-2 mr-4 mb-5"
-          >
-            Challenge overview
-          </Link>
-          <Link
-            to={`/challenge/${challengeId}/solutions`}
-            className="bg-gray-300 p-2 mr-4 mb-5"
-          >
-            Solutions
-          </Link>
-          <button className="bg-gray-300 p-2 mb-5">button3</button>
         </div>
 
         <div className="my-10 mx-40">
@@ -101,7 +88,12 @@ const CreateSolution = () => {
           </h1>
           <div className="space-y-5">
             <div>
-              <label className="block mb-1 font-bold text-gray-500">Title</label>
+              <label
+                htmlFor="title"
+                className="block mb-1 font-bold text-gray-500"
+              >
+                Title
+              </label>
               <input
                 type="text"
                 name="solutionTitle"
@@ -128,8 +120,8 @@ const CreateSolution = () => {
                 setEditorState={(value) => {
                   setInputValues({
                     ...inputValues,
-                    solutionDescription: value
-                  })
+                    solutionDescription: value,
+                  });
                 }}
                 placeholder="Type solution description here"
               />

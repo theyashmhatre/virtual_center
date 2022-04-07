@@ -32,9 +32,7 @@ export const emailValidation = (email, errors = {}) => {
 
 export const isEmptyObject = (object) => !Object.keys(object).length;
 
-export const getTruncatedContentState = (rawContent, maxCharCount = 50) => {
-  console.log(rawContent);
-
+export const getTruncatedContentState = (rawContent, maxCharCount = 100) => {
   const editorState = EditorState.createWithContent(convertFromRaw(rawContent));
 
   const contentState = editorState.getCurrentContent();
