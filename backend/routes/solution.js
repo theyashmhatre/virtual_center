@@ -163,7 +163,7 @@ router.get(
     try {
       const { challengeId, pageNum } = req.params; //current page number
 
-      const limit = 5; //number of items to be sent per request
+      const limit = 12; //number of items to be sent per request
 
       const offset = (pageNum - 1) * limit; //number of rows to skip before selecting records
 

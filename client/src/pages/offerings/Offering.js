@@ -3,7 +3,11 @@ import Footer from "../../components/Footer";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
-import { getComments, getSingleOffering, postComment } from "../../utilities/api/offering";
+import {
+  getComments,
+  getSingleOffering,
+  postComment,
+} from "../../utilities/api/offering";
 import { data } from "autoprefixer";
 import Comments from "../../components/Comments";
 
@@ -25,19 +29,19 @@ const Offering = () => {
 
       getComments(offeringId, pageNo)
         .then(({ data }) => {
-          console.log(data)
-          setComments(data.comments_list)
+          console.log(data);
+          setComments(data.comments_list);
         })
-        .catch(() => {})
+        .catch(() => {});
     }
   }, []);
-  
+
   const onPost = () => {
     console.log(commentText);
     postComment(offeringId, commentText)
       .then(() => {})
       .catch(() => {});
-  }
+  };
 
   return (
     <div>
@@ -86,7 +90,6 @@ const Offering = () => {
               </p>
             </div>
           </div>
-
           <Comments
             comments={comments}
             commentText={commentText}

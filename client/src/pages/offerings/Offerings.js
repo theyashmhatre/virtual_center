@@ -1,5 +1,5 @@
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faPaperclip } from "@fortawesome/free-solid-svg-icons";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Navbar from "../../components/Navbar";
@@ -75,7 +75,12 @@ const Offerings = () => {
 
                     <div className="flex items-center">
                       <button className="bg-pink-600 text-white ml-4  px-1 rounded ">
-                        See Attachment
+                        View Attachment
+                        <FontAwesomeIcon
+                          icon={faPaperclip}
+                          size="md"
+                          className="p-0 pl-1"
+                        />
                       </button>
                     </div>
                   </div>
