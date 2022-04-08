@@ -341,15 +341,15 @@ router.get(
             return res.status(500).json({
               main: "Something went wrong. Please try again.",
               devError: sqlErr,
-              devMsg: "Error occured while fetching solutions from db",
+              devMsg: "Error occured while fetching solution comments from db",
             });
           } else if (!result.length) {
-            return res.status(200).json({ main: "No solutions found." });
+            return res.status(200).json({ main: "No solution comments found." });
           } else {
             let data = {
-              solutions_count: result.length,
+              comments_count: result.length,
               page_number: pageNum,
-              solution_list: result,
+              comment_list: result,
             };
             res.status(200).json(data);
           }
@@ -360,7 +360,7 @@ router.get(
       return res.status(500).json({
         main: "Something went wrong. Please try again.",
         devError: error,
-        devMsg: "Error occured while fetching solutions",
+        devMsg: "Error occured while fetching solution comments",
       });
     }
   }
