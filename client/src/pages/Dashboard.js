@@ -13,10 +13,11 @@ const Dashboard = () => {
               Top Challenges - Most Challenges Won
             </label>
             <select className="py-1 px-2 border-b-2 rounded shadow bg-white ring-1">
-              <option>2018</option>
-              <option>2019</option>
-              <option>2020</option>
+              <option>2022</option>
               <option>2021</option>
+              <option>2020</option>
+              <option>2019</option>
+              <option>2018</option>
             </select>
           </div>
 
@@ -95,10 +96,11 @@ const Dashboard = () => {
               Top Challenges - Most Challenges Won
             </label>
             <select className="py-1 px-2 border-b-2 rounded shadow bg-white ring-1">
-              <option>2018</option>
-              <option>2019</option>
-              <option>2020</option>
+              <option>2022</option>
               <option>2021</option>
+              <option>2020</option>
+              <option>2019</option>
+              <option>2018</option>
             </select>
           </div>
 

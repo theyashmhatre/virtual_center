@@ -163,7 +163,7 @@ router.get(
     try {
       const { challengeId, pageNum } = req.params; //current page number
 
-      const limit = 5; //number of items to be sent per request
+      const limit = 12; //number of items to be sent per request
 
       const offset = (pageNum - 1) * limit; //number of rows to skip before selecting records
 
@@ -319,7 +319,53 @@ passport.authenticate("jwt", { session: false }),
       devMsg: "Error occured while updating comment to db",
   });
   }
-})
+});
+
+router.get(
+  "/get-comments/:solutionId/:pageNum",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    try {
+      const { solutionId, pageNum } = req.params; //current page number
+
+      const limit = 4; //number of items to be sent per request
+
+      const offset = (pageNum - 1) * limit; //number of rows to skip before selecting records
+
+      mysqlConnection.query(
+        `SELECT * from solution_comment WHERE solution_id=${solutionId} LIMIT ? OFFSET ? `,
+        [limit, offset],
+        (sqlErr, result, fields) => {
+          if (sqlErr) {
+            console.log(sqlErr);
+            return res.status(500).json({
+              main: "Something went wrong. Please try again.",
+              devError: sqlErr,
+              devMsg: "Error occured while fetching solutions from db",
+            });
+          } else if (!result.length) {
+            return res.status(200).json({ main: "No solutions found." });
+          } else {
+            let data = {
+              solutions_count: result.length,
+              page_number: pageNum,
+              solution_list: result,
+            };
+            res.status(200).json(data);
+          }
+        }
+      );
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        main: "Something went wrong. Please try again.",
+        devError: error,
+        devMsg: "Error occured while fetching solutions",
+      });
+    }
+  }
+);
+
 
 
 router.post("/upvote/:solutionId",
@@ -528,7 +574,6 @@ router.get(
         GROUP BY u.user_id`,
         (sqlErr, result, fields) => {
           if (sqlErr) {
-            console.log(sqlErr);
             return res.status(500).json({
               main: "Something went wrong. Please try again.",
               devError: sqlErr,

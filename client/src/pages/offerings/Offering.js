@@ -3,7 +3,11 @@ import Footer from "../../components/Footer";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
-import { getComments, getSingleOffering, postComment } from "../../utilities/api/offering";
+import {
+  getComments,
+  getSingleOffering,
+  postComment,
+} from "../../utilities/api/offering";
 import { data } from "autoprefixer";
 import Comments from "../../components/Comments";
 
@@ -12,33 +16,34 @@ const Offering = () => {
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState("");
   const [pageNo, setPageNo] = useState(1);
+  const [postSuccess, setPostSuccess] = useState(false)
   const { offeringId } = useParams();
 
   useEffect(() => {
-    if (offeringId) {
+    if (offeringId)
       getSingleOffering(offeringId)
         .then(({ data }) => {
-          console.log(data);
           setOffering(data);
         })
         .catch(() => {});
+  }, []);
 
+  useEffect(() => {
+    if (offeringId)
       getComments(offeringId, pageNo)
         .then(({ data }) => {
-          console.log(data)
-          if(data.comments_list)
-          setComments(data.comments_list)
+          if (data.comments_list)
+            setComments(data.comments_list)
+          setPostSuccess(false)
         })
         .catch(() => {})
-    }
-  }, []);
+  }, [postSuccess]);
   
   const onPost = () => {
-    console.log(commentText);
     postComment(offeringId, commentText)
-      .then(() => {})
-      .catch((err) => {console.log(err.response)});
-  }
+      .then(() => setPostSuccess(true))
+      .catch(() => {});
+  };
 
   return (
     <div>
@@ -87,12 +92,12 @@ const Offering = () => {
               </p>
             </div>
           </div>
-
           <Comments
             comments={comments}
             commentText={commentText}
             setCommentText={setCommentText}
             onClick={onPost}
+            success={postSuccess}
           />
         </div>
       </div>
