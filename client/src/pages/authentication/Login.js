@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
+import { AuthSidebar } from "../../components/AuthSidebar";
 import { login } from "../../utilities/api/user";
 import { isEmptyObject } from "../../utilities/utils";
 import { loginInputValidation } from "../../utilities/validation/user";
@@ -48,21 +49,7 @@ const Login = () => {
     /*grid start*/
     <div className="grid grid-cols-2 divide-x">
       {/* grid child_1 start*/}
-      <div className="min-h-screen bg-blue-500 bg-opacity-100 bg-gradient-to-tr from-blue-grd to-green-grd">
-        <div className="text-center pl-4 pt-16">
-          <h1 className="font-normal text-slate-50 text-l">
-            TATA CONSULTANCY SERVICES
-          </h1>
-        </div>
-        <div className="text-center pl-4 pt-60">
-          <h1 className="font-bold text-slate-50 text-4xl">TCS Virtual</h1>
-        </div>
-        <div className="text-center pl-4 pt-1">
-          <h1 className="font-bold text-slate-50 text-4xl">
-            Innovation Center
-          </h1>
-        </div>
-      </div>
+      <AuthSidebar />
 
       {/* grid child_1 end*/}
       {/* grid child_2 start*/}
