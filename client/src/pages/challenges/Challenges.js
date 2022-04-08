@@ -116,22 +116,6 @@ const Challenges = () => {
                         </button>
                         <p>Until {endDate}</p>
                       </div>
-                      <div className="flex items-center mb-1">
-                        <button className="bg-gray-300 px-1 rounded mr-2">
-                          Awards
-                        </button>
-                        <button className="bg-gray-300 px-1 rounded mr-2">
-                          See Details
-                        </button>
-                      </div>
-                      <div className="flex items-center">
-                        <button className="bg-gray-300 px-1 rounded mr-2">
-                          Active Solvers
-                        </button>
-                        <button className="bg-gray-300 px-1 rounded mr-2">
-                          6
-                        </button>
-                      </div>
                     </div>
                     <div>
                       <Link to={`/challenge/${challenge.challenge_id}`}>

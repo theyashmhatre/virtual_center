@@ -16,30 +16,32 @@ const Offering = () => {
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState("");
   const [pageNo, setPageNo] = useState(1);
+  const [postSuccess, setPostSuccess] = useState(false)
   const { offeringId } = useParams();
 
   useEffect(() => {
-    if (offeringId) {
+    if (offeringId)
       getSingleOffering(offeringId)
         .then(({ data }) => {
-          console.log(data);
           setOffering(data);
         })
         .catch(() => {});
-
-      getComments(offeringId, pageNo)
-        .then(({ data }) => {
-          console.log(data);
-          setComments(data.comments_list);
-        })
-        .catch(() => {});
-    }
   }, []);
 
+  useEffect(() => {
+    if (offeringId)
+      getComments(offeringId, pageNo)
+        .then(({ data }) => {
+          if (data.comments_list)
+            setComments(data.comments_list)
+          setPostSuccess(false)
+        })
+        .catch(() => {})
+  }, [postSuccess]);
+  
   const onPost = () => {
-    console.log(commentText);
     postComment(offeringId, commentText)
-      .then(() => {})
+      .then(() => setPostSuccess(true))
       .catch(() => {});
   };
 
@@ -95,6 +97,7 @@ const Offering = () => {
             commentText={commentText}
             setCommentText={setCommentText}
             onClick={onPost}
+            success={postSuccess}
           />
         </div>
       </div>

@@ -15,38 +15,42 @@ const Solution = () => {
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState("");
   const [pageNo, setPageNo] = useState(1);
+  const [postSuccess, setPostSuccess] = useState(false)
   const { solutionId } = useParams();
 
   useEffect(() => {
-    if (solutionId) {
+    if (solutionId)
       getSingleSolution(solutionId)
         .then(({ data }) => setSolution(data))
         .catch(() => {});
+  }, []);
 
+  useEffect(() => {
+    if (offeringId)
       getComments(solutionId, pageNo)
         .then(({ data }) => {
-          setComments(data.comments);
+          setComments(data.comments)
+          setPostSuccess(false)
         })
         .catch((e) => {
-          console.log(e.response);
-        });
-    }
-  }, []);
+          console.log(e.response)
+        })
+  }, [postSuccess]);
 
   const onPost = () => {
     postComment(solutionId, commentText)
-      .then(() => {})
+      .then(() => setPostSuccess(true))
       .catch(() => {});
   };
 
   return (
     <div>
       <Navbar />
-      <div className=" mx-16">
-        <div className=" mb-5 ">
+      <div className="mx-16">
+        <div className="mb-5">
           <div className="w-80v md:w-95v sm:w-95v">
             <div className="mt-10">
-              <h1 className=" font-mono font-semibold text-4xl ">
+              <h1 className=" font-mono font-semibold text-4xl">
                 {solution.title}
               </h1>
             </div>
@@ -70,6 +74,7 @@ const Solution = () => {
           commentText={commentText}
           setCommentText={setCommentText}
           onClick={onPost}
+          success={postSuccess}
         />
       </div>
       <Footer />
