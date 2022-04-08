@@ -55,6 +55,15 @@ const Solutions = () => {
         <h1 className="mb-5 flex justify-center font-serif text-4xl  ">
           {challenge.title}
         </h1>
+        
+        <div className="flex justify-end mx-10 my-4">
+          <Link to={`/challenge/${challengeId}/create-solution`}>
+            <h2 className="text-center text-pink-700">
+              Create solution
+            </h2>
+          </Link>
+        </div>
+        
         <div className="flex flex-col"></div>
         <div className="flex justify-start w-full ">
           <div className="flex w-80v flex-wrap md:w-95v sm:w-95v">
