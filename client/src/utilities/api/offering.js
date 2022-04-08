@@ -1,7 +1,5 @@
 import { apiURL } from "../../../constants";
 import APIRequest from "./APIRequest";
-import axios from "axios";
-import jwt from "jsonwebtoken";
 
 const api = new APIRequest();
 

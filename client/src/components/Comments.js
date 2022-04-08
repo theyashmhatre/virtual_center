@@ -1,8 +1,13 @@
-import { faThumbsUp } from "@fortawesome/free-solid-svg-icons";
-
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const Comments = ({ comments, commentText, setCommentText, onClick }) => {
+const Comments = ({
+  comments,
+  commentText,
+  setCommentText,
+  onClick,
+  success
+}) => {
   return (
     <div className="mt-10 mb-20">
       <h1 className=" text-lg ">Comments : </h1>
@@ -21,14 +26,20 @@ const Comments = ({ comments, commentText, setCommentText, onClick }) => {
             Post Comment
           </button>
         </div>
+        {!success ? null : (<p>Comment Done!</p>)}
         {comments.map((comment) => (
           <div key={comment.id} className="border-4 mt-2 p-3 flex flex-row">
             {/* DO CHECK ID AGAIN */}
             <div className="flex flex-col w-10per justify-center align-middle">
               <div className="w-full flex justify-center">
-                <div className="bg-red-700 rounded-full h-20 w-20"></div>
+                <div className="bg-red-700 rounded-full h-20 w-20">
+                  <FontAwesomeIcon
+                    icon={faUser}
+                    size="lg"
+                  />
+                </div>
               </div>
-              <div className="w-full  flex justify-center">
+              <div className="w-full flex justify-center">
                 <div>{comment.user_id}</div>
               </div>
             </div>

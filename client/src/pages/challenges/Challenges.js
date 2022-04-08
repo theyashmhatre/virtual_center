@@ -42,6 +42,15 @@ const Challenges = () => {
   return (
     <div>
       <Navbar />
+      
+      <div className="flex justify-end mx-10 my-4">
+        <Link to="/create-challenge">
+          <h2 className="text-center text-pink-700">
+            Create challenge
+          </h2>
+        </Link>
+      </div>
+
       <div className="flex items-center justify-center  h-20v border">
         <div className="flex border-2 border-gray-200 rounded w-1/2 sm:w-5/6 xs:w-full absolute">
           <input
@@ -115,22 +124,6 @@ const Challenges = () => {
                           Open
                         </button>
                         <p>Until {endDate}</p>
-                      </div>
-                      <div className="flex items-center mb-1">
-                        <button className="bg-gray-300 px-1 rounded mr-2">
-                          Awards
-                        </button>
-                        <button className="bg-gray-300 px-1 rounded mr-2">
-                          See Details
-                        </button>
-                      </div>
-                      <div className="flex items-center">
-                        <button className="bg-gray-300 px-1 rounded mr-2">
-                          Active Solvers
-                        </button>
-                        <button className="bg-gray-300 px-1 rounded mr-2">
-                          6
-                        </button>
                       </div>
                     </div>
                     <div>
