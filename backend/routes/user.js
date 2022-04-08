@@ -12,6 +12,7 @@ const {
   isEmptyObject,
   passwordsValidation,
 } = require("../utils/utils");
+const { generateCurrentDateTime } = require("../utils/utils");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 
@@ -98,6 +99,7 @@ router.post("/register", (req, res) => {
                 security_question_id: securityQuestionId,
                 security_question_answer: ans_hash,
                 account_type_id: accountTypeId,
+                creation_date: generateCurrentDateTime()
               };
 
               mysqlConnection.query(`SELECT * from user where account_type_id = ${accountTypeId}`, (sqlErr, result, fields) => {

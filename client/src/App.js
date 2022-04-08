@@ -16,7 +16,6 @@ import CreateSolution from "./pages/solutions/CreateSolution";
 import Solution from "./pages/solutions/Solution";
 import Solutions from "./pages/solutions/Solutions";
 import Solvers from "./pages/Solvers";
-import Comments from "./components/Comments";
 
 const App = () => {
   return (
@@ -142,7 +141,6 @@ const App = () => {
             </AuthNotRequired>
           }
         />
-        <Route path="comments" element={<Comments />} />
       </Routes>
     </div>
   );

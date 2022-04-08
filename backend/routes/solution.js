@@ -242,7 +242,7 @@ router.post("/:solutionId/like",
     }
 });
 
-router.post("/comment/:solutionId", 
+router.post("/:solutionId/comment", 
 passport.authenticate("jwt", { session: false }), 
 (req, res) => {
   try{
@@ -313,7 +313,11 @@ passport.authenticate("jwt", { session: false }),
       }
     })  
   } catch(error){
-
+    return res.status(500).json({
+      main: "Something went wrong. Please try again.",
+      devError: error,
+      devMsg: "Error occured while updating comment to db",
+  });
   }
 })
 
@@ -437,6 +441,39 @@ passport.authenticate("jwt", { session: false }),
 });
 
 
+router.get("/upvotes/:solutionId",
+ passport.authenticate("jwt", { sessoin: false }),
+ (req,res) => {
+   const { solutionId } = req.params;
+   const userId = res.req.user.user_id;
+   try{
+      mysqlConnection.query(`SELECT solution_id, sum(upvotes) as votes FROM solution_upvote where solution_id=${solutionId}`,
+      (sqlErr, result, fields) => {
+        if(sqlErr){
+          return res.status(500).json({
+            main: "Something went wrong. Please try again.",
+            devError: sqlErr,
+            devMsg: "Error occured while fetching upvotes from db",
+        });
+        } else if (!result[0]){
+          return res.status(200).json({
+            main:"No upvotes found",
+            devMsg:"No upvotes found with the userId from db"
+          })
+        } else {
+          return res.status(200).json({result});
+        }
+      })
+
+   } catch(err){
+    return res.status(500).json({
+      main: "Something went wrong. Please try again.",
+      devError: error,
+      devMsg: "Error occured while fetching upvotes from db",
+  });
+   }
+ });
+
 router.get("/comments/:solutionId",
   passport.authenticate("jwt", { sessoin: false }),
   (req,res) => {
@@ -452,13 +489,15 @@ router.get("/comments/:solutionId",
               devError: sqlErr,
               devMsg: "Error occured while fetching upvotes from db",
             });
-          }
-          return res.status(500).json({
-            count: result.length,
-            comments: result
-          });
+          } else if(!result[0]){
+
+          } else{
+            return res.status(200).json({
+              count: result.length,
+              comments: result
+            });
         }
-      );
+      });
     } catch(err){
       return res.status(500).json({
         main: "Something went wrong. Please try again.",
@@ -468,36 +507,6 @@ router.get("/comments/:solutionId",
     }
   }
 );
-
-router.get("/upvotes",
- passport.authenticate("jwt", { sessoin: false }),
- (req,res) => {
-   const { userId } = res.req.user.user_id;
-   try{
-      mysqlConnection.query(`SELECT * FROM solution_upvote WHERE user_id=${userId}`,
-      (sqlErr, result, fields) => {
-        if(sqlErr){
-          return res.status(500).json({
-            main: "Something went wrong. Please try again.",
-            devError: sqlErr,
-            devMsg: "Error occured while fetching upvotes from db",
-        });
-        } else if (!result[0]){
-          return res.status(200).json({
-            main:"No upvotes found",
-            devMsg:"No upvotes found with the userId from db"
-          })
-        }
-      })
-
-   } catch(err){
-    return res.status(500).json({
-      main: "Something went wrong. Please try again.",
-      devError: error,
-      devMsg: "Error occured while fetching upvotes from db",
-  });
-   }
- })
 
 
 router.get(
@@ -513,10 +522,10 @@ router.get(
         });
 
       mysqlConnection.query(
-        `SELECT u.email from user u, account_type a, idea i 
+        `SELECT u.* from user u, account_type a, solution s 
         WHERE u.account_type_id = a.account_type_id
-        AND u.user_id = i.user_id
-        GROUP BY u.user_id;`,
+        AND u.user_id = s.user_id
+        GROUP BY u.user_id`,
         (sqlErr, result, fields) => {
           if (sqlErr) {
             console.log(sqlErr);

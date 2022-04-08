@@ -182,6 +182,7 @@ router.post("/comment", passport.authenticate("jwt", { session: false }), (req, 
             user_id: userId,
             offering_id: offeringId,
             comment_text: commentText,
+            posted_on: generateCurrentDateTime()
         };
 
         mysqlConnection.query(`INSERT INTO offering_comment SET ?`, newComment, (sqlErr, result, fields) => {

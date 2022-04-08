@@ -3,23 +3,42 @@ import Footer from "../../components/Footer";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
-import { getSingleOffering } from "../../utilities/api/offering";
+import { getComments, getSingleOffering, postComment } from "../../utilities/api/offering";
 import { data } from "autoprefixer";
 import Comments from "../../components/Comments";
 
 const Offering = () => {
   const [offering, setOffering] = useState({});
+  const [comments, setComments] = useState([]);
+  const [commentText, setCommentText] = useState("");
+  const [pageNo, setPageNo] = useState(1);
   const { offeringId } = useParams();
 
   useEffect(() => {
-    if (offeringId)
+    if (offeringId) {
       getSingleOffering(offeringId)
         .then(({ data }) => {
           console.log(data);
           setOffering(data);
         })
         .catch(() => {});
+
+      getComments(offeringId, pageNo)
+        .then(({ data }) => {
+          console.log(data)
+          if(data.comments_list)
+          setComments(data.comments_list)
+        })
+        .catch(() => {})
+    }
   }, []);
+  
+  const onPost = () => {
+    console.log(commentText);
+    postComment(offeringId, commentText)
+      .then(() => {})
+      .catch((err) => {console.log(err.response)});
+  }
 
   return (
     <div>
@@ -69,7 +88,12 @@ const Offering = () => {
             </div>
           </div>
 
-          <Comments />
+          <Comments
+            comments={comments}
+            commentText={commentText}
+            setCommentText={setCommentText}
+            onClick={onPost}
+          />
         </div>
       </div>
       <Footer />
