@@ -1,4 +1,6 @@
 import Navbar from "../components/Navbar";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Solvers = () => {
   return (
@@ -18,8 +20,16 @@ const Solvers = () => {
 
           <div className="flex flex-wrap md:flex-col sm:flex-col md:items-center sm:items-center  mt-10">
             <div className="mb-4 w-24per border-4 flex flex-col items-center h-30v md:w-1/2 sm:w-1/2 xs:w-1/2 mr-3  p-4">
-              <div className="border h-20 w-20 bg-red-600 text-center mb-1 rounded-full">
-                image
+              <div className="border h-20 w-20 bg-gray-200 text-center mb-1 rounded-full">
+                <div className="w-full flex  justify-center mb-3">
+                  <div className=" border-2 rounded-full h-20 w-20">
+                    <FontAwesomeIcon
+                      icon={faUser}
+                      size="3x"
+                      className=" pt-2"
+                    />
+                  </div>
+                </div>
               </div>
 
               <div>
@@ -36,8 +46,16 @@ const Solvers = () => {
             </div>
 
             <div className="mb-4 w-24per border-4 flex flex-col items-center h-30v md:w-1/2 sm:w-1/2 xs:w-1/2 mr-3  p-4">
-              <div className="border h-20 w-20 bg-red-600 text-center mb-1 rounded-full">
-                image
+              <div className="border h-20 w-20 bg-gray-200 text-center mb-1 rounded-full">
+                <div className="w-full flex  justify-center mb-3">
+                  <div className=" border-2 rounded-full h-20 w-20">
+                    <FontAwesomeIcon
+                      icon={faUser}
+                      size="3x"
+                      className=" pt-2"
+                    />
+                  </div>
+                </div>
               </div>
 
               <div>
