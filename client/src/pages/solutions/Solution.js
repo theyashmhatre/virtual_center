@@ -15,7 +15,7 @@ const Solution = () => {
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState("");
   const [pageNo, setPageNo] = useState(1);
-  const [postSuccess, setPostSuccess] = useState(false)
+  const [postSuccess, setPostSuccess] = useState(false);
   const { solutionId } = useParams();
 
   useEffect(() => {
@@ -26,15 +26,15 @@ const Solution = () => {
   }, []);
 
   useEffect(() => {
-    if (offeringId)
+    if (solutionId)
       getComments(solutionId, pageNo)
         .then(({ data }) => {
-          setComments(data.comments)
-          setPostSuccess(false)
+          setComments(data.comments);
+          setPostSuccess(false);
         })
         .catch((e) => {
-          console.log(e.response)
-        })
+          console.log(e.response);
+        });
   }, [postSuccess]);
 
   const onPost = () => {
