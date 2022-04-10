@@ -6,7 +6,7 @@ const Comments = ({
   commentText,
   setCommentText,
   onClick,
-  success
+  success,
 }) => {
   return (
     <div className="mt-10 mb-20">
@@ -26,16 +26,17 @@ const Comments = ({
             Post Comment
           </button>
         </div>
-        {!success ? null : (<p>Comment Done!</p>)}
+        {!success ? null : <p>Comment Done!</p>}
         {comments.map((comment) => (
           <div key={comment.id} className="border-4 mt-2 p-3 flex flex-row">
             {/* DO CHECK ID AGAIN */}
             <div className="flex flex-col w-10per justify-center align-middle">
-              <div className="w-full flex justify-center">
-                <div className="bg-red-700 rounded-full h-20 w-20">
+              <div className="w-full flex  justify-center mb-3">
+                <div className=" bg-gray-200 border-2 rounded-full h-20 w-20">
                   <FontAwesomeIcon
                     icon={faUser}
-                    size="lg"
+                    size="3x"
+                    className=" pl-4 pt-2"
                   />
                 </div>
               </div>
