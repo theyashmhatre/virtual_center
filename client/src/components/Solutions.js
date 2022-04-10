@@ -1,4 +1,4 @@
-import { faEnvelope, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faSpinner, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
@@ -8,19 +8,53 @@ import { getSolutions } from "../utilities/api/solution";
 import { getTruncatedContentState } from "../utilities/utils";
 import { monthNames } from "../../constants";
 
-
 const Solutions = () => {
   const [solutions, setSolutions] = useState([]);
   const [pageNo, setPageNo] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [moreSolutionsAvlbl, setMoreSolutionsAvlbl] = useState(true);
+  const limit = 12;
   const { challengeId } = useParams();
 
+  const handleScroll = (e) => {
+    const window = e.currentTarget;
+    if (
+      window.scrollY > (
+        window.document.documentElement.scrollHeight -
+        window.document.documentElement.clientHeight -
+        100
+      )
+    )
+      setPageNo(prevPageNo => prevPageNo+1);
+  };
+
   useEffect(() => {
+    if (!moreSolutionsAvlbl) return;
+
+    window.addEventListener("scroll", (e) => handleScroll(e));
+
+    return () => {
+      window.removeEventListener("scroll", (e) => handleScroll(e));
+    };
+  }, [window.scrollY]);
+
+  useEffect(() => {
+    if (!moreSolutionsAvlbl) return;
+
+    setLoading(true);
     if (challengeId)
       getSolutions(challengeId, pageNo)
         .then(({ data }) => {
-          setSolutions([...solutions, ...data.solution_list]);
+          if (data.solution_list)
+            setSolutions([...solutions, ...data.solution_list]);
+          
+          setLoading(false);
+          if (!data.solutions_count || data.solutions_count < limit)
+            setMoreSolutionsAvlbl(false);
         })
-        .catch(() => {});
+        .catch(() => {
+          setLoading(false);
+        });
   }, [pageNo]);
 
   return (
@@ -107,14 +141,16 @@ const Solutions = () => {
               );
             })}
           </div>
-          <div className="flex justify-center mt-5 mb-10">
-            <button
-              className="text-lg text-red-700 font-bold"
-              onClick={() => setPageNo(pageNo + 1)}
-            >
-              Load More
-            </button>
-          </div>
+          {moreSolutionsAvlbl && loading ? (
+            <div className="flex justify-center w-full my-20">
+              <FontAwesomeIcon
+                icon={faSpinner}
+                size="4x"
+                color="pink"
+                spin={true}
+              />
+            </div>
+          ) : null}
         </div>
       </div>
     </div>
