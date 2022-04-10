@@ -14,7 +14,6 @@ import Offerings from "./pages/offerings/Offerings";
 import Offering from "./pages/offerings/Offering";
 import CreateSolution from "./pages/solutions/CreateSolution";
 import Solution from "./pages/solutions/Solution";
-import Solutions from "./pages/solutions/Solutions";
 import Solvers from "./pages/Solvers";
 
 const App = () => {
@@ -58,14 +57,6 @@ const App = () => {
           element={
             <AuthRequired>
               <Challenge />
-            </AuthRequired>
-          }
-        />
-        <Route
-          path="challenge/:challengeId/solutions"
-          element={
-            <AuthRequired>
-              <Solutions />
             </AuthRequired>
           }
         />
