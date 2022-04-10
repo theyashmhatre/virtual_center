@@ -1,7 +1,4 @@
-import { apiURL } from "../../../constants";
-import APIRequest from "./APIRequest";
-
-const api = new APIRequest();
+import api from "./index";
 
 export const createChallenge = async ({
   title,
@@ -17,34 +14,25 @@ export const createChallenge = async ({
   formData.append('tags', tags);
   formData.append('endDate', endDate);
 
-  const customHeaders = {
-    "Content-Type": "multipart/form-data"
-  };
-
-  const endpoint = new URL("/api/challenge/create", apiURL).href;
-  return await api.post(endpoint, formData, customHeaders);
+  const endpoint = "/api/challenge/create";
+  return await api.post(endpoint, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  });
 };
 
 export const getChallenges = async (pageNo) => {
-  const endpoint = new URL(
-    `/api/challenge/multiple/${pageNo}`,
-    apiURL
-  ).href;
+  const endpoint = `/api/challenge/multiple/${pageNo}`;
   return await api.get(endpoint);
 };
 
 export const getSingleChallenge = async (challengeId) => {
-  const endpoint = new URL(
-    `/api/challenge/single/${challengeId}`,
-    apiURL
-  ).href;
+  const endpoint = `/api/challenge/single/${challengeId}`;
   return await api.get(endpoint);
 };
 
 export const searchChallenges = async (searchQuery, pageNo) => {
-  const endpoint = new URL(
-    `/api/challenge/search/${searchQuery}/${pageNo}`,
-    apiURL
-  ).href;
+  const endpoint = `/api/challenge/search/${searchQuery}/${pageNo}`;
   return await api.get(endpoint);
 };

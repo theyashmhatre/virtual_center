@@ -1,57 +1,47 @@
-import { apiURL } from "../../../constants";
-import APIRequest from "./APIRequest";
-
-const api = new APIRequest();
+import api from "./index";
 
 export const createSolution = async ({
   challengeId,
   solutionTitle,
   solutionDescription,
 }) => {
-  const endpoint = new URL("/api/solution/create-solution", apiURL).href;
+  const endpoint = "/api/solution/create-solution";
   return await api.post(endpoint, {
     challengeId,
     solutionTitle,
     solutionDescription,
+  }, {
+    headers: {
+      "Content-Type": "application/json"
+    }
   });
 };
 
 export const getSolutions = async (challengeId, pageNo) => {
-  const endpoint = new URL(
-    `/api/solution/get-solutions/${challengeId}/${pageNo}`,
-    apiURL
-  ).href;
+  const endpoint = `/api/solution/get-solutions/${challengeId}/${pageNo}`;
   return await api.get(endpoint);
 };
 
 export const getSingleSolution = async (solutionId) => {
-  const endpoint = new URL(
-    `/api/solution/get-single-solution/${solutionId}`,
-    apiURL
-  ).href;
+  const endpoint = `/api/solution/get-single-solution/${solutionId}`;
   return await api.get(endpoint);
 };
 
 export const getComments = async (solutionId, pageNo=1) => {
-  const endpoint = new URL(
-    `/api/solution/comments/${solutionId}`,
-    apiURL
-  ).href;
+  const endpoint = `/api/solution/comments/${solutionId}`;
   return await api.get(endpoint);
 };
 
 export const postComment = async (solutionId, commentText) => {
-  const endpoint = new URL(
-    `/api/solution/${solutionId}/comment`,
-    apiURL
-  ).href;
-  return await api.post(endpoint, { commentText });
+  const endpoint = `/api/solution/${solutionId}/comment`;
+  return await api.post(endpoint, { commentText }, {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  });
 };
 
 export const getSolvers = async (accountId) => {
-  const endpoint = new URL(
-    `/api/solution/get-solvers/${accountId}`,
-    apiURL
-  ).href;
+  const endpoint = `/api/solution/get-solvers/${accountId}`;
   return await api.get(endpoint);
 }
