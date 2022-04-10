@@ -46,6 +46,14 @@ function passwordsValidation(password, confirmPassword, errors) {
   return errors;
 }
 
+function generatePaginationValues(req) {
+    const {limit, pageNum} = req.params;
+
+    const offset = (pageNum - 1) * limit; //number of rows to skip before selecting records
+
+    return {limit: parseInt(limit), pageNum, offset};
+}
+
 
 function generateCurrentDateTime() {
     var currTime = new Date();
@@ -66,5 +74,6 @@ module.exports = {
   isEmptyObject,
   emailValidation,
   passwordsValidation,
+  generatePaginationValues,
   generateCurrentDateTime
 };
