@@ -1,6 +1,7 @@
 import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { Link } from "react-router-dom";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
 import Solutions from "../../components/Solutions";
@@ -17,7 +18,6 @@ const Challenge = () => {
     if (challengeId)
       getSingleChallenge(challengeId)
         .then(({ data }) => {
-          console.log(data);
           setChallenge(data);
         })
         .catch(() => {});
@@ -26,11 +26,11 @@ const Challenge = () => {
   return (
     <div>
       <Navbar />
-      <div className="flex items-center flex-col mx-2 mb-4 ">
-        <div className="flex flex-col sm:w-full w-full mb-1 border-2  ">
-          <div className="bg-red-500 h-30v flex items-center justify-center">
+      <div className="flex items-center flex-col mx-10 mb-10">
+        <div className="flex flex-col mb-1">
+          <div className="h-30v flex items-center justify-center">
             <img
-              className="object-fill h-full w-full"
+              className="object-fill h-full rounded-3xl"
               src={
                 !challenge.cover_image
                   ? challenge_cover
@@ -40,31 +40,35 @@ const Challenge = () => {
             />
           </div>
         </div>
-        <h1 className="mb-5 flex justify-center font-serif text-4xl">
+        <h1 className="my-5 flex justify-center font-serif text-4xl">
           {challenge.title}
         </h1>
         
-        <div className="flex justify-start w-full">
+        <div className="flex justify-between w-full mb-5">
           <div className="flex w-80v flex-wrap md:w-95v sm:w-95v">
             <button
-              className="bg-gray-300 p-2 mb-1 border-white border-x"
+              className={`${tab == "overview" ? "border-2" : "border-b-2 hover:border-2"} border-black hover:scale-110 p-2 mr-2`}
               onClick={() => setTab("overview")}
             >
               Overview
             </button>
             <button
-              className="bg-gray-200 p-2 mb-1"
+              className={`${tab == "solutions" ? "border-2" : "border-b-2 hover:border-2"} border-black hover:scale-110 p-2 mx-2`}
               onClick={() => setTab("solutions")}
             >
               Solutions
             </button>
-            <button
-              className="bg-gray-200 p-2 mb-1"
-              onClick={() => setTab("comments")}
-            >
-              Comments
-            </button>
           </div>
+          
+          {tab == "solutions" ? (
+            <div className="flex justify-end">
+              <Link to={`/challenge/${challengeId}/create-solution`}>
+                <h2 className="border-b-2 hover:border-2 border-black hover:scale-110 text-center text-pink-700 p-2">
+                  Create solution
+                </h2>
+              </Link>
+            </div>
+          ) : null}
         </div>
 
         {tab == "overview" ? (
