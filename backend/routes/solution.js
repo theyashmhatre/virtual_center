@@ -503,9 +503,9 @@ router.get(
         });
 
       mysqlConnection.query(
-        `SELECT u.email from user u, account_type a, idea i 
-        WHERE u.account_type_id = a.account_type_id
-        AND u.user_id = i.user_id
+        `SELECT u.* from user u, solution s
+        WHERE u.account_type_id = ${accountId}
+        AND u.user_id = s.user_id
         GROUP BY u.user_id;`,
         (sqlErr, result, fields) => {
           if (sqlErr) {
@@ -516,11 +516,17 @@ router.get(
               devMsg: "Error occured while fetching solvers from db",
             });
           } else if (!result.length) {
-            return res.status(200).json({ main: "No solvers found." });
+            return res.status(200).json({
+              solvers_count: 0,
+              main: "No solvers found."
+            });
           } else {
             console.log(result)
             let solvers = result;
-            return res.status(200).json(solvers);
+            return res.status(200).json({
+              solvers_count: result.length,
+              solvers: solvers,
+            });
           }
         }
       );
