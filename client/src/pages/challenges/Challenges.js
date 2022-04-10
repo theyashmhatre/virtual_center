@@ -1,4 +1,4 @@
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
@@ -13,30 +13,82 @@ const Challenges = () => {
   const [challenges, setChallenges] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [pageNo, setPageNo] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [moreChallengeAvlbl, setMoreChallengeAvlbl] = useState(true);
+  const limit = 9;
+
+  const handleScroll = (e) => {
+    const window = e.currentTarget;
+    if (
+      window.scrollY > (
+        window.document.documentElement.scrollHeight -
+        window.document.documentElement.clientHeight -
+        100
+      )
+    )
+      setPageNo(prevPageNo => prevPageNo+1);
+  };
 
   useEffect(() => {
-    if (!searchQuery)
+    if (!moreChallengeAvlbl) return;
+
+    window.addEventListener("scroll", (e) => handleScroll(e));
+
+    return () => {
+      window.removeEventListener("scroll", (e) => handleScroll(e));
+    };
+  }, [window.scrollY]);
+  
+  useEffect(() => {
+    if (!moreChallengeAvlbl) return;
+
+    setLoading(true);
+    if (!searchQuery) {
       getChallenges(pageNo)
         .then(({ data }) => {
-          console.log(data);
-          setChallenges([...challenges, ...data.challenge_list]);
+          if (data.challenge_list)
+            setChallenges([...challenges, ...data.challenge_list]);
+          
+          setLoading(false);
+          if (data.challenges_count < limit)
+            setMoreChallengeAvlbl(false);
         })
-        .catch(() => {});
-    else
+        .catch(() => {
+          setLoading(false);
+        });
+    } else {
       searchChallenges(searchQuery, pageNo)
         .then(({ data }) => {
-          setChallenges([...challenges, ...data.challenge_list]);
+          if (data.challenge_list)
+            setChallenges([...challenges, ...data.challenge_list]);
+          
+          setLoading(false);
+          if (data.challenges_count < limit)
+            setMoreChallengeAvlbl(false);
         })
-        .catch(() => {});
+        .catch(() => {
+          setLoading(false);
+        });
+    };
   }, [pageNo]);
 
   const onSearch = () => {
     if (searchQuery) {
       setPageNo(1);
+      setMoreChallengeAvlbl(true);
       searchChallenges(searchQuery, 1)
-        .then(({ data }) => setChallenges(data.challenge_list || []))
-        .catch(() => {});
-    }
+        .then(({ data }) => {
+          if (data.challenge_list)
+            setChallenges(data.challenge_list || []);
+          
+          setLoading(false);
+          if (data.challenges_count < limit)
+            setMoreChallengeAvlbl(false);
+        })
+        .catch(() => {
+          setLoading(false);
+        });
+    };
   };
 
   return (
@@ -81,7 +133,7 @@ const Challenges = () => {
               <p className="">Sort By : Posted Date Newest</p>
             </div>
           </div>
-          <div className="lg:h-70v flex md:flex-col md:items-center sm:items-center sm:flex-col flex-wrap">
+          <div className="lg:h-70v flex md:flex-col md:items-center sm:items-center sm:flex-col flex-wrap mb-10">
             {challenges.map((challenge) => {
               const temp = new Date(challenge.end_date);
               const endDate =
@@ -138,14 +190,16 @@ const Challenges = () => {
               );
             })}
           </div>
-          <div className="flex justify-center mt-5 mb-10">
-            <button
-              className="text-lg text-red-700 font-bold"
-              onClick={() => setPageNo(pageNo + 1)}
-            >
-              Load More
-            </button>
-          </div>
+          {moreChallengeAvlbl && loading ? (
+            <div className="flex justify-center w-full my-20">
+              <FontAwesomeIcon
+                icon={faSpinner}
+                size="4x"
+                color="pink"
+                spin={true}
+              />
+            </div>
+          ) : null}
         </div>
       </div>
       <Footer />
