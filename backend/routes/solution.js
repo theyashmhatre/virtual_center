@@ -266,7 +266,7 @@ router.post("/like/:solutionId",
     }
 });
 
-router.get("/check-like/:solutionId",
+router.get("/get-likes/:solutionId",
 passport.authenticate("jwt", { session: false }), 
 (req, res) => {
   try{
@@ -277,6 +277,20 @@ passport.authenticate("jwt", { session: false }),
     if (!solutionId || !userId || solutionId == null || userId == null)
             return res.status(400).json({ main: "Something went wrong. Please try again",
              devMsg: `Either solutionId or userId is invalid. SolutionId: ${solutionId} userId: ${userId}` })
+
+    let noOfLikes = 0;
+    mysqlConnection.query(`SELECT COUNT(*) as likesCount from solution_like where solution_id = ${solutionId} AND likes = 1`,
+    (sqlErr, result, fields) => {
+      if (sqlErr) {
+        return res.status(500).json({
+           main: "Something went wrong. Please try again.",
+           devError: sqlErr,
+           devMsg: "Error occured while checking if user has liked the post",
+    });
+  } else {
+    noOfLikes = (!result[0]) ? 0 : (result[0].likesCount)
+  }
+    })
 
     mysqlConnection.query(`SELECT COUNT(*) as likesCount from solution_like where solution_id = ${solutionId} AND user_id = ${userId} AND likes=1`,
      (sqlErr, result, fields) => {
@@ -289,8 +303,8 @@ passport.authenticate("jwt", { session: false }),
       } else {
       const { likesCount } = result[0];
       console.log(result)
-      const hasLiked = likesCount > 0 ? true : false;
-      return res.status(201).json({ main: hasLiked });
+      const isLiked = likesCount > 0 ? true : false;
+      return res.status(201).json({ isLiked: isLiked, noOfLikes: noOfLikes });
      }
   });  
   } catch(err){
@@ -556,7 +570,7 @@ router.get("/get-upvotes/:commentId",
 
    try{
 
-      let voteStatus = 0; // Gives the status of the vote for respective user and comment 
+      let voteStatus = ""; // Gives the status of the vote for respective user and comment 
 
       mysqlConnection.query(`SELECT upvotes from comment_upvote WHERE user_id=${userId} AND solution_comment_id=${commentId}`,
       (sqlErr, result, fields) => {
