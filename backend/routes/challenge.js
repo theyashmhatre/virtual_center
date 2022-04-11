@@ -9,6 +9,7 @@ const {
 const upload = require("../config/multerConfig");
 const passport = require("passport");
 const { off } = require("../config/dbConnection");
+const { generatePaginationValues } = require("../utils/utils");
 
 router.get("/", (req, res) => {
   res.status(200).send("Challenge");
@@ -40,17 +41,13 @@ router.post(
         description: challengeDescription,
         user_id: res.req.user.user_id,
         cover_image: req.file.filename,
+        tags: tags,
         end_date: endDate,
         status: true,
       };
 
-      tags = tags.split(",").map(function (tag) {
-        return [tag.trim()];
-      });
-
-      //MySQL transaction begins
-      mysqlConnection.beginTransaction(function (err) {
-        if (err) {
+      mysqlConnection.query(`INSERT INTO challenge SET ?`, newChallenge, (sqlErr, result, fields) => {
+        if (sqlErr) {
           return res.status(500).json({
             main: "Something went wrong. Please try again.",
             devError: sqlErr,
@@ -58,55 +55,13 @@ router.post(
           });
         }
 
-        //Inserting all tags into 'tag' table. Ignore a tag if already inserted. 'name' in Tag table should be set to unique.
-        mysqlConnection.query(`INSERT IGNORE INTO tag (name) VALUES ?`, [tags], (sqlErr, result, fields) => {
-          if (sqlErr) {
-            return mysqlConnection.rollback(function () {
-              throw sqlErr;
-            });
-          }
-
-          //Creating a new challenge
-          mysqlConnection.query(
-            `INSERT INTO challenge SET ?`,
-            newChallenge,
-            (sqlErr, result, fields) => {
-              if (sqlErr) {
-                return mysqlConnection.rollback(function () {
-                  throw sqlErr;
-                });
-              }
-
-              newChallengeId = result.insertId;
-
-              //Individually inserting challenge_id and tag_id of each of the tags associated with the challenge inside a 'tag_map' table
-              mysqlConnection.query(
-                `INSERT INTO tag_map (challenge_id, tag_id) SELECT ${newChallengeId}, t.tag_id from tag t WHERE t.name IN ?`,
-                [[tags]],
-                (sqlErr, result, fields) => {
-                  if (sqlErr) {
-                    return mysqlConnection.rollback(function () {
-                      throw sqlErr;
-                    });
-                  }
-
-                  //Commit transaction
-                  //All the changes by the previous queries will be accepted into the database only if this function executes else everything returns back to original state
-                  mysqlConnection.commit(function (error) {
-                    if (error) {
-                      return mysqlConnection.rollback(function () {
-                        throw error;
-                      });
-                    }
-
-                    return res
-                      .status(201)
-                      .json({ devMsg: "New challenge created successfully" });
-                  });
-                });
-            });
-        });
+        else {
+          return res
+            .status(201)
+            .json({ devMsg: "New challenge created successfully" });
+        }
       });
+
     } catch (error) {
       console.log(error);
       return res.status(500).json({
@@ -201,6 +156,47 @@ router.post(
   }
 );
 
+//fetches all challenges(paginated) created by a particular user
+router.get("/user/:userId/:pageNum/:limit", passport.authenticate("jwt", { session: false }), (req, res) => {
+    try {
+
+      let { limit, pageNum, offset } = generatePaginationValues(req);
+      let {userId} = req.params;
+
+      if (!userId || isNaN(userId)) return res.status(400).json({main: "Invalid request", devMsg: `UserId is invalid: ${userId}`});
+
+      mysqlConnection.query(`SELECT * from challenge WHERE user_id = ${userId} LIMIT ? OFFSET ?`, [limit, offset], (sqlErr, result, fields) => {
+       
+        if (sqlErr) {
+          return res.status(500).json({
+            main: "Something went wrong. Please try again.",
+            devError: sqlErr,
+            devMsg: "Error occured while fetching challenges created by a particular user from db",
+          });
+
+        } else if (!result.length) {
+          return res.status(200).json({ challenges_count: result.length, main: "No challenges found." });
+
+        } else {
+          let data = {
+            challenges_count: result.length,
+            page_number: pageNum,
+            challenge_list: result,
+          };
+
+          res.status(200).json(data);
+        }
+      });
+
+    } catch (error) {
+      return res.status(500).json({
+        main: "Something went wrong. Please try again.",
+        devError: error,
+        devMsg: "Error occured while getting user's created challenges",
+      });
+    }
+});
+
 router.get(
   "/single/:challengeId",
   passport.authenticate("jwt", { session: false }),
@@ -217,6 +213,7 @@ router.get(
       mysqlConnection.query(
         `SELECT * from challenge where challenge_id = ${challengeId}`,
         (sqlErr, result, fields) => {
+
           if (sqlErr) {
             console.log(sqlErr);
             return res.status(500).json({
@@ -224,14 +221,15 @@ router.get(
               devError: sqlErr,
               devMsg: "Error occured while fetching challenge from db",
             });
+
           } else if (!result.length) {
             //if no challenge found with the given challengeID
 
-            console.log("No challenge found");
             return res.status(200).json({
               main: "Challenge you were looking for doesn't exist.",
               devError: "Challenge not found in database",
             });
+
           } else {
             let challenge = result[0];
 
@@ -250,30 +248,57 @@ router.get(
   }
 );
 
+
+//returns multiple challenges(paginated) with sorting
+
 router.get(
-  "/multiple/:pageNum",
+  "/multiple/:pageNum/:limit/:columnName/:order",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     try {
-      const { pageNum } = req.params; //current page number
 
-      const limit = 9; //number of items to be sent per request
+      //columnName => on which table's column the sorting is to be performed  | order => 1 or -1, where 1 means ascending
+      let { columnName, order } = req.params;
+      let { limit, pageNum, offset } = generatePaginationValues(req);
 
-      const offset = (pageNum - 1) * limit; //number of rows to skip before selecting records
+      const sortingOrder = {
+        "1": "ASC",
+        "-1": "DESC",
+      };
+
+      const sortingQueries = (columnName,order) => {
+        const queries = {
+          postedOn: `SELECT * FROM challenge ORDER BY posted_on ${sortingOrder[order]} LIMIT ? OFFSET ?`,
+          endDate: `SELECT * FROM challenge ORDER BY end_date ${sortingOrder[order]} LIMIT ? OFFSET ?`,
+          status: `SELECT * FROM challenge WHERE NOW() < end_date LIMIT ? OFFSET ?`
+        };
+
+        return queries[columnName];
+      };
+
+      //checks if either columnName or order have invalid values. replaces them with default values which will return a list in descending order of creation date
+      if (!sortingQueries(columnName,order) || (order!=="-1" && order!=="1")){
+        columnName="postedOn";
+        order = "-1";
+      }
 
       mysqlConnection.query(
-        `SELECT * from challenge LIMIT ? OFFSET ?`,
+
+        sortingQueries(columnName, order),
+
         [limit, offset],
         (sqlErr, result, fields) => {
+
           if (sqlErr) {
-            console.log(sqlErr);
             return res.status(500).json({
               main: "Something went wrong. Please try again.",
               devError: sqlErr,
               devMsg: "Error occured while fetching challenges from db",
             });
+
           } else if (!result.length) {
             return res.status(200).json({ challenges_count: result.length, main: "No challenges found." });
+
           } else {
             let data = {
               challenges_count: result.length,
@@ -297,44 +322,41 @@ router.get(
 );
 
 router.get(
-  "/challenges-using-tags/:tagsArray",
+  "/challenges-using-tags/:tagsArray/:pageNum/:limit",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     try {
       let { tagsArray } = req.params;
 
       tagsArray = JSON.parse(tagsArray);
+      let tagString = tagsArray.join("|");
+
+      let { limit, pageNum, offset } = generatePaginationValues(req);
 
       if (!tagsArray)
         return res
           .status(400)
           .json({ main: "Invalid Request", devMsg: "No tag found in request" });
 
-      //Selects all fields from challenges
-      //checks for intersecting records in tag_map & tag table, tag_map & challenge table
-      //works as an Union (OR) query for multiple tags
       mysqlConnection.query(
-        `SELECT c.* from tag_map tm, challenge c, tag t 
-            WHERE tm.tag_id = t.tag_id 
-            AND (t.name IN ?) 
-            AND c.challenge_id = tm.challenge_id 
-            GROUP BY c.challenge_id`,
-
-        [[tagsArray]],
+        `SELECT * from challenge where tags REGEXP "${tagString}" LIMIT ? OFFSET ?`,   //e.g. tagString = tagExample|anothertag|great
+        [limit, offset],
         (sqlErr, result, fields) => {
+
           if (sqlErr) {
-            console.log(sqlErr);
+
             return res.status(500).json({
               main: "Something went wrong. Please try again.",
               devError: sqlErr,
               devMsg: "Error occured while fetching challenge from db",
             });
+
           } else if (!result.length) {
             return res.status(200).json({ challenges_count: result.length, main: "No challenges found." });
+
           } else {
             let data = {
               challenges_count: result.length,
-              page_number: pageNum,
               challenge_list: result,
             };
             return res.status(200).json(data);
@@ -352,15 +374,13 @@ router.get(
 );
 
 router.get(
-  "/search/:queryString/:pageNum",
+  "/search/:queryString/:pageNum/:limit",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     try {
-      const { queryString, pageNum } = req.params;
+      const { queryString } = req.params;
 
-      const limit = 6; //number of items to be sent per request
-
-      const offset = (pageNum - 1) * limit; //number of rows to skip before selecting records
+      let { limit, pageNum, offset } = generatePaginationValues(req);
 
       if (!queryString)
         return res
@@ -369,6 +389,7 @@ router.get(
             main: "Invalid Request",
             devMsg: "No query string id found",
           });
+          
       if (!pageNum)
         return res
           .status(400)
@@ -414,15 +435,13 @@ router.get(
 );
 
 router.get(
-  "/search/all/:queryString/:pageNum",
+  "/search/all/:queryString/:pageNum/:limit",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     try {
-      const { queryString, pageNum } = req.params;
+      const { queryString } = req.params;
 
-      const limit = 100; //number of items to be sent per request
-
-      const offset = (pageNum - 1) * limit; //number of rows to skip before selecting records
+      let { limit, pageNum, offset } = generatePaginationValues(req);
 
       if (!queryString)
         return res

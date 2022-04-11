@@ -32,10 +32,11 @@ CREATE TABLE `challenge` (
   `end_date` datetime(1) NOT NULL,
   `status` tinyint DEFAULT NULL,
   `cover_image` varchar(100) NOT NULL,
+  `tags` varchar(1000) DEFAULT NULL,
   PRIMARY KEY (`challenge_id`),
   UNIQUE KEY `challenge_id_UNIQUE` (`challenge_id`),
   UNIQUE KEY `cover_image_UNIQUE` (`cover_image`)
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
 > offering table
 CREATE TABLE `offering` (
@@ -59,34 +60,21 @@ CREATE TABLE `offering_comment` (
   `posted_on` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`offering_comment_id`),
   UNIQUE KEY `offering_comment_id_UNIQUE` (`offering_comment_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
 > offering_like
 CREATE TABLE `offering_like` (
-  `offering_like_id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
   `offering_id` int NOT NULL,
-  PRIMARY KEY (`offering_like_id`),
-  UNIQUE KEY `idoffering_like_id_UNIQUE` (`offering_like_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+  UNIQUE KEY `liked_item` (`user_id`,`offering_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
-> tag table
-CREATE TABLE `tag` (
-  `tag_id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
-  PRIMARY KEY (`tag_id`),
-  UNIQUE KEY `tag_id_UNIQUE` (`tag_id`),
-  UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=150 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-
-> tag_map table
-CREATE TABLE `tag_map` (
-  `tag_map_id` int NOT NULL AUTO_INCREMENT,
-  `challenge_id` int NOT NULL,
-  `tag_id` int NOT NULL,
-  PRIMARY KEY (`tag_map_id`),
-  UNIQUE KEY `tag_map_id_UNIQUE` (`tag_map_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=171 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+> offering_comment_upvote
+CREATE TABLE `offering_comment_upvote` (
+  `user_id` varchar(45) NOT NULL,
+  `offering_comment_id` int NOT NULL,
+  UNIQUE KEY `upvoted_item` (`user_id`,`offering_comment_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
 > account_type table
 CREATE TABLE `account_type` (

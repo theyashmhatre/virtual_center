@@ -47,3 +47,11 @@ export const postComment = async (solutionId, commentText) => {
   ).href;
   return await api.post(endpoint, { commentText });
 };
+
+export const getSolvers = async (accountId) => {
+  const endpoint = new URL(
+    `/api/solution/get-solvers/${accountId}`,
+    apiURL
+  ).href;
+  return await api.get(endpoint);
+}

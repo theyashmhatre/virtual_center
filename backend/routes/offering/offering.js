@@ -1,21 +1,14 @@
 const router = require('express').Router();
-const express = require("express");
-const mysqlConnection = require("../config/dbConnection");
-const { route } = require('./user');
-const { createChallengeValidation, editChallengeValidation } = require("../utils/validation/challenge");
-const upload = require("../config/multerConfig");
-const { generateCurrentDateTime } = require('../utils/utils');
+const mysqlConnection = require("../../config/dbConnection");
+const { generatePaginationValues } = require('../../utils/utils');
 const passport = require("passport");
-const e = require('express');
 
-router.get("/multiple/:pageNum", passport.authenticate("jwt", { session: false }), (req, res) => {
+//get all offerings(paginated)
+
+router.get("/multiple/:pageNum/:limit", passport.authenticate("jwt", { session: false }), (req, res) => {
     try {
 
-        const { pageNum } = req.params;      //current page number
-
-        const limit = 12;        //number of items to be sent per request
-
-        const offset = (pageNum - 1) * limit;       //number of rows to skip before selecting records
+        let { limit, pageNum, offset } = generatePaginationValues(req);
 
         mysqlConnection.query(`SELECT * from offering LIMIT ? OFFSET ?`, [limit, offset], (sqlErr, result, fields) => {
 
@@ -59,7 +52,7 @@ router.get("/single/:offeringId", passport.authenticate("jwt", { session: false 
         if (!offeringId)
             return res
                 .status(400)
-                .json({ main: "Invalid Request", devMsg: "No offering id found" });
+                .json({ main: "Something went wrong. Please try again", devMsg: "No offering id found" });
 
         //query to find if the challenge exists
         mysqlConnection.query(
@@ -111,7 +104,7 @@ router.post("/like", passport.authenticate("jwt", { session: false }), (req, res
             user_id: userId
         };
 
-        mysqlConnection.query(`INSERT INTO offering_like SET ?`, newLike, (sqlErr, result, fields) => {
+        mysqlConnection.query(`INSERT IGNORE INTO offering_like SET ? `, newLike, (sqlErr, result, fields) => {
             if (sqlErr) {
                 return res.status(500).json({
                     main: "Something went wrong. Please try again.",
@@ -132,7 +125,38 @@ router.post("/like", passport.authenticate("jwt", { session: false }), (req, res
 
 });
 
+router.post("/dislike", passport.authenticate("jwt", { session: false }), (req, res) => {
 
+    try {
+        const { offeringId } = req.body;
+        const userId = res.req.user.user_id;
+
+
+        if (!offeringId || !userId || offeringId == null || userId == null) return res.status(400).json({ main: "Something went wrong. Please try again", devMsg: `Either offeringId or userId is invalid. OfferingId: ${offeringId} userId: ${userId}` })
+
+        mysqlConnection.query(`DELETE FROM offering_like WHERE user_id=${userId} AND offering_id = ${offeringId}`, (sqlErr, result, fields) => {
+            if (sqlErr) {
+                return res.status(500).json({
+                    main: "Something went wrong. Please try again.",
+                    devError: sqlErr,
+                    devMsg: "Error occured while inserting dislike into db",
+                });
+            } else {
+                res.status(200).json({ main: "Offering disliked successfully" });
+            }
+        });
+    } catch (error) {
+        return res.status(500).json({
+            main: "Something went wrong. Please try again.",
+            devError: error,
+            devMsg: "Error occured while adding like",
+        });
+    }
+
+});
+
+
+//checks if a user has liked an offering
 router.get("/check-like/:userId/:offeringId", passport.authenticate("jwt", { session: false }), (req, res) => {
     try {
         const { userId, offeringId } = req.params;
@@ -144,7 +168,7 @@ router.get("/check-like/:userId/:offeringId", passport.authenticate("jwt", { ses
             offering_id: offeringId,
             user_id: userId
         };
-        mysqlConnection.query(`SELECT COUNT(*) as likesCount from offering_like where offering_id = ${offeringId} AND user_id = ${userId}`, (sqlErr, result, fields) => {
+        mysqlConnection.query(`SELECT * from offering_like where offering_id = ${offeringId} AND user_id = ${userId}`, (sqlErr, result, fields) => {
             if (sqlErr) {
                 return res.status(500).json({
                     main: "Something went wrong. Please try again.",
@@ -153,9 +177,8 @@ router.get("/check-like/:userId/:offeringId", passport.authenticate("jwt", { ses
                 });
 
             } else {
-                const { likesCount } = result[0];
-                const hasLiked = likesCount > 0 ? true : false;
-                return res.status(201).json({ main: hasLiked });
+                const hasLiked = result.length > 0 ? true : false;
+                return res.status(200).json({ isLiked: hasLiked });
             }
         });
 
@@ -168,84 +191,33 @@ router.get("/check-like/:userId/:offeringId", passport.authenticate("jwt", { ses
     }
 });
 
-
-router.post("/comment", passport.authenticate("jwt", { session: false }), (req, res) => {
-
+//get total count of likes on a particular offering
+router.get("/:offeringId/likes/count", passport.authenticate("jwt", { session: false }), (req, res) => {
     try {
-        const { offeringId, commentText } = req.body;
-        const userId = res.req.user.user_id;
+        const { offeringId } = req.params;
 
-        if (!offeringId || !userId || offeringId == null || userId == null || !commentText)
-            return res.status(400).json({ main: "Something went wrong. Please try again", devMsg: `Either offeringId, userId, commentText is invalid. OfferingId: ${offeringId} userId: ${userId} commentText: ${commentText}` })
+        if (!offeringId || offeringId == null)
+            return res.status(400).json({ main: "Something went wrong. Please try again", devMsg: `offeringId is invalid. OfferingId: ${offeringId}` });
 
-        const newComment = {
-            user_id: userId,
-            offering_id: offeringId,
-            comment_text: commentText,
-            posted_on: generateCurrentDateTime()
-        };
-
-        mysqlConnection.query(`INSERT INTO offering_comment SET ?`, newComment, (sqlErr, result, fields) => {
+        mysqlConnection.query(`SELECT COUNT(*) as totalLikes from offering_like where offering_id = ${offeringId}`, (sqlErr, result, fields) => {
             if (sqlErr) {
                 return res.status(500).json({
                     main: "Something went wrong. Please try again.",
                     devError: sqlErr,
-                    devMsg: "Error occured while adding comment to db",
+                    devMsg: "Error occured while checking total number of likes on an offering",
                 });
 
             } else {
-                return res.status(201).json({ main: "Comment added successfully" });
+                console.log(result);
+                return res.status(200).json({ totalLikes: result[0].totalLikes });
             }
         });
+
     } catch (error) {
         return res.status(500).json({
             main: "Something went wrong. Please try again.",
             devError: error,
-            devMsg: "Error occured while adding comment to db",
-        });
-    }
-});
-
-
-router.get("/get-comments/:offeringId/:pageNum", passport.authenticate("jwt", { session: false }), (req, res) => {
-
-    try {
-        const { offeringId, pageNum } = req.params;
-
-        const limit = 8; //number of items to be sent per request
-
-        const offset = (pageNum - 1) * limit; //number of rows to skip before selecting records
-
-        if (!offeringId)
-            return res
-                .status(400)
-                .json({ main: "Invalid Request", devMsg: "No offering id found" });
-        
-        mysqlConnection.query(`SELECT * from offering_comment where offering_id = ${offeringId} LIMIT ? OFFSET ?`, [limit,offset], (sqlErr, result, fields) => {
-            if (sqlErr) {
-                return res.status(500).json({
-                    main: "Something went wrong. Please try again.",
-                    devError: sqlErr,
-                    devMsg: "Error occured while fetching comments from db",
-                });
-            } else if (!result.length) {
-                return res.status(200).json({ comments_count: result.length, main: "No comments found." });
-            } else {
-                let data = {
-                    comments_count: result.length,
-                    page_number: pageNum,
-                    comments_list: result,
-                };
-
-                res.status(200).json(data);
-            }
-        });
-        
-    } catch (error) {
-        return res.status(500).json({
-            main: "Something went wrong. Please try again.",
-            devError: error,
-            devMsg: "Error occured while fetching comments from db",
+            devMsg: "Error occured while executing count like api",
         });
     }
 });
