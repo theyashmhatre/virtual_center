@@ -6,6 +6,7 @@ function createChallengeValidation(req, res) {
     challengeDescription,
     endDate,
     tags,
+    cloudProvider,
     supportingMedia,
     reward,
   } = req.body;
@@ -31,6 +32,8 @@ function createChallengeValidation(req, res) {
     errors.endDate = "Please choose a valid end date for challenge.";
 
   if (!tags) errors.tags = "You must enter atleast 1 tag";
+
+  if(!cloudProvider) errors.cloudProvider = "Please select a valid cloud provider";
 
   if (!req.file || !req.file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG)$/)) errors.challengeImage = "Please choose a valid cover image for challenge";
 
