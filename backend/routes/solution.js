@@ -242,8 +242,8 @@ router.post("/like/:solutionId",
           }
         })
       } else {
-        var likes = result[0].likes ^ 1; 
-        mysqlConnection.query(`UPDATE solution_like SET likes="${likes}" WHERE user_id=${userId} AND solution_id=${solutionId}`,
+        // var likes = result[0].likes ^ 1; 
+        mysqlConnection.query(`DELETE FROM solution_like WHERE user_id=${userId} AND solution_id=${solutionId}`,
         (sqlErr, result, fields) => {
           if(sqlErr) {
             return res.status(500).json({
@@ -252,7 +252,7 @@ router.post("/like/:solutionId",
               devMsg: "Error occured while updating like to db",
           });
           } else {
-            return res.status(201).json({ main: "Solution liked successfully" });
+            return res.status(201).json({ main: "Solution unliked successfully" });
           }
         });
       }
