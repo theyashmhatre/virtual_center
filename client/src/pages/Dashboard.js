@@ -234,7 +234,10 @@ const Dashboard = () => {
       <div className="m-10">
         <div className="pl-5 pr-20 pb-5">
           <h2 className="text-2xl">
-            Lorem Ipsum Dolor, Sit Amet Consectetur
+            Know how challenges are being solved across various accounts.
+            <br />
+            Interactive view of past trends on challenges managed in the
+            platform.
           </h2>
           <br></br>
           <h3 className="text-zinc-700 text-justify">
