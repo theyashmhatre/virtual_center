@@ -32,6 +32,7 @@ router.post(
         challengeDescription,
         endDate,
         tags,
+        cloudProvider,
         supportingMedia,
         reward,
       } = req.body;
@@ -42,6 +43,7 @@ router.post(
         user_id: res.req.user.user_id,
         cover_image: req.file.filename,
         tags: tags,
+        cloud_provider: cloudProvider,
         end_date: endDate,
         status: true,
       };

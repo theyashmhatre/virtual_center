@@ -8,22 +8,22 @@ export const createChallenge = async ({
   endDate,
 }) => {
   const formData = new FormData();
-  formData.append('coverImage', coverImage);
-  formData.append('challengeTitle', title);
-  formData.append('challengeDescription', description);
-  formData.append('tags', tags);
-  formData.append('endDate', endDate);
+  formData.append("coverImage", coverImage);
+  formData.append("challengeTitle", title);
+  formData.append("challengeDescription", description);
+  formData.append("tags", tags);
+  formData.append("endDate", endDate);
 
   const endpoint = "/api/challenge/create";
   return await api.post(endpoint, formData, {
     headers: {
-      "Content-Type": "multipart/form-data"
-    }
+      "Content-Type": "multipart/form-data",
+    },
   });
 };
 
 export const getChallenges = async (pageNo) => {
-  const endpoint = `/api/challenge/multiple/${pageNo}`;
+  const endpoint = `/api/challenge/multiple/${pageNo}/12/challenge_id/-1`;
   return await api.get(endpoint);
 };
 

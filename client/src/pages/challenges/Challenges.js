@@ -20,13 +20,12 @@ const Challenges = () => {
   const handleScroll = (e) => {
     const window = e.currentTarget;
     if (
-      window.scrollY > (
-        window.document.documentElement.scrollHeight -
+      window.scrollY >
+      window.document.documentElement.scrollHeight -
         window.document.documentElement.clientHeight -
         100
-      )
     )
-      setPageNo(prevPageNo => prevPageNo+1);
+      setPageNo((prevPageNo) => prevPageNo + 1);
   };
 
   useEffect(() => {
@@ -38,7 +37,7 @@ const Challenges = () => {
       window.removeEventListener("scroll", (e) => handleScroll(e));
     };
   }, [window.scrollY]);
-  
+
   useEffect(() => {
     if (!moreChallengeAvlbl) return;
 
@@ -48,10 +47,9 @@ const Challenges = () => {
         .then(({ data }) => {
           if (data.challenge_list)
             setChallenges([...challenges, ...data.challenge_list]);
-          
+
           setLoading(false);
-          if (data.challenges_count < limit)
-            setMoreChallengeAvlbl(false);
+          if (data.challenges_count < limit) setMoreChallengeAvlbl(false);
         })
         .catch(() => {
           setLoading(false);
@@ -61,15 +59,14 @@ const Challenges = () => {
         .then(({ data }) => {
           if (data.challenge_list)
             setChallenges([...challenges, ...data.challenge_list]);
-          
+
           setLoading(false);
-          if (data.challenges_count < limit)
-            setMoreChallengeAvlbl(false);
+          if (data.challenges_count < limit) setMoreChallengeAvlbl(false);
         })
         .catch(() => {
           setLoading(false);
         });
-    };
+    }
   }, [pageNo]);
 
   const onSearch = () => {
@@ -78,28 +75,24 @@ const Challenges = () => {
       setMoreChallengeAvlbl(true);
       searchChallenges(searchQuery, 1)
         .then(({ data }) => {
-          if (data.challenge_list)
-            setChallenges(data.challenge_list || []);
-          
+          if (data.challenge_list) setChallenges(data.challenge_list || []);
+
           setLoading(false);
-          if (data.challenges_count < limit)
-            setMoreChallengeAvlbl(false);
+          if (data.challenges_count < limit) setMoreChallengeAvlbl(false);
         })
         .catch(() => {
           setLoading(false);
         });
-    };
+    }
   };
 
   return (
     <div>
       <Navbar />
-      
+
       <div className="flex justify-end mx-10 my-4">
         <Link to="/create-challenge">
-          <h2 className="text-center text-pink-700">
-            Create challenge
-          </h2>
+          <h2 className="text-center text-pink-700">Create challenge</h2>
         </Link>
       </div>
 

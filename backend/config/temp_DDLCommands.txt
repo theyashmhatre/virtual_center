@@ -41,10 +41,11 @@ CREATE TABLE `challenge` (
   `status` tinyint DEFAULT NULL,
   `cover_image` varchar(100) NOT NULL,
   `tags` varchar(1000) DEFAULT NULL,
+  `cloud_provider` varchar(100) NOT NULL,
   PRIMARY KEY (`challenge_id`),
   UNIQUE KEY `challenge_id_UNIQUE` (`challenge_id`),
   UNIQUE KEY `cover_image_UNIQUE` (`cover_image`)
-) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
 > offering table
 CREATE TABLE `offering` (
