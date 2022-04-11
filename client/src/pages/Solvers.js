@@ -1,9 +1,10 @@
-import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { getSolvers } from "../utilities/api/solution";
 import { getAccountTypes } from "../utilities/api/user";
+import { Link } from "react-router-dom";
 
 const Solvers = () => {
   const [accountTypes, setAccountTypes] = useState([]);
@@ -13,10 +14,10 @@ const Solvers = () => {
   const updateSolvers = (id) => {
     getSolvers(id)
       .then(({ data }) => {
-        if (data.solvers_count)
+        if (data.solvers_count) {
+          console.log(data.solvers);
           setSolvers(data.solvers);
-        else
-          setSolvers([]);
+        } else setSolvers([]);
       })
       .catch(() => {});
   };
@@ -33,7 +34,7 @@ const Solvers = () => {
 
   useEffect(() => {
     updateSolvers(accountTypeId);
-  }, [accountTypeId])
+  }, [accountTypeId]);
 
   return (
     <div>
@@ -63,49 +64,36 @@ const Solvers = () => {
             {solvers.map((solver) => (
               <div
                 key={solver.id}
-                className="flex flex-col items-center rounded-3xl border-4 border-red-600 h-25v w-24per md:w-1/2 sm:w-1/2 xs:w-1/2 mr-3 mb-4 p-4"
+                className="border-2 shadow-sm hover:shadow-xl  rounded-lg  lg:mb-0 mb-4 w-24per  md:w-1/2 sm:w-2/3 xs:w-5/6"
               >
-                <div className="w-full">
-                  <div className="flex space-x-5">
-                    <div className="flex flex-col items-center">
-                      <div className="border h-20 w-20 bg-gray-200 text-center mb-1 rounded-full">
-                        <div className="w-full flex justify-center mb-3">
-                          <div className="border-2 rounded-full h-20 w-20">
-                            {!solver.display_picture ? (
-                              <FontAwesomeIcon
-                                icon={faUser}
-                                size="3x"
-                                className=" pt-2"
-                              />
-                            ) : (
-                              <img
-                                src={apiURL + "/public/images/" + solver.display_picture}
-                                alt="Profile Pic"
-                              />
-                            )}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div>
-                        <h1>{solver.username}</h1>
-                      </div>
-                    </div>
-
+                <div className="flex flex-col">
+                  <div className=" flex  flex-col m-4 rounded   shadow-lg border-2 ">
+                    <p className=" font-semibold flex justify-center align-bottom   ">
+                      <FontAwesomeIcon
+                        icon={faUser}
+                        size="sm"
+                        className="p-1"
+                      />
+                      {solver.employee_name}
+                    </p>
                     <div>
-                      <div>
-                        <h1 className="text-3xl">{solver.employee_name}</h1>
-                      </div>
-
-                      <div>
-                        <h1 className="text-3xl">{solver.email}</h1>
+                      <div className="  flex justify-center   ">
+                        <FontAwesomeIcon
+                          icon={faEnvelope}
+                          size="lg"
+                          className=" p-1"
+                        />
+                        <p className="font-serif">{solver.email}</p>
                       </div>
                     </div>
                   </div>
                 </div>
-
-                <div className="mt-5">
-                  <button className="bg-red-600 rounded-lg px-3 py-1">Connect</button>
+                <div>
+                  <Link className="flex justify-center" to={``}>
+                    <h2 className="text-center m-4 w-20 p-1 rounded-lg bg-pink-700 text-white">
+                      Connect
+                    </h2>
+                  </Link>
                 </div>
               </div>
             ))}
