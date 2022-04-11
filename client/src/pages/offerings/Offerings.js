@@ -1,22 +1,24 @@
-import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
-import { faUser, faPaperclip } from "@fortawesome/free-solid-svg-icons";
-
+import { faEnvelope, faPaperclip, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Navbar from "../../components/Navbar";
-import Footer from "../../components/Footer";
+import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
-import { getOfferings } from "../../utilities/api/offering";
 import { Link } from "react-router-dom";
+import Footer from "../../components/Footer";
+import Navbar from "../../components/Navbar";
+import { getOfferings } from "../../utilities/api/offering";
+import { getTruncatedContentState } from "../../utilities/utils";
 
 const Offerings = () => {
   const [errors, setErrors] = useState({});
   const [offeringData, setOfferingData] = useState([]);
   const [pageNo, setPageNo] = useState(1);
+  const limit = 8;
 
   useEffect(() => {
-    getOfferings(pageNo)
+    getOfferings(pageNo, limit)
       .then(({ data }) => {
-        setOfferingData([...offeringData, ...data.offerings_list]);
+        if (data.offerings_count)
+          setOfferingData([...offeringData, ...data.offerings_list]);
       })
       .catch((error) => {
         console.log(error);
@@ -36,24 +38,31 @@ const Offerings = () => {
               return (
                 <div
                   key={id}
-                  className="border-2 shadow-sm hover:shadow-xl  rounded-lg  lg:mb-0 mb-4 w-24per  md:w-1/2 sm:w-2/3 xs:w-5/6"
+                  className="border-2 shadow-sm hover:shadow-xl rounded-lg lg:mb-0 mb-4 w-24per  md:w-1/2 sm:w-2/3 xs:w-5/6"
                 >
-                  <div className="rounded-lg bg-gradient-to-r from-pink-900 to-blue-grd  border-gray-500 border-2 flex flex-col justify-between p-3">
-                    <div className="h-25per   flex  justify-center ">
-                      <h2 className=" text-2xl font-mono font-semibold text-white   ">
+                  <div className="rounded-lg bg-gradient-to-r from-pink-900 to-blue-grd border-gray-500 border-2 flex flex-col justify-between p-3">
+                    <div className="h-25per flex justify-center">
+                      <h2 className="text-2xl font-mono font-semibold text-white">
                         {data.title}
                       </h2>
                     </div>
                   </div>
-                  <div className="p-2  font-serif flex items-center justify-center ">
-                    <p>
-                      {data.description} This is description Of TCS Offering to
-                      get more details of the offering click on view Detail...{" "}
-                    </p>
+                  <div className="p-2 font-serif flex items-center justify-center">
+                    {data.description && (
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: draftToHtml(
+                            getTruncatedContentState(
+                              JSON.parse(data.description)
+                            )
+                          ),
+                        }}
+                      />
+                    )}
                   </div>
                   <div className="flex flex-col">
-                    <div className=" flex  flex-col m-4 rounded   shadow-lg border-2 ">
-                      <p className=" font-semibold flex justify-center align-bottom   ">
+                    <div className="flex flex-col m-4 rounded shadow-lg border-2">
+                      <p className="font-semibold flex justify-center align-bottom">
                         <FontAwesomeIcon
                           icon={faUser}
                           size="sm"

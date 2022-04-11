@@ -22,11 +22,19 @@ CREATE TABLE `user` (
   UNIQUE KEY `UserName_UNIQUE` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
+> security_question table
+CREATE TABLE `security_question` (
+  `question_id` int NOT NULL,
+  `question_text` varchar(200) NOT NULL,
+  PRIMARY KEY (`question_id`),
+  UNIQUE KEY `question_id` (`question_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
 > challenge table
 CREATE TABLE `challenge` (
   `challenge_id` int NOT NULL AUTO_INCREMENT,
   `title` varchar(200) NOT NULL,
-  `description` varchar(300) NOT NULL,
+  `description` TEXT NOT NULL,
   `user_id` int NOT NULL,
   `posted_on` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `end_date` datetime(1) NOT NULL,
@@ -42,7 +50,7 @@ CREATE TABLE `challenge` (
 CREATE TABLE `offering` (
   `offering_id` int NOT NULL,
   `title` varchar(100) NOT NULL,
-  `description` varchar(300) NOT NULL,
+  `description` TEXT NOT NULL,
   `owner_name` varchar(100) NOT NULL,
   `owner_email` varchar(100) NOT NULL,
   `attachment` varchar(100) NOT NULL,
