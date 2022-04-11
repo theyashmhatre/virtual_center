@@ -24,8 +24,8 @@ export const createChallenge = async ({
   });
 };
 
-export const getChallenges = async (pageNo) => {
-  const endpoint = `/api/challenge/multiple/${pageNo}/12/challenge_id/-1`;
+export const getChallenges = async (pageNo, limit, sortedBy, order) => {
+  const endpoint = `/api/challenge/multiple/${pageNo}/${limit}/${sortedBy}/${order}`;
   return await api.get(endpoint);
 };
 
