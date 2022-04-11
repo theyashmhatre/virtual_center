@@ -26,17 +26,18 @@ CREATE TABLE `user` (
 CREATE TABLE `challenge` (
   `challenge_id` int NOT NULL AUTO_INCREMENT,
   `title` varchar(200) NOT NULL,
-  `description` varchar(300) NOT NULL,
+  `description` varchar(10000) NOT NULL,
   `user_id` int NOT NULL,
   `posted_on` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `end_date` datetime(1) NOT NULL,
   `status` tinyint DEFAULT NULL,
   `cover_image` varchar(100) NOT NULL,
   `tags` varchar(1000) DEFAULT NULL,
+  `cloud_provider` varchar(100) NOT NULL,
   PRIMARY KEY (`challenge_id`),
   UNIQUE KEY `challenge_id_UNIQUE` (`challenge_id`),
   UNIQUE KEY `cover_image_UNIQUE` (`cover_image`)
-) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
 > offering table
 CREATE TABLE `offering` (

@@ -70,19 +70,27 @@ router.get("/multiple/:offeringId/:pageNum/:limit", passport.authenticate("jwt",
                 .status(400)
                 .json({ main: "Something went wrong. Please try again", devMsg: "No offering id found" });
 
-        //returns comment info, user's name, displayimage and email and also an isLiked vairable which indicated if a user has liked the particular comment or not
-        //isLiked = 1 means user has liked that comment
-        // returns the list in descending order or creation date
+
+        //returns a list of comments
+        //having comment info, user's employee_name, display_picture and email, totalLikes, isLiked variable which indicates if a user has liked the particular comment or not
+        //INNER JOIN tables offering_comment on user to fetch each comment with the comment creator's name,email and dp
+        //LEFT JOIN on offering_comment_upvote to fetch totalLikes of each comment
+        //LEFT JOIN on offering_comment_upvote again to check if each comment has been liked by the current user
+
         mysqlConnection.query(
 
-            `SELECT c.*, IF(v.user_id is NOT NULL,1,0) as isLiked, u.employee_name, u.display_picture, u.email
+            `SELECT c.*, IF(v.user_id is NOT NULL,1,0) as isLiked, u.employee_name, u.email, u.display_picture, IF(ocv.offering_comment_id is NOT NULL,COUNT(*),0) as totalLikes
             FROM offering_comment c
             INNER JOIN user u 
             ON c.user_id = u.user_id
+            LEFT JOIN
+            offering_comment_upvote ocv
+            ON c.offering_comment_id = ocv.offering_comment_id
             LEFT JOIN 
             offering_comment_upvote v 
             ON c.offering_comment_id = v.offering_comment_id AND v.user_id = ${userId}
-            where c.offering_id = ${offeringId} 
+            where c.offering_id = ${offeringId}
+            GROUP BY v.offering_comment_id
             ORDER BY c.posted_on DESC
             LIMIT ? OFFSET ?`,
 
@@ -239,7 +247,7 @@ router.get("/:commentId/upvotes/count", passport.authenticate("jwt", { session: 
         if (!commentId || commentId == null)
             return res.status(400).json({ main: "Something went wrong. Please try again", devMsg: `commentId is invalid. CommentId: ${commentId}` });
 
-        mysqlConnection.query(`SELECT COUNT(*) as totalLikes from offering_comment_upvote where offering_comment_id = ${commentId}`, (sqlErr, result, fields) => {
+        mysqlConnection.query(`SELECT COUNT(*) as totalUpvotes from offering_comment_upvote where offering_comment_id = ${commentId}`, (sqlErr, result, fields) => {
             if (sqlErr) {
                 return res.status(500).json({
                     main: "Something went wrong. Please try again.",
@@ -249,7 +257,8 @@ router.get("/:commentId/upvotes/count", passport.authenticate("jwt", { session: 
 
             } else {
                 console.log(result);
-                return res.status(200).json({ totalUpvotes: result[0].totalUpvotes });
+                let result2 = result[0];
+                return res.status(200).json({ totalUpvotes: result2.totalUpvotes });
             }
         });
 
