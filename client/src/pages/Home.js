@@ -10,15 +10,14 @@ const Home = () => {
     <div>
       <Navbar />
       <div className="flex flex-col ">
-        <div className="flex bg-[url('../public/home_cover.png')] h-80 ">
+        <div className="flex bg-[url('../public/home_cover.png')] h-80">
           <div
-            className=" flex-1 bg-blue-bg-lite/80  pt-8 bg-blue-700 
-                 bg-opacity-25  "
+            className="flex-1 bg-blue-bg-lite/80 pt-8 bg-blue-700 bg-opacity-25"
           >
             <h1 className="  text-4xl pl-14 text-white font-semibold ">
               Where Innovation Meets Reality{" "}
             </h1>
-            <h3 className="text-left pl-14 pt-5 text-lg   mr-16 pr-2 text-white">
+            <h3 className="text-left pl-14 pt-5 text-lg mr-16 pr-2 text-white">
               A collaborative space to innovate in the virtual world .
               Innovative teams connect to provide solutions on various customer
               ongoing challenges

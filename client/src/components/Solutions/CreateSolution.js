@@ -1,16 +1,10 @@
 import { EditorState, convertToRaw } from "draft-js";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router";
-import { Link } from "react-router-dom";
-import Footer from "../../components/Footer";
-import Navbar from "../../components/Navbar";
-import RichTextEditor from "../../components/RichTextEditor";
-import { getSingleChallenge } from "../../utilities/api/challenge";
+import RichTextEditor from "../RichTextEditor";
 import { createSolution } from "../../utilities/api/solution";
 import { isEmptyObject } from "../../utilities/utils";
 import { createSolutionInputValidation } from "../../utilities/validation/solution";
-import { apiURL } from "../../../constants";
-import challenge_cover from "../../../public/challenge_cover.png";
 
 const initialInputValues = {
   solutionTitle: "",
@@ -18,18 +12,10 @@ const initialInputValues = {
 };
 
 const CreateSolution = () => {
-  const [challenge, setChallenge] = useState({});
   const [inputValues, setInputValues] = useState(initialInputValues);
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
   const { challengeId } = useParams();
-
-  useEffect(() => {
-    if (challengeId)
-      getSingleChallenge(challengeId)
-        .then(({ data }) => setChallenge(data))
-        .catch(() => {});
-  }, []);
 
   const handleInputChange = (e) => {
     let { name, value } = e.target;
@@ -65,23 +51,8 @@ const CreateSolution = () => {
   };
 
   return (
-    <div>
-      <Navbar />
+    <div className="w-full border-2">
       <div className="flex items-center flex-col">
-        <div className="flex flex-col sm:w-full w-full mb-5">
-          <div className="bg-red-500 h-30v flex w-full  mx-2 items-center justify-center">
-            <img
-              className="object-fill h-full w-full"
-              src={
-                !challenge.cover_image
-                  ? challenge_cover
-                  : apiURL + "/public/images/" + challenge.cover_image
-              }
-              alt="challenge cover"
-            />
-          </div>
-        </div>
-
         <div className="my-10 mx-40">
           <h1 className="text-3xl text-center font-bold my-5">
             Create Solution
@@ -152,7 +123,6 @@ const CreateSolution = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };

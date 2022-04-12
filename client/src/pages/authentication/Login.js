@@ -9,7 +9,7 @@ import { isEmptyObject } from "../../utilities/utils";
 import { loginInputValidation } from "../../utilities/validation/user";
 
 initialInputValues = {
-  username: "",
+  username: 0,
   password: "",
 };
 
@@ -20,11 +20,16 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
-    let { name, value } = e.target;
+    let { name, value, type } = e.target;
+
+    setErrors({
+      ...errors,
+      [name]: null,
+    });
 
     setInputValues({
       ...inputValues,
-      [name]: value,
+      [name]: type == 'number' ? Number(value) : value,
     });
   };
 
@@ -59,51 +64,59 @@ const Login = () => {
           <h2 className="my-8 font-display font-medium text-4xl text-pink-700 text-center">
             Login
           </h2>
-          <div className="text-center mb-5">
-            <input
-              type="text"
-              id="username"
-              name="username"
-              placeholder="Enter your Employee Id or Username"
-              value={inputValues.username}
-              onChange={handleInputChange}
-              className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
-            />
-            {!errors.username ? null : (
-              <div className="text-center text-pink-700 text-lg mt-2">
-                <p>{errors.username}</p>
-              </div>
-            )}
-          </div>
-          <div className="flex flex-col items-center text-center mb-10">
-            <div className="relative w-fit">
+          <div className="flex justify-center mb-5">
+            <div>
               <input
-                type={passwordVisibility ? "text" : "password"}
-                id="password"
-                name="password"
-                placeholder="Enter your password"
-                minLength="8"
-                required
-                value={inputValues.password}
+                type="number"
+                id="username"
+                name="username"
+                placeholder="Enter your Employee Id or Username"
+                value={!inputValues.username ? '' : inputValues.username}
                 onChange={handleInputChange}
-                className="py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
+                className={`flex-1 py-2 border-b-2 ${
+                  !errors.username ? "border-gray-400" : "border-red-500"
+                } focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96`}
               />
-              <FontAwesomeIcon
-                icon={passwordVisibility ? faEye : faEyeSlash}
-                size="lg"
-                className="text-gray-600 cursor-pointer absolute float-right z-10 -ml-5 mt-3"
-                onClick={() => setPasswordVisibility(!passwordVisibility)}
-              />
+              {!errors.username ? null : (
+                <div className="text-sm text-pink-700 text-lg mt-2">
+                  <p>{errors.username}</p>
+                </div>
+              )}
             </div>
-            {/* flex end */}
-            {!errors.password ? null : (
-              <div className="text-center text-pink-700 text-lg mt-2">
-                <p>{errors.password}</p>
+          </div>
+          <div className="flex flex-col items-center justify-center mb-10">
+            <div>
+              <div className="relative w-fit">
+                <input
+                  type={passwordVisibility ? "text" : "password"}
+                  id="password"
+                  name="password"
+                  placeholder="Enter your password"
+                  minLength="8"
+                  required
+                  value={inputValues.password}
+                  onChange={handleInputChange}
+                  className={`py-2 border-b-2 ${
+                    !errors.password ? "border-gray-400" : "border-red-500"
+                  } focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96`}
+                />
+                <FontAwesomeIcon
+                  icon={passwordVisibility ? faEye : faEyeSlash}
+                  size="lg"
+                  className="text-gray-600 cursor-pointer absolute float-right z-10 -ml-5 mt-3"
+                  onClick={() => setPasswordVisibility(!passwordVisibility)}
+                />
               </div>
-            )}
+              {/* flex end */}
+              {!errors.password ? null : (
+                <div className="text-sm text-pink-700 text-lg mt-2">
+                  <p>{errors.password}</p>
+                </div>
+              )}
+            </div>
           </div>
           {!errors.main ? null : (
-            <div className="text-center text-pink-700 text-lg mb-5">
+            <div className="text-sm text-center text-pink-700 text-lg mb-5">
               <p>{errors.main}</p>
             </div>
           )}

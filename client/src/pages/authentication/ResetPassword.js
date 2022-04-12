@@ -26,6 +26,11 @@ const ResetPassword = () => {
   const handleInputChange = (e) => {
     let { name, value } = e.target;
 
+    setErrors({
+      ...errors,
+      [name]: null,
+    });
+    
     setInputValues({
       ...inputValues,
       [name]: value
@@ -83,62 +88,66 @@ const ResetPassword = () => {
               <p>{successMessage}</p>
             </div>
           )}
-          <div className="flex flex-col items-center text-center mb-5">
-            <div className="relative w-fit">
-              <input
-                type={visibility.password ? 'text' : 'password'}
-                id="password"
-                name="password"
-                placeholder="Password"
-                minLength="8"
-                required
-                value={inputValues.password}
-                onChange={handleInputChange}
-                className="py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
-              />
-              <FontAwesomeIcon
-                icon={visibility.password ? faEye : faEyeSlash}
-                size="lg"
-                className="text-gray-600 cursor-pointer absolute float-right z-10 -ml-5 mt-3"
-                onClick={() => handleVisibilityChange("password")}
-              />
-            </div>
-            {!errors.password ? null : (
-              <div className="text-center text-pink-700 text-lg mt-2">
-                <p>{errors.password}</p>
+          <div className="flex flex-col items-center justify-center mb-5">
+            <div>
+              <div className="relative w-fit">
+                <input
+                  type={visibility.password ? 'text' : 'password'}
+                  id="password"
+                  name="password"
+                  placeholder="Password"
+                  minLength="8"
+                  required
+                  value={inputValues.password}
+                  onChange={handleInputChange}
+                  className="py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
+                />
+                <FontAwesomeIcon
+                  icon={visibility.password ? faEye : faEyeSlash}
+                  size="lg"
+                  className="text-gray-600 cursor-pointer absolute float-right z-10 -ml-5 mt-3"
+                  onClick={() => handleVisibilityChange("password")}
+                />
               </div>
-            )}
+              {!errors.password ? null : (
+                <div className="text-sm text-pink-700 text-lg mt-2">
+                  <p>{errors.password}</p>
+                </div>
+              )}
+            </div>
           </div>
-          <div className="flex flex-col items-center text-center mb-10">
-            <div className="relative w-fit">
-              <input
-                type={visibility.confirmPassword ? 'text' : 'password'}
-                id="cpassword"
-                name="confirmPassword"
-                placeholder="Confirm password"
-                minLength="8"
-                required
-                value={inputValues.confirmPassword}
-                onChange={handleInputChange}
-                className="py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
-              />
-              <FontAwesomeIcon
-                icon={visibility.confirmPassword ? faEye : faEyeSlash}
-                size="lg"
-                className="text-gray-600 cursor-pointer absolute float-right z-10 -ml-5 mt-3"
-                onClick={() => handleVisibilityChange("confirmPassword")}
-              />
-            </div>
-                {/* flex end */}
-
-            {!errors.confirmPassword ? null : (
-              <div className="text-center text-pink-700 text-lg mt-2">
-                <p>{errors.confirmPassword}</p>
+          <div className="flex flex-col items-center flex justify-center mb-10">
+            <div>
+              <div className="relative w-fit">
+                <input
+                  type={visibility.confirmPassword ? 'text' : 'password'}
+                  id="cpassword"
+                  name="confirmPassword"
+                  placeholder="Confirm password"
+                  minLength="8"
+                  required
+                  value={inputValues.confirmPassword}
+                  onChange={handleInputChange}
+                  className="py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
+                />
+                <FontAwesomeIcon
+                  icon={visibility.confirmPassword ? faEye : faEyeSlash}
+                  size="lg"
+                  className="text-gray-600 cursor-pointer absolute float-right z-10 -ml-5 mt-3"
+                  onClick={() => handleVisibilityChange("confirmPassword")}
+                />
               </div>
-            )}
+                  {/* flex end */}
+
+              {!errors.confirmPassword ? null : (
+                <div className="text-sm text-pink-700 text-lg mt-2">
+                  <p>{errors.confirmPassword}</p>
+                </div>
+              )}
+            </div>
           </div>
           {!errors.main ? null : (
-            <div className="text-center text-pink-700 text-lg mb-5">
+            <div className="text-sm text-center text-pink-700 text-lg mb-5">
               <p>{errors.main}</p>
             </div>
           )}
