@@ -1,8 +1,19 @@
+import { useEffect, useState } from "react";
+import { colors } from "../../constants";
 import DoughnutChart from "../components/DoughnutChart";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
+import { getChallengesCounts } from "../utilities/api/dashboard";
 
 const Dashboard = () => {
+  const [challengeCounts, setChallengeCounts] = useState([]);
+
+  useEffect(() => {
+    getChallengesCounts()
+      .then(({ data }) => setChallengeCounts(data))
+      .catch((e) => console.log(e));
+  }, []);
+  
   return (
     <div>
       <Navbar />
@@ -170,22 +181,14 @@ const Dashboard = () => {
             </div>
 
             <div className="flex justify-center">
-              <div className="relative h-44 w-52 mt-4 mb-2">
+              <div className="relative h-44 w-52 mt-4 mb-4">
                 <DoughnutChart
                   chartData={{
-                    labels: [
-                      'Red',
-                      'Blue',
-                      'Yellow'
-                    ],
+                    labels: challengeCounts.map((challenge) => challenge.accountName),
                     datasets: [{
                       label: 'My First Dataset',
-                      data: [300, 50, 100],
-                      backgroundColor: [
-                        'red',
-                        'blue',
-                        'yellow'
-                      ],
+                      data: challengeCounts.map((challenge) => challenge.challengeCount),
+                      backgroundColor: colors.slice(0, challengeCounts.length),
                       hoverOffset: 4
                     }]
                   }}
@@ -200,20 +203,17 @@ const Dashboard = () => {
               </div>
             </div>
 
-            <div className="h-28 mt-6">
+            <div className="h-16 mt-16">
               <div className="flex flex-wrap items-center">
-                <div className="flex items-center space-x-1 px-2 py-1">
-                  <div className="border-2 bg-red-600 rounded-full h-5 w-5" />
-                  <p className="text-sm">Red Color</p>
-                </div>
-                <div className="flex items-center space-x-1 px-2 py-1">
-                  <div className="border-2 bg-blue-600 rounded-full h-5 w-5" />
-                  <p className="text-sm">Blue Color</p>
-                </div>
-                <div className="flex items-center space-x-1 px-2 py-1">
-                  <div className="border-2 bg-yellow-600 rounded-full h-5 w-5" />
-                  <p className="text-sm">Yellow Color</p>
-                </div>
+                {challengeCounts.map((challenge, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center space-x-1 px-2 py-1"
+                  >
+                    <div className={`border-2 bg-${colors[index]}-600 rounded-full h-5 w-5`} />
+                    <p className="text-sm">{challenge.accountName}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
