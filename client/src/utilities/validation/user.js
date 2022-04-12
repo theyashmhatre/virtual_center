@@ -1,7 +1,6 @@
 import { emailValidation, passwordValidation } from "../utils";
 
 export const registerInputValidation = ({
-  employeeId,
   employeeName,
   email,
   accountTypeId,
@@ -13,8 +12,6 @@ export const registerInputValidation = ({
   confirmPassword,
 }) => {
   errors = {};
-
-  if (!employeeId) errors.employeeId = "Employee Id is required";
   
   if (!employeeName) errors.employeeName = "Employee Name is required";
   
@@ -25,7 +22,6 @@ export const registerInputValidation = ({
   if (!contactNumber) errors.contactNumber = "Contact Number is required";
 
   if (!username) errors.username = "Username is required";
-  else if (username != employeeId) errors.username = "Username is incorrect";
 
   if (!securityQuestionId)
     errors.securityQuestionId = "Please Select one security question";

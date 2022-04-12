@@ -5,9 +5,12 @@ var apiURL = process.env.REACT_APP_API_URL;
 
 var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
+var colors = ["red", "yellow", "blue", "green", "gray", "pink", "orange", "voilet"];
+
 module.exports = {
     emailRegex,
     passwordRegex,
     apiURL,
-    monthNames
+    monthNames,
+    colors
 };

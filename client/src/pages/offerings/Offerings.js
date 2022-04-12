@@ -19,7 +19,7 @@ const Offerings = () => {
   const [pageNo, setPageNo] = useState(1);
   const [loading, setLoading] = useState(true);
   const [moreOfferingsAvlbl, setMoreOfferingsAvlbl] = useState(true);
-  const limit = 2;
+  const limit = 8;
 
   const handleScroll = (e) => {
     const window = e.currentTarget;
