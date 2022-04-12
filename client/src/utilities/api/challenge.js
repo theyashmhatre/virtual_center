@@ -3,6 +3,7 @@ import api from "./index";
 export const createChallenge = async ({
   title,
   description,
+  cloudProvider,
   coverImage,
   tags,
   endDate,
@@ -11,6 +12,7 @@ export const createChallenge = async ({
   formData.append("coverImage", coverImage);
   formData.append("challengeTitle", title);
   formData.append("challengeDescription", description);
+  formData.append("cloudProvider", cloudProvider);
   formData.append("tags", tags);
   formData.append("endDate", endDate);
 
@@ -22,10 +24,8 @@ export const createChallenge = async ({
   });
 };
 
-export const getChallenges = async (pageNo) => {
-  //console.log(2);
-  const endpoint = `/api/challenge/multiple/${pageNo}/12/challenge_id/-1`;
-  // console.log(endpoint);
+export const getChallenges = async (pageNo, limit, sortedBy, order) => {
+  const endpoint = `/api/challenge/multiple/${pageNo}/${limit}/${sortedBy}/${order}`;
   return await api.get(endpoint);
 };
 

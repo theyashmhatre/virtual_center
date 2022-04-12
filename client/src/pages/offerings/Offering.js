@@ -1,16 +1,14 @@
-import Navbar from "../../components/Navbar";
-import Footer from "../../components/Footer";
+import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { Link } from "react-router-dom";
-import draftToHtml from "draftjs-to-html";
+import Comments from "../../components/Comments";
+import Footer from "../../components/Footer";
+import Navbar from "../../components/Navbar";
 import {
   getComments,
   getSingleOffering,
   postComment,
 } from "../../utilities/api/offering";
-import { data } from "autoprefixer";
-import Comments from "../../components/Comments";
 
 const Offering = () => {
   const [offering, setOffering] = useState({});
@@ -68,15 +66,13 @@ const Offering = () => {
 
           <div className="mt-5">
             <div className="border-4 mt-2 p-3">
-              <p>
-                {!offering.description ? null : (
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: draftToHtml(JSON.parse(offering.description)),
-                    }}
-                  />
-                )}
-              </p>
+              {offering.description && (
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: draftToHtml(JSON.parse(offering.description)),
+                  }}
+                />
+              )}
             </div>
           </div>
           <Comments

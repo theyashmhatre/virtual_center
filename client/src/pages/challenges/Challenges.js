@@ -10,13 +10,14 @@ import { getTruncatedContentState } from "../../utilities/utils";
 import { apiURL, monthNames } from "../../../constants";
 
 const Challenges = () => {
-  console.log(1);
   const [challenges, setChallenges] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [pageNo, setPageNo] = useState(1);
   const [loading, setLoading] = useState(true);
   const [moreChallengeAvlbl, setMoreChallengeAvlbl] = useState(true);
-  const limit = 9;
+  const [sortedBy, setSortedBy] = useState("postedOn");
+  const [order, setOrder] = useState(1);
+  const limit = 8;
 
   const handleScroll = (e) => {
     const window = e.currentTarget;
@@ -44,7 +45,7 @@ const Challenges = () => {
 
     setLoading(true);
     if (!searchQuery) {
-      getChallenges(pageNo)
+      getChallenges(pageNo, limit, sortedBy, order)
         .then(({ data }) => {
           if (data.challenge_list)
             setChallenges([...challenges, ...data.challenge_list]);
@@ -68,7 +69,7 @@ const Challenges = () => {
           setLoading(false);
         });
     }
-  }, [pageNo]);
+  }, [pageNo, sortedBy, order]);
 
   const onSearch = () => {
     if (searchQuery) {
@@ -90,110 +91,145 @@ const Challenges = () => {
   return (
     <div>
       <Navbar />
-
-      <div className="flex justify-end mx-10 my-4">
-        <Link to="/create-challenge">
-          <h2 className="text-center text-pink-700">Create challenge</h2>
-        </Link>
-      </div>
-
-      <div className="flex items-center justify-center  h-20v border">
-        <div className="flex border-2 border-gray-200 rounded w-1/2 sm:w-5/6 xs:w-full absolute">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="px-4 py-2 w-90per"
-            placeholder="what are you looking for?"
-          />
-          <div className="absolute top-2 right-3">
-            <FontAwesomeIcon
-              icon={faSearch}
-              size="lg"
-              className="text-gray-400 z-20 hover:text-gray-500 cursor-pointer"
-              onClick={onSearch}
+      <div className="min-h-screen">
+        <div className="flex items-center justify-center h-20v border">
+          <div className="flex border-2 border-gray-200 rounded w-1/2 sm:w-5/6 xs:w-full absolute">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="px-4 py-2 w-90per"
+              placeholder="what are you looking for?"
             />
-          </div>
-        </div>
-      </div>
-      <div className="flex justify-center">
-        <div className="lg:h-80v w-90v">
-          <div className="h-10v flex items-center sm:flex-col">
-            <div className=" w-70per lg:w-60per md:w-50per sm:w-full">
-              <h1>Lorem lpsum Dolor Sit Amet</h1>
-            </div>
-            <div className=" w-30per lg:w-40per md:w-50per sm:w-full flex justify-end flex-wrap">
-              <p className=" mr-4">{challenges.length} Results</p>
-              <p className="">Sort By : Posted Date Newest</p>
-            </div>
-          </div>
-          <div className="lg:h-70v flex md:flex-col md:items-center sm:items-center sm:flex-col flex-wrap mb-10">
-            {challenges.map((challenge) => {
-              const temp = new Date(challenge.end_date);
-              const endDate =
-                temp.getDate() +
-                " " +
-                monthNames[temp.getMonth()] +
-                " " +
-                temp.getFullYear();
-
-              return (
-                <div
-                  className="border-2 h-70v lg:mb-0 mb-4 mr-3 w-24per md:w-1/2 sm:w-2/3 xs:w-5/6"
-                  key={challenge.challenge_id}
-                >
-                  <div className="h-40per">
-                    <img
-                      className="object-fill h-full w-full"
-                      src={apiURL + "/public/images/" + challenge.cover_image}
-                      alt="challenge cover"
-                    />
-                  </div>
-                  <div className="h-60per border-gray-500 border-2 flex flex-col justify-between p-3">
-                    <div className="h-25per flex items-center">
-                      <h2>{challenge.title}</h2>
-                    </div>
-                    <div className="h-10per flex items-center">
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html: draftToHtml(
-                            getTruncatedContentState(
-                              JSON.parse(challenge.description)
-                            )
-                          ),
-                        }}
-                      />
-                    </div>
-                    <div className="flex flex-col">
-                      <div className=" flex items-center mb-1">
-                        <button className="bg-pink-700 px-1 rounded mr-2">
-                          Open
-                        </button>
-                        <p>Until {endDate}</p>
-                      </div>
-                    </div>
-                    <div>
-                      <Link to={`/challenge/${challenge.challenge_id}`}>
-                        <h2 className="text-center text-pink-700">
-                          View challenge
-                        </h2>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          {moreChallengeAvlbl && loading ? (
-            <div className="flex justify-center w-full my-20">
+            <div className="absolute top-2 right-3">
               <FontAwesomeIcon
-                icon={faSpinner}
-                size="4x"
-                color="pink"
-                spin={true}
+                icon={faSearch}
+                size="lg"
+                className="text-gray-400 z-20 hover:text-gray-500 cursor-pointer"
+                onClick={onSearch}
               />
             </div>
-          ) : null}
+          </div>
+        </div>
+        <div className="flex justify-center">
+          <div className="lg:h-80v w-90v">
+            <div className="h-10v flex items-center justify-between sm:flex-col">
+              <div className="font-bold">
+                <h1>View All Chalenges, Collaborate and Innovate</h1>
+              </div>
+              <div className="flex justify-end flex-wrap">
+                <p className="mr-10">{challenges.length} Results</p>
+                <div className="flex flex-wrap flex-start">
+                  <h2 className="mr-2">Sort By :</h2> 
+                  <select
+                    className="border-2 px-2"
+                    name="sort"
+                    onChange={(e) => {
+                      setMoreChallengeAvlbl(true);
+                      setPageNo(1);
+                      setChallenges([]);
+                      if (e.target.value == 1 || e.target.value == 2)
+                        setSortedBy("postedOn");
+                      else if (e.target.value == 3 || e.target.value == 4)
+                        setSortedBy("endDate");
+                      else
+                        setSortedBy("status");
+
+                      if (Number(e.target.value)%2)
+                        setOrder(1);
+                      else
+                        setOrder(-1);
+                    }}
+                  >
+                    <option value={1} label="Posted On Newest First" />
+                    <option value={2} label="Posted On Oldest First" />
+                    <option value={3} label="End Date Ascending Order" />
+                    <option value={4} label="End Date Descending Order" />
+                    <option value={5} label="Status Ascending Order" />
+                    <option value={6} label="Status Descending Order" />
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* {role == "admin" ? ( */}
+            <div className="flex justify-end mb-10">
+              <Link to={`/create-challenge`}>
+                <h2 className="border-2 border-black rounded-3xl hover:scale-110 text-center text-pink-700 p-2">
+                  Create Challenge
+                </h2>
+              </Link>
+            </div>
+            {/* ) : null} */}
+
+            <div className="lg:h-70v flex md:flex-col md:items-center sm:items-center sm:flex-col flex-wrap mb-10">
+              {challenges.map((challenge) => {
+                const temp = new Date(challenge.end_date);
+                const endDate =
+                  temp.getDate() +
+                  " " +
+                  monthNames[temp.getMonth()] +
+                  " " +
+                  temp.getFullYear();
+
+                return (
+                  <div
+                    className="border-2 h-70v lg:mb-0 mb-4 mr-3 w-24per md:w-1/2 sm:w-2/3 xs:w-5/6"
+                    key={challenge.challenge_id}
+                  >
+                    <div className="h-40per">
+                      <img
+                        className="object-fill h-full w-full"
+                        src={apiURL + "/public/images/" + challenge.cover_image}
+                        alt="challenge cover"
+                      />
+                    </div>
+                    <div className="h-60per border-gray-500 border-2 flex flex-col justify-between p-3">
+                      <div className="h-25per flex items-center">
+                        <h2>{challenge.title}</h2>
+                      </div>
+                      <div className="h-10per flex items-center">
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: draftToHtml(
+                              getTruncatedContentState(
+                                JSON.parse(challenge.description)
+                              )
+                            ),
+                          }}
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <div className=" flex items-center mb-1">
+                          <button className="bg-pink-700 px-1 rounded mr-2">
+                            Open
+                          </button>
+                          <p>Until {endDate}</p>
+                        </div>
+                      </div>
+                      <div>
+                        <Link to={`/challenge/${challenge.challenge_id}`}>
+                          <h2 className="text-center text-pink-700">
+                            View challenge
+                          </h2>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            {moreChallengeAvlbl && loading ? (
+              <div className="flex justify-center w-full my-20">
+                <FontAwesomeIcon
+                  icon={faSpinner}
+                  size="4x"
+                  color="pink"
+                  spin={true}
+                />
+              </div>
+            ) : null}
+          </div>
         </div>
       </div>
       <Footer />

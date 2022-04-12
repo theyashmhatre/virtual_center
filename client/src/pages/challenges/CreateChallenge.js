@@ -11,6 +11,7 @@ import { createChallengeInputValidation } from "../../utilities/validation/chall
 const initialInputValues = {
   title: '',
   description: EditorState.createEmpty(),
+  cloudProvider: '',
   coverImage: '',
   tags: [],
   endDate: '',
@@ -99,6 +100,22 @@ const CreateChallenge = () => {
             {!errors.description ? null : (
               <div className="text-center text-red-700 text-lg mb-5">
                 <p>{errors.description}</p>
+              </div>
+            )}
+          </div>
+          <div>
+            <label className="block mb-1 font-bold text-gray-500">Cloud Provider</label>
+            <input
+              type="text"
+              name="cloudProvider"
+              value={inputValues.cloudProvider}
+              onChange={handleInputChange}
+              placeholder="Type cloud provider"
+              className="w-full border-2 border-gray-200 p-3 rounded-lg outline-none focus:border-purple-500"
+            />
+            {!errors.cloudProvider ? null : (
+              <div className="text-center text-red-700 text-lg mb-5">
+                <p>{errors.cloudProvider}</p>
               </div>
             )}
           </div>

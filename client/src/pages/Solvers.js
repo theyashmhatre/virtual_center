@@ -1,10 +1,10 @@
 import { faUser, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { getSolvers } from "../utilities/api/solution";
 import { getAccountTypes } from "../utilities/api/user";
-import { Link } from "react-router-dom";
 
 const Solvers = () => {
   const [accountTypes, setAccountTypes] = useState([]);
@@ -14,10 +14,9 @@ const Solvers = () => {
   const updateSolvers = (id) => {
     getSolvers(id)
       .then(({ data }) => {
-        if (data.solvers_count) {
-          console.log(data.solvers);
+        if (data.solvers_count)
           setSolvers(data.solvers);
-        } else setSolvers([]);
+        else setSolvers([]);
       })
       .catch(() => {});
   };

@@ -1,7 +1,7 @@
 import api from "./index";
 
-export const getOfferings = async (page) => {
-  const endpoint = `/api/offering/multiple/${page}/4`;
+export const getOfferings = async (page, limit) => {
+  const endpoint = `/api/offering/multiple/${page}/${limit}`;
   return await api.get(endpoint);
 };
 

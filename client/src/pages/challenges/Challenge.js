@@ -26,7 +26,7 @@ const Challenge = () => {
   return (
     <div>
       <Navbar />
-      <div className="flex items-center flex-col mx-10 mb-10">
+      <div className="flex items-center flex-col mx-10 mb-10 min-h-screen">
         <div className="flex flex-col mb-1">
           <div className="h-30v flex items-center justify-center">
             <img
