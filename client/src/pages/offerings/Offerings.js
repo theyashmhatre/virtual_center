@@ -72,11 +72,11 @@ const Offerings = () => {
             {offeringData.map((data) => {
               return (
                 <div
-                  key={id}
-                  className="border-2 shadow-sm hover:shadow-xl rounded-lg lg:mb-0 mb-4 mx-2 w-24per  md:w-1/2 sm:w-2/3 xs:w-5/6"
+                  key={data.offering_id}
+                  className="border-2 shadow-sm hover:shadow-xl rounded-lg lg:mb-0 mb-4 mx-1 w-24per  md:w-1/2 sm:w-2/3 xs:w-5/6"
                 >
-                  <div className="rounded-lg bg-gradient-to-r from-pink-900 to-blue-grd border-gray-500 border-2 flex flex-col justify-between p-3">
-                    <div className="h-25per flex justify-center">
+                  <div className="h-25per rounded-lg bg-gradient-to-r from-pink-900 to-blue-grd border-gray-500 border-2 flex flex-col justify-between p-3">
+                    <div className=" flex justify-center">
                       <h2 className="text-2xl font-mono font-semibold text-white">
                         {data.title}
                       </h2>

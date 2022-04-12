@@ -43,23 +43,31 @@ const Challenge = () => {
         <h1 className="my-5 flex justify-center font-serif text-4xl">
           {challenge.title}
         </h1>
-        
+
         <div className="flex justify-between w-full mb-5">
           <div className="flex w-80v flex-wrap md:w-95v sm:w-95v">
             <button
-              className={`${tab == "overview" ? "border-2" : "border-b-2 hover:border-2"} border-black hover:scale-110 p-2 mr-2`}
+              className={`${
+                tab == "overview" ? "border-2" : "border-b-2 hover:border-2"
+              } border-black hover:scale-110 p-2 mr-2`}
               onClick={() => setTab("overview")}
             >
               Overview
             </button>
             <button
-              className={`${tab == "solutions" ? "border-2" : "border-b-2 hover:border-2"} border-black hover:scale-110 p-2 mx-2`}
+              className={`${
+                tab == "solutions" ? "border-2" : "border-b-2 hover:border-2"
+              } border-black hover:scale-110 p-2 mx-2`}
               onClick={() => setTab("solutions")}
             >
               Solutions
             </button>
             <button
-              className={`${tab == "create solution" ? "border-2" : "border-b-2 hover:border-2"} border-black hover:scale-110 p-2 mx-2`}
+              className={`${
+                tab == "create solution"
+                  ? "border-2"
+                  : "border-b-2 hover:border-2"
+              } border-black hover:scale-110 p-2 mx-2`}
               onClick={() => setTab("create solution")}
             >
               Create solution
@@ -80,30 +88,15 @@ const Challenge = () => {
                   />
                 )}
                 <br />
-                lorem ipsum loremlorem ipsum loremlorem ipsum loremlorem ipsum
-                loremlorem ipsum lorem lorem ipsum loremlorem ipsum loremlorem ipsum
-                loremlorem ipsum loremlorem ipsum lorem lorem ipsum loremlorem ipsum
-                loremlorem ipsum loremlorem ipsum loremlorem ipsum lorem lorem ipsum
-                loremlorem ipsum loremlorem ipsum loremlorem ipsum loremlorem ipsum
-                loremlorem ipsum loremlorem ipsum loremlorem ipsum loremlorem ipsum
-                loremlorem ipsum loremlorem ipsum loremlorem ipsum loremlorem ipsum
-                loremlorem ipsum loremlorem ipsum loremlorem ipsum loremlorem ipsum
-                loremlorem ipsum loremlorem ipsum loremlorem ipsum loremlorem ipsum
-                lorem lorem ipsum loremlorem ipsum loremlorem ipsum loremlorem ipsum
-                loremlorem ipsum lorem loremlorem ipsum lorem loremlorem ipsum lorem
               </div>
             </div>
             <div className="mt-10 pl-2 pt-2 flex items-center">
               <h1 className="text-lg font-bold">Cloud Provider</h1>
-              <div className="ml-10">
-                {challenge.cloud_provider}
-              </div>
+              <div className="ml-10">{challenge.cloud_provider}</div>
             </div>
             <div className="my-10 pl-2 pt-2 flex items-center">
               <h1 className="text-lg font-bold">Account Type</h1>
-              <div className="ml-10">
-                {challenge.account_type_id}
-              </div>
+              <div className="ml-10">{challenge.account_type_id}</div>
             </div>
           </div>
         ) : tab == "solutions" ? (
