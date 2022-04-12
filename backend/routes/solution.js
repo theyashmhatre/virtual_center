@@ -1,10 +1,8 @@
 const router = require("express").Router();
-const express = require("express");
 const mysqlConnection = require("../config/dbConnection");
 const createSolutionValidation = require("../utils/validation/solution");
 const { generateCurrentDateTime } = require("../utils/utils");
 const passport = require("passport");
-const { fields } = require("../config/multerConfig");
 
 router.get("/", (req, res) => {
   res.status(200).send("Solution");
