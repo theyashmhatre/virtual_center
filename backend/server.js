@@ -17,6 +17,7 @@ app.use(cors());
 app.use("/api/user", require("./routes/user"));
 app.use("/api/solution", require("./routes/solution"));
 app.use("/api/challenge", require("./routes/challenge"));
+app.use("/api/dashboard", require("./routes/dashboard"));
 app.use("/api/offering", require("./routes/offering/offering"));
 app.use("/api/offering/comment", require("./routes/offering/comment/comment"));
 
