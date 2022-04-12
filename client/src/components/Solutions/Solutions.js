@@ -4,9 +4,9 @@ import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
-import { getSolutions } from "../utilities/api/solution";
-import { getTruncatedContentState } from "../utilities/utils";
-import { monthNames } from "../../constants";
+import { getSolutions } from "../../utilities/api/solution";
+import { getTruncatedContentState } from "../../utilities/utils";
+import { monthNames } from "../../../constants";
 
 const Solutions = () => {
   const [solutions, setSolutions] = useState([]);

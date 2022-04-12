@@ -12,7 +12,6 @@ import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 import Offerings from "./pages/offerings/Offerings";
 import Offering from "./pages/offerings/Offering";
-import CreateSolution from "./pages/solutions/CreateSolution";
 import Solution from "./pages/solutions/Solution";
 import Solvers from "./pages/Solvers";
 
@@ -57,14 +56,6 @@ const App = () => {
           element={
             <AuthRequired>
               <Challenge />
-            </AuthRequired>
-          }
-        />
-        <Route
-          path="challenge/:challengeId/create-solution"
-          element={
-            <AuthRequired>
-              <CreateSolution />
             </AuthRequired>
           }
         />

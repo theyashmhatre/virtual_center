@@ -23,6 +23,11 @@ const ForgotPassword = () => {
   const handleInputChange = (e) => {
     let { name, value, type } = e.target;
 
+    setErrors({
+      ...errors,
+      [name]: null,
+    });
+
     setInputValues({
       ...inputValues,
       [name]: type == 'select-one' ? Number(value) : value
@@ -81,71 +86,77 @@ const ForgotPassword = () => {
               <p>{successMessage}</p>
             </div>
           )}
-          <div className="text-center mb-5">
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Enter your email-id"
-              value={inputValues.email}
-              onChange={handleInputChange}
-              className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
-            />
-            {!errors.email ? null : (
-              <div className="text-center text-pink-700 text-lg mt-2">
-                <p>{errors.email}</p>
-              </div>
-            )}
-          </div>
-          <div className="text-center mb-5">
-            <select
-              className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
-              name="securityQuestionId"
-              value={inputValues.securityQuestionId}
-              onChange={handleInputChange}
-            >
-              <option value={0} label='---Select Secret Question---' />
-              {securityQuestions.map((question) => (
-                <option
-                  value={question.securityQuestionId}
-                  label={question.securityQuestionText}
-                  key={question.securityQuestionId}
-                />
-              ))}
-            </select>
-            {!errors.securityQuestionId ? null : (
-              <div className="text-center text-pink-700 text-lg mt-2">
-                <p>{errors.securityQuestionId}</p>
-              </div>
-            )}
-          </div>
-          <div className="flex flex-col items-center text-center mb-10">
-            <div className="relative w-fit">
+          <div className="flex justify-center mb-5">
+            <div>
               <input
-                type={securityAnswerVisibility ? 'text' : 'password'}
-                id="securityAnswer"
-                name="securityQuestionAnswer"
-                placeholder="Your answer for the secret question"
-                value={inputValues.securityQuestionAnswer}
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email-id"
+                value={inputValues.email}
                 onChange={handleInputChange}
-                className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96 "
+                className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
               />
-              <FontAwesomeIcon
-                icon={securityAnswerVisibility ? faEye : faEyeSlash}
-                size="lg"
-                className="text-gray-600 cursor-pointer absolute float-right z-10 -ml-5 mt-3"
-                onClick={() => setSecurityAnswerVisibility(!securityAnswerVisibility)}
-              />
+              {!errors.email ? null : (
+                <div className="text-sm text-pink-700 text-lg mt-2">
+                  <p>{errors.email}</p>
+                </div>
+              )}
             </div>
-            {!errors.securityQuestionAnswer ? null : (
-              <div className="text-center text-pink-700 text-lg mt-2">
-                <p>{errors.securityQuestionAnswer}</p>
+          </div>
+          <div className="flex justify-center mb-5">
+            <div>
+              <select
+                className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
+                name="securityQuestionId"
+                value={inputValues.securityQuestionId}
+                onChange={handleInputChange}
+              >
+                <option value={0} label='---Select Secret Question---' />
+                {securityQuestions.map((question) => (
+                  <option
+                    value={question.securityQuestionId}
+                    label={question.securityQuestionText}
+                    key={question.securityQuestionId}
+                  />
+                ))}
+              </select>
+              {!errors.securityQuestionId ? null : (
+                <div className="text-sm text-pink-700 text-lg mt-2">
+                  <p>{errors.securityQuestionId}</p>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="flex flex-col items-center justify-center mb-10">
+            <div>
+              <div className="relative w-fit">
+                <input
+                  type={securityAnswerVisibility ? 'text' : 'password'}
+                  id="securityAnswer"
+                  name="securityQuestionAnswer"
+                  placeholder="Your answer for the secret question"
+                  value={inputValues.securityQuestionAnswer}
+                  onChange={handleInputChange}
+                  className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96 "
+                />
+                <FontAwesomeIcon
+                  icon={securityAnswerVisibility ? faEye : faEyeSlash}
+                  size="lg"
+                  className="text-gray-600 cursor-pointer absolute float-right z-10 -ml-5 mt-3"
+                  onClick={() => setSecurityAnswerVisibility(!securityAnswerVisibility)}
+                />
               </div>
-            )}
+              {!errors.securityQuestionAnswer ? null : (
+                <div className="text-sm text-pink-700 text-lg mt-2">
+                  <p>{errors.securityQuestionAnswer}</p>
+                </div>
+              )}
+            </div>
           </div>
           {/* flex  end*/}
           {!errors.main ? null : (
-            <div className="text-center text-pink-700 text-lg mb-5">
+            <div className="text-sm text-center text-pink-700 text-lg mb-5">
               <p>{errors.main}</p>
             </div>
           )}
