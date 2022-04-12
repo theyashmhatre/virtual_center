@@ -109,6 +109,7 @@ const Register = () => {
 
       {/* grid child_2 start*/}
       {/* flex parent start*/}
+      {/* withscroll bar */}
       <div>
         <div className="bg-white text-pink-800 antialiased px-2 py-4 flex flex-col">
           <h2 className="my-8 font-display font-medium text-4xl text-pink-700 text-center">
