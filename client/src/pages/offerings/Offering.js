@@ -3,6 +3,7 @@ import Footer from "../../components/Footer";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
+import draftToHtml from "draftjs-to-html";
 import {
   getComments,
   getSingleOffering,
@@ -16,7 +17,7 @@ const Offering = () => {
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState("");
   const [pageNo, setPageNo] = useState(1);
-  const [postSuccess, setPostSuccess] = useState(false)
+  const [postSuccess, setPostSuccess] = useState(false);
   const { offeringId } = useParams();
 
   useEffect(() => {
@@ -32,13 +33,12 @@ const Offering = () => {
     if (offeringId)
       getComments(offeringId, pageNo)
         .then(({ data }) => {
-          if (data.comments_list)
-            setComments(data.comments_list)
-          setPostSuccess(false)
+          if (data.comments_list) setComments(data.comments_list);
+          setPostSuccess(false);
         })
-        .catch(() => {})
+        .catch(() => {});
   }, [postSuccess]);
-  
+
   const onPost = () => {
     postComment(offeringId, commentText)
       .then(() => setPostSuccess(true))
@@ -69,26 +69,13 @@ const Offering = () => {
           <div className="mt-5">
             <div className="border-4 mt-2 p-3">
               <p>
-                {offering.description}
-                some decription will be here. some decription will be here. some
-                decription will be here. some decription will be here. some
-                decription will be here. some decription will be here. some
-                decription will be here. some decription will be here. some
-                decription will be here. some decription will be here. some
-                decription will be here. some decription will be here. some
-                decription will be here. some decription will be here. some
-                decription will be here. some decription will be here. some
-                decription will be here. some decription will be here. some
-                decription will be here. some decription will be here. some
-                decription will be here. some decription will be here. some
-                decription will be here. some decription will be here. some
-                decription will be here. some decription will be here. some
-                decription will be here. some decription will be here. some
-                decription will be here. some decription will be here. some
-                decription will be here. some decription will be here. some
-                decription will be here. some decription will be here. some
-                decription will be here. some decription will be here. some
-                decription will be here.
+                {!offering.description ? null : (
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: draftToHtml(JSON.parse(offering.description)),
+                    }}
+                  />
+                )}
               </p>
             </div>
           </div>
