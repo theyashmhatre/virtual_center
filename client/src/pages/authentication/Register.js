@@ -108,8 +108,8 @@ const Register = () => {
 
       {/* grid child_2 start*/}
       {/* flex parent start*/}
-      {/* withscroll bar */}
-      <div>
+      {/* withscrolling bar */}
+      <div className="min-h-screen overflow-y-auto whitespace-nowrap h-96 mt-4	">
         <div className="bg-white text-pink-800 antialiased px-2 py-4 flex flex-col">
           <h2 className="my-8 font-display font-medium text-4xl text-pink-700 text-center">
             Register
@@ -374,7 +374,7 @@ const Register = () => {
           </div>
         </div>
 
-        <div className="pl-60 pt-2 ">
+        <div className="pl-60  ">
           <label
             htmlFor="account"
             className="inline-block w-25 mr-6 text-center font-medium text-gray-600"
