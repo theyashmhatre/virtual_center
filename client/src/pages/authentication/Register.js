@@ -8,7 +8,7 @@ import { isEmptyObject } from "../../utilities/utils";
 import { registerInputValidation } from "../../utilities/validation/user";
 
 const initialInputValues = {
-  employeeId: 0,
+  username: 0,
   employeeName: "",
   email: "",
   contactNumber: 0,
@@ -36,6 +36,11 @@ const Register = () => {
   const handleInputChange = (e) => {
     let { name, value, type } = e.target;
 
+    setErrors({
+      ...errors,
+      [name]: null,
+    });
+    
     setInputValues({
       ...inputValues,
       [name]: type == 'number' || type == 'select-one' ? Number(value) : value,
@@ -76,17 +81,11 @@ const Register = () => {
   const onSubmit = () => {
     setSuccessMessage('');
     setErrors({});
-    const inputErrors = registerInputValidation({
-      ...inputValues,
-      username: inputValues.employeeId
-    });
+    const inputErrors = registerInputValidation(inputValues);
 
     if (isEmptyObject(inputErrors))
       // register user using api
-      register({
-        ...inputValues,
-        username: inputValues.employeeId
-      })
+      register(inputValues)
         .then(() => {
           setSuccessMessage('You are registered successfully, now you can login.');
         })
@@ -114,208 +113,248 @@ const Register = () => {
           <h2 className="my-8 font-display font-medium text-4xl text-pink-700 text-center">
             Register
           </h2>
-          <div className="text-center mb-5 pr-22">
-            <input
-              type="number"
-              name="employeeId"
-              placeholder="Employee Id"
-              value={!inputValues.employeeId ? '' : inputValues.employeeId}
-              onChange={handleInputChange}
-              className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
-            />
-            {!errors.employeeId ? null : (
-              <div className="text-center text-pink-700 text-lg mt-2">
-                <p>{errors.employeeId}</p>
-              </div>
-            )}
+          <div className="flex justify-center mb-5 pr-22">
+            <div>
+              <input
+                type="number"
+                name="username"
+                placeholder="Employee Id"
+                value={!inputValues.username ? '' : inputValues.username} // username is same as employee id
+                onChange={handleInputChange}
+                className={`flex-1 py-2 border-b-2 ${
+                  !errors.username ? "border-gray-400" : "border-red-500"
+                } focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96`}
+              />
+              {!errors.username ? null : (
+                <div className="text-sm text-pink-700 text-lg mt-2">
+                  <p>{errors.username}</p>
+                </div>
+              )}
+            </div>
           </div>
-          <div className="text-center mb-5">
-            <input
-              type="text"
-              name="employeeName"
-              placeholder="Employee Name"
-              value={inputValues.employeeName}
-              onChange={handleInputChange}
-              className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
-            />
-            {!errors.employeeName ? null : (
-              <div className="text-center text-pink-700 text-lg mt-2">
-                <p>{errors.employeeName}</p>
-              </div>
-            )}
+          <div className="flex justify-center mb-5">
+            <div>
+              <input
+                type="text"
+                name="employeeName"
+                placeholder="Employee Name"
+                value={inputValues.employeeName}
+                onChange={handleInputChange}
+                className={`flex-1 py-2 border-b-2 ${
+                  !errors.employeeName ? "border-gray-400" : "border-red-500"
+                } focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96`}
+              />
+              {!errors.employeeName ? null : (
+                <div className="text-sm text-pink-700 text-lg mt-2">
+                  <p>{errors.employeeName}</p>
+                </div>
+              )}
+            </div>
           </div>
-          <div className="text-center mb-5">
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Email"
-              value={inputValues.email}
-              onChange={handleInputChange}
-              className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
-            />
-            {!errors.email ? null : (
-              <div className="text-center text-pink-700 text-lg mt-2">
-                <p>{errors.email}</p>
-              </div>
-            )}
+          <div className="flex justify-center mb-5">
+            <div>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Email"
+                value={inputValues.email}
+                onChange={handleInputChange}
+                className={`flex-1 py-2 border-b-2 ${
+                  !errors.email ? "border-gray-400" : "border-red-500"
+                } focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96`}
+              />
+              {!errors.email ? null : (
+                <div className="text-sm text-pink-700 text-lg mt-2">
+                  <p>{errors.email}</p>
+                </div>
+              )}
+            </div>
           </div>
-          <div className="text-center mb-5">
-            <select
-              className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
-              name="accountTypeId"
-              value={inputValues.accountTypeId}
-              onChange={handleInputChange}
-            >
-              <option value={0} label="---Select Account Type---" />
-              {accountTypes.map((type) => (
-                <option
-                  value={type.accountId}
-                  label={type.accountName}
-                  key={type.accountId}
+          <div className="flex justify-center mb-5">
+            <div>
+              <select
+                className={`flex-1 py-2 border-b-2 ${
+                  !errors.accountTypeId ? "border-gray-400" : "border-red-500"
+                } focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96`}
+                name="accountTypeId"
+                value={inputValues.accountTypeId}
+                onChange={handleInputChange}
+              >
+                <option value={0} label="---Select Account Type---" />
+                {accountTypes.map((type) => (
+                  <option
+                    value={type.accountId}
+                    label={type.accountName}
+                    key={type.accountId}
+                  />
+                ))}
+              </select>
+              {!errors.accountTypeId ? null : (
+                <div className="text-sm text-pink-700 text-lg mt-2">
+                  <p>{errors.accountTypeId}</p>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="flex justify-center mb-5">
+            <div>
+              <input
+                type="number"
+                name="contactNumber"
+                placeholder="Contact Number"
+                value={!inputValues.contactNumber ? '' : inputValues.contactNumber}
+                onChange={handleInputChange}
+                className={`flex-1 py-2 border-b-2 ${
+                  !errors.contactNumber ? "border-gray-400" : "border-red-500"
+                } focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96`}
+              />
+              {!errors.contactNumber ? null : (
+                <div className="text-sm text-pink-700 text-lg mt-2">
+                  <p>{errors.contactNumber}</p>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="flex justify-center mb-5">
+            <div>
+              <input
+                type="text"
+                name="username"
+                placeholder="Username"
+                value={!inputValues.username ? '' : inputValues.username}
+                disabled
+                className={`flex-1 py-2 border-b-2 ${
+                  !errors.username ? "border-gray-400" : "border-red-500"
+                } text-gray-400 placeholder-zinc-300 outline-none w-96 cursor-not-allowed`}
+              />
+              {!errors.username ? null : (
+                <div className="text-sm text-pink-700 text-lg mt-2">
+                  <p>{errors.username}</p>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="flex justify-center mb-5">
+            <div>
+              <select
+                className={`flex-1 py-2 border-b-2 ${
+                  !errors.securityQuestionId ? "border-gray-400" : "border-red-500"
+                } focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96`}
+                name="securityQuestionId"
+                value={inputValues.securityQuestionId}
+                onChange={handleInputChange}
+              >
+                <option value={0} label="---Select Secret Question---" />
+                {securityQuestions.map((question) => (
+                  <option
+                    value={question.securityQuestionId}
+                    label={question.securityQuestionText}
+                    key={question.securityQuestionId}
+                  />
+                ))}
+              </select>
+              {!errors.securityQuestionId ? null : (
+                <div className="text-sm text-pink-700 text-lg mt-2">
+                  <p>{errors.securityQuestionId}</p>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="flex flex-col items-center justify-center mb-5 pr-22">
+            <div>
+              <div className="relative w-fit">
+                <input
+                  type={visibility.securityAnswer ? "text" : "password"}
+                  id="securityAnswer"
+                  name="securityQuestionAnswer"
+                  placeholder="Your answer for the secret question"
+                  value={inputValues.securityQuestionAnswer}
+                  onChange={handleInputChange}
+                  className={`flex-1 py-2 border-b-2 ${
+                    !errors.securityQuestionAnswer ? "border-gray-400" : "border-red-500"
+                  } focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96`}
                 />
-              ))}
-            </select>
-            {!errors.accountTypeId ? null : (
-              <div className="text-center text-pink-700 text-lg mt-2">
-                <p>{errors.accountTypeId}</p>
-              </div>
-            )}
-          </div>
-          <div className="text-center mb-5">
-            <input
-              type="number"
-              name="contactNumber"
-              placeholder="Contact Number"
-              value={!inputValues.contactNumber ? '' : inputValues.contactNumber}
-              onChange={handleInputChange}
-              className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
-            />
-            {!errors.contactNumber ? null : (
-              <div className="text-center text-pink-700 text-lg mt-2">
-                <p>{errors.contactNumber}</p>
-              </div>
-            )}
-          </div>
-          <div className="text-center mb-5">
-            <input
-              type="text"
-              name="username"
-              placeholder="Username"
-              value={!inputValues.employeeId ? '' : inputValues.employeeId} // username is same as employee id
-              disabled
-              className="flex-1 py-2 border-b-2 border-gray-300 text-gray-400 placeholder-zinc-300 outline-none w-96 cursor-not-allowed"
-            />
-            {!errors.username ? null : (
-              <div className="text-center text-pink-700 text-lg mt-2">
-                <p>{errors.username}</p>
-              </div>
-            )}
-          </div>
-          <div className="text-center mb-5">
-            <select
-              className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
-              name="securityQuestionId"
-              value={inputValues.securityQuestionId}
-              onChange={handleInputChange}
-            >
-              <option value={0} label="---Select Secret Question---" />
-              {securityQuestions.map((question) => (
-                <option
-                  value={question.securityQuestionId}
-                  label={question.securityQuestionText}
-                  key={question.securityQuestionId}
+                <FontAwesomeIcon
+                  icon={visibility.securityAnswer ? faEye : faEyeSlash}
+                  size="lg"
+                  className="text-gray-600 cursor-pointer absolute float-right z-10 -ml-5 mt-3"
+                  name="securityAnswer"
+                  onClick={() => handleVisibilityChange("securityAnswer")}
                 />
-              ))}
-            </select>
-            {!errors.securityQuestionId ? null : (
-              <div className="text-center text-pink-700 text-lg mt-2">
-                <p>{errors.securityQuestionId}</p>
               </div>
-            )}
-          </div>
-          <div className="flex flex-col items-center text-center mb-5 pr-22">
-            <div className="relative w-fit">
-              <input
-                type={visibility.securityAnswer ? "text" : "password"}
-                id="securityAnswer"
-                name="securityQuestionAnswer"
-                placeholder="Your answer for the secret question"
-                value={inputValues.securityQuestionAnswer}
-                onChange={handleInputChange}
-                className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96 "
-              />
-              <FontAwesomeIcon
-                icon={visibility.securityAnswer ? faEye : faEyeSlash}
-                size="lg"
-                className="text-gray-600 cursor-pointer absolute float-right z-10 -ml-5 mt-3"
-                name="securityAnswer"
-                onClick={() => handleVisibilityChange("securityAnswer")}
-              />
+              {!errors.securityQuestionAnswer ? null : (
+                <div className="text-sm text-pink-700 text-lg mt-2">
+                  <p>{errors.securityQuestionAnswer}</p>
+                </div>
+              )}
             </div>
-            {!errors.securityQuestionAnswer ? null : (
-              <div className="text-center text-pink-700 text-lg mt-2">
-                <p>{errors.securityQuestionAnswer}</p>
+          </div>
+          <div className="flex flex-col items-center justify-center mb-5">
+            <div>
+              <div className="relative w-fit">
+                <input
+                  type={visibility.password ? "text" : "password"}
+                  id="password"
+                  name="password"
+                  placeholder="Password"
+                  minLength="8"
+                  required
+                  value={inputValues.password}
+                  onChange={handleInputChange}
+                  className={`py-2 border-b-2 ${
+                    !errors.password ? "border-gray-400" : "border-red-500"
+                  } focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96`}
+                />
+                <FontAwesomeIcon
+                  icon={visibility.password ? faEye : faEyeSlash}
+                  size="lg"
+                  className="text-gray-600 cursor-pointer absolute float-right z-10 -ml-5 mt-3"
+                  name="password"
+                  onClick={() => handleVisibilityChange("password")}
+                />
               </div>
-            )}
-          </div>
-          <div className="flex flex-col items-center text-center mb-5">
-            <div className="relative w-fit">
-              <input
-                type={visibility.password ? "text" : "password"}
-                id="password"
-                name="password"
-                placeholder="Password"
-                minLength="8"
-                required
-                value={inputValues.password}
-                onChange={handleInputChange}
-                className="py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
-              />
-              <FontAwesomeIcon
-                icon={visibility.password ? faEye : faEyeSlash}
-                size="lg"
-                className="text-gray-600 cursor-pointer absolute float-right z-10 -ml-5 mt-3"
-                name="password"
-                onClick={() => handleVisibilityChange("password")}
-              />
+              {!errors.password ? null : (
+                <div className="text-sm text-pink-700 text-lg mt-2">
+                  <p>{errors.password}</p>
+                </div>
+              )}
             </div>
-            {!errors.password ? null : (
-              <div className="text-center text-pink-700 text-lg mt-2">
-                <p>{errors.password}</p>
+          </div>
+          <div className="flex flex-col items-center justify-center mb-10">
+            <div>
+              <div className="relative w-fit">
+                <input
+                  type={visibility.confirmPassword ? "text" : "password"}
+                  id="cpassword"
+                  name="confirmPassword"
+                  placeholder="Confirm password"
+                  minLength="8"
+                  required
+                  value={inputValues.confirmPassword}
+                  onChange={handleInputChange}
+                  className={`py-2 border-b-2 ${
+                    !errors.confirmPassword ? "border-gray-400" : "border-red-500"
+                  } focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96`}
+                />
+                <FontAwesomeIcon
+                  icon={visibility.confirmPassword ? faEye : faEyeSlash}
+                  size="lg"
+                  className="text-gray-600 cursor-pointer absolute float-right z-10 -ml-5 mt-3"
+                  onClick={() => handleVisibilityChange("confirmPassword")}
+                />
               </div>
-            )}
-          </div>
-          <div className="flex flex-col items-center text-center mb-10">
-            <div className="relative w-fit">
-              <input
-                type={visibility.confirmPassword ? "text" : "password"}
-                id="cpassword"
-                name="confirmPassword"
-                placeholder="Confirm password"
-                minLength="8"
-                required
-                value={inputValues.confirmPassword}
-                onChange={handleInputChange}
-                className="py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
-              />
-              <FontAwesomeIcon
-                icon={visibility.confirmPassword ? faEye : faEyeSlash}
-                size="lg"
-                className="text-gray-600 cursor-pointer absolute float-right z-10 -ml-5 mt-3"
-                onClick={() => handleVisibilityChange("confirmPassword")}
-              />
-            </div>
-              {/* flex end */}
+                {/* flex end */}
 
-            {!errors.confirmPassword ? null : (
-              <div className="text-center text-pink-700 text-lg mt-2">
-                <p>{errors.confirmPassword}</p>
-              </div>
-            )}
+              {!errors.confirmPassword ? null : (
+                <div className="text-sm text-pink-700 text-lg mt-2">
+                  <p>{errors.confirmPassword}</p>
+                </div>
+              )}
+            </div>
           </div>
           {!errors.main ? null : (
-            <div className="text-center text-pink-700 text-lg mb-5">
+            <div className="text-sm text-center text-pink-700 text-lg mb-5">
               <p>{errors.main}</p>
             </div>
           )}
@@ -334,7 +373,7 @@ const Register = () => {
           </div>
         </div>
 
-        <div className="pl-60 pt-2 ">
+        <div className="pl-60 pt-2 mb-20">
           <label
             htmlFor="account"
             className="inline-block w-25 mr-6 text-center font-medium text-gray-600"
