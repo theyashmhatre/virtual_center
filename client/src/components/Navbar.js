@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Navbar = () => {
   return (
@@ -17,7 +19,10 @@ const Navbar = () => {
           />
         </li>
         <li>
-          <div className="rounded-full bg-white px-11 p-1">Shubham </div>
+          <div className="rounded-full bg-white px-11 p-1">
+            <FontAwesomeIcon icon={faUser} size="sm" className=" mr-1" />
+            Shubham
+          </div>
         </li>
       </ul>
 
