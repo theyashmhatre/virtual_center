@@ -3,7 +3,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthSidebar } from "../../components/AuthSidebar";
-import { getAccountTypes, getSecurityQuestions, register } from "../../utilities/api/user";
+import {
+  getAccountTypes,
+  getSecurityQuestions,
+  register,
+} from "../../utilities/api/user";
 import { isEmptyObject } from "../../utilities/utils";
 import { registerInputValidation } from "../../utilities/validation/user";
 
@@ -22,7 +26,7 @@ const initialInputValues = {
 const initialVisibility = {
   password: false,
   confirmPassword: false,
-  securityAnswer: false
+  securityAnswer: false,
 };
 
 const Register = () => {
@@ -31,7 +35,7 @@ const Register = () => {
   const [visibility, setVisibility] = useState(initialVisibility);
   const [securityQuestions, setSecurityQuestions] = useState([]);
   const [errors, setErrors] = useState({});
-  const [successMessage, setSuccessMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleInputChange = (e) => {
     let { name, value, type } = e.target;
@@ -40,10 +44,10 @@ const Register = () => {
       ...errors,
       [name]: null,
     });
-    
+
     setInputValues({
       ...inputValues,
-      [name]: type == 'number' || type == 'select-one' ? Number(value) : value,
+      [name]: type == "number" || type == "select-one" ? Number(value) : value,
     });
   };
 
@@ -65,7 +69,7 @@ const Register = () => {
           else setErrors({ main: "Some Error Occured, Try Again!" });
         else setErrors({ main: "Some Error Occured, Try Again!" });
       });
-    
+
     getAccountTypes()
       .then(({ data }) => {
         setAccountTypes(data);
@@ -79,7 +83,7 @@ const Register = () => {
   }, []);
 
   const onSubmit = () => {
-    setSuccessMessage('');
+    setSuccessMessage("");
     setErrors({});
     const inputErrors = registerInputValidation(inputValues);
 
@@ -87,7 +91,9 @@ const Register = () => {
       // register user using api
       register(inputValues)
         .then(() => {
-          setSuccessMessage('You are registered successfully, now you can login.');
+          setSuccessMessage(
+            "You are registered successfully, now you can login."
+          );
         })
         .catch((error) => {
           if (error.response)
@@ -120,7 +126,7 @@ const Register = () => {
                 type="number"
                 name="username"
                 placeholder="Employee Id"
-                value={!inputValues.username ? '' : inputValues.username} // username is same as employee id
+                value={!inputValues.username ? "" : inputValues.username} // username is same as employee id
                 onChange={handleInputChange}
                 className={`flex-1 py-2 border-b-2 ${
                   !errors.username ? "border-gray-400" : "border-red-500"
@@ -204,7 +210,9 @@ const Register = () => {
                 type="number"
                 name="contactNumber"
                 placeholder="Contact Number"
-                value={!inputValues.contactNumber ? '' : inputValues.contactNumber}
+                value={
+                  !inputValues.contactNumber ? "" : inputValues.contactNumber
+                }
                 onChange={handleInputChange}
                 className={`flex-1 py-2 border-b-2 ${
                   !errors.contactNumber ? "border-gray-400" : "border-red-500"
@@ -223,7 +231,7 @@ const Register = () => {
                 type="text"
                 name="username"
                 placeholder="Username"
-                value={!inputValues.username ? '' : inputValues.username}
+                value={!inputValues.username ? "" : inputValues.username}
                 disabled
                 className={`flex-1 py-2 border-b-2 ${
                   !errors.username ? "border-gray-400" : "border-red-500"
@@ -240,7 +248,9 @@ const Register = () => {
             <div>
               <select
                 className={`flex-1 py-2 border-b-2 ${
-                  !errors.securityQuestionId ? "border-gray-400" : "border-red-500"
+                  !errors.securityQuestionId
+                    ? "border-gray-400"
+                    : "border-red-500"
                 } focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96`}
                 name="securityQuestionId"
                 value={inputValues.securityQuestionId}
@@ -273,7 +283,9 @@ const Register = () => {
                   value={inputValues.securityQuestionAnswer}
                   onChange={handleInputChange}
                   className={`flex-1 py-2 border-b-2 ${
-                    !errors.securityQuestionAnswer ? "border-gray-400" : "border-red-500"
+                    !errors.securityQuestionAnswer
+                      ? "border-gray-400"
+                      : "border-red-500"
                   } focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96`}
                 />
                 <FontAwesomeIcon
@@ -335,7 +347,9 @@ const Register = () => {
                   value={inputValues.confirmPassword}
                   onChange={handleInputChange}
                   className={`py-2 border-b-2 ${
-                    !errors.confirmPassword ? "border-gray-400" : "border-red-500"
+                    !errors.confirmPassword
+                      ? "border-gray-400"
+                      : "border-red-500"
                   } focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96`}
                 />
                 <FontAwesomeIcon
@@ -345,7 +359,7 @@ const Register = () => {
                   onClick={() => handleVisibilityChange("confirmPassword")}
                 />
               </div>
-                {/* flex end */}
+              {/* flex end */}
 
               {!errors.confirmPassword ? null : (
                 <div className="text-sm text-pink-700 text-lg mt-2">

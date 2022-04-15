@@ -14,8 +14,8 @@ const Solvers = () => {
   const updateSolvers = (id) => {
     getSolvers(id)
       .then(({ data }) => {
-        if (data.solvers_count)
-          setSolvers(data.solvers);
+        console.log(data);
+        if (data.solvers_count) setSolvers(data.solvers);
         else setSolvers([]);
       })
       .catch(() => {});
@@ -24,6 +24,7 @@ const Solvers = () => {
   useEffect(() => {
     getAccountTypes()
       .then(({ data }) => {
+        console.log(data);
         setAccountTypes(data);
         setAccountTypeId(1);
         updateSolvers(1);

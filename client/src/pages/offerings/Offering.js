@@ -15,7 +15,7 @@ const Offering = () => {
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState("");
   const [pageNo, setPageNo] = useState(1);
-  const [postSuccess, setPostSuccess] = useState(false)
+  const [postSuccess, setPostSuccess] = useState(false);
   const { offeringId } = useParams();
 
   useEffect(() => {
@@ -31,13 +31,12 @@ const Offering = () => {
     if (offeringId)
       getComments(offeringId, pageNo)
         .then(({ data }) => {
-          if (data.comments_list)
-            setComments(data.comments_list)
-          setPostSuccess(false)
+          if (data.comments_list) setComments(data.comments_list);
+          setPostSuccess(false);
         })
-        .catch(() => {})
+        .catch(() => {});
   }, [postSuccess]);
-  
+
   const onPost = () => {
     postComment(offeringId, commentText)
       .then(() => setPostSuccess(true))
@@ -70,9 +69,7 @@ const Offering = () => {
               {offering.description && (
                 <div
                   dangerouslySetInnerHTML={{
-                    __html: draftToHtml(
-                      JSON.parse(offering.description)
-                    ),
+                    __html: draftToHtml(JSON.parse(offering.description)),
                   }}
                 />
               )}

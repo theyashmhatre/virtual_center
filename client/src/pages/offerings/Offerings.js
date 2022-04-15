@@ -1,4 +1,9 @@
-import { faEnvelope, faPaperclip, faSpinner, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEnvelope,
+  faPaperclip,
+  faSpinner,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
@@ -19,13 +24,12 @@ const Offerings = () => {
   const handleScroll = (e) => {
     const window = e.currentTarget;
     if (
-      window.scrollY > (
-        window.document.documentElement.scrollHeight -
+      window.scrollY >
+      window.document.documentElement.scrollHeight -
         window.document.documentElement.clientHeight -
         100
-      )
     )
-      setPageNo(prevPageNo => prevPageNo+1);
+      setPageNo((prevPageNo) => prevPageNo + 1);
   };
 
   useEffect(() => {
@@ -37,7 +41,7 @@ const Offerings = () => {
       window.removeEventListener("scroll", (e) => handleScroll(e));
     };
   }, [window.scrollY]);
-  
+
   useEffect(() => {
     if (!moreOfferingsAvlbl) return;
 
@@ -45,10 +49,9 @@ const Offerings = () => {
       .then(({ data }) => {
         if (data.offerings_count)
           setOfferingData([...offeringData, ...data.offerings_list]);
-        
+
         setLoading(false);
-        if (data.offerings_count < limit)
-          setMoreOfferingsAvlbl(false);
+        if (data.offerings_count < limit) setMoreOfferingsAvlbl(false);
       })
       .catch((error) => {
         console.log(error);
@@ -61,21 +64,19 @@ const Offerings = () => {
       <Navbar />
 
       <div className="min-h-screen mx-16 my-5">
-        <h1 className="text-3xl text-center font-bold mb-10">
-          Offerings
-        </h1>
+        <h1 className="text-3xl text-center font-bold mb-10">Offerings</h1>
         <div className="lg:h-80v w-90v">
           <div className="lg:h-70v lg:w-4/5 flex md:flex-col md:items-center sm:items-center sm:flex-col justify-start flex-wrap">
             {/* Offerings blocks Started */}
 
-            {offeringData.map((data, id) => {
+            {offeringData.map((data) => {
               return (
                 <div
-                  key={id}
-                  className="border-2 shadow-sm hover:shadow-xl rounded-lg lg:mb-0 mb-4 mx-2 w-24per  md:w-1/2 sm:w-2/3 xs:w-5/6"
+                  key={data.offering_id}
+                  className="border-2 shadow-sm hover:shadow-xl rounded-lg lg:mb-0 mb-4 mx-1 w-24per  md:w-1/2 sm:w-2/3 xs:w-5/6"
                 >
-                  <div className="rounded-lg bg-gradient-to-r from-pink-900 to-blue-grd border-gray-500 border-2 flex flex-col justify-between p-3">
-                    <div className="h-25per flex justify-center">
+                  <div className="h-25per rounded-lg bg-gradient-to-r from-pink-900 to-blue-grd border-gray-500 border-2 flex flex-col justify-between p-3">
+                    <div className=" flex justify-center">
                       <h2 className="text-2xl font-mono font-semibold text-white">
                         {data.title}
                       </h2>
@@ -121,7 +122,6 @@ const Offerings = () => {
                         View Attachment
                         <FontAwesomeIcon
                           icon={faPaperclip}
-                          size="md"
                           className="p-0 pl-1"
                         />
                       </button>
