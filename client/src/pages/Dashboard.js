@@ -210,7 +210,10 @@ const Dashboard = () => {
                     key={index}
                     className="flex items-center space-x-1 px-2 py-1"
                   >
-                    <div className={`border-2 bg-${colors[index]}-600 rounded-full h-5 w-5`} />
+                    <div
+                      className={`border-2 rounded-full h-5 w-5`}
+                      style={{ backgroundColor: [colors[index]] }}
+                    />
                     <p className="text-sm">{challenge.accountName}</p>
                   </div>
                 ))}
