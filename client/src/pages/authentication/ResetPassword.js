@@ -110,7 +110,7 @@ const ResetPassword = () => {
                 />
               </div>
               {!errors.password ? null : (
-                <div className="text-sm text-pink-700 text-lg mt-2">
+                <div className="text-sm text-pink-700 text-lg mt-2 w-96 whitespace-normal">
                   <p>{errors.password}</p>
                 </div>
               )}
@@ -140,7 +140,7 @@ const ResetPassword = () => {
                   {/* flex end */}
 
               {!errors.confirmPassword ? null : (
-                <div className="text-sm text-pink-700 text-lg mt-2">
+                <div className="text-sm text-pink-700 text-lg mt-2 w-96 whitespace-normal">
                   <p>{errors.confirmPassword}</p>
                 </div>
               )}

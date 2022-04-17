@@ -4,18 +4,10 @@ import { useParams } from "react-router";
 import Comments from "../../components/Comments";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
-import {
-  getSingleSolution,
-  getComments,
-  postComment,
-} from "../../utilities/api/solution";
+import { getSingleSolution } from "../../utilities/api/solution";
 
 const Solution = () => {
   const [solution, setSolution] = useState({});
-  const [comments, setComments] = useState([]);
-  const [commentText, setCommentText] = useState("");
-  const [pageNo, setPageNo] = useState(1);
-  const [postSuccess, setPostSuccess] = useState(false);
   const { solutionId } = useParams();
 
   useEffect(() => {
@@ -24,24 +16,6 @@ const Solution = () => {
         .then(({ data }) => setSolution(data))
         .catch(() => {});
   }, []);
-
-  useEffect(() => {
-    if (solutionId)
-      getComments(solutionId, pageNo)
-        .then(({ data }) => {
-          setComments(data.comments);
-          setPostSuccess(false);
-        })
-        .catch((e) => {
-          console.log(e.response);
-        });
-  }, [postSuccess]);
-
-  const onPost = () => {
-    postComment(solutionId, commentText)
-      .then(() => setPostSuccess(true))
-      .catch(() => {});
-  };
 
   return (
     <div>
@@ -69,13 +43,7 @@ const Solution = () => {
             </div>
           </div>
         </div>
-        <Comments
-          comments={comments}
-          commentText={commentText}
-          setCommentText={setCommentText}
-          onClick={onPost}
-          success={postSuccess}
-        />
+        <Comments type="solution" id={solutionId} />
       </div>
       <Footer />
     </div>
