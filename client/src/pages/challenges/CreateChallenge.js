@@ -9,19 +9,19 @@ import { isEmptyObject } from "../../utilities/utils";
 import { createChallengeInputValidation } from "../../utilities/validation/challenge";
 
 const initialInputValues = {
-  title: '',
+  title: "",
   description: EditorState.createEmpty(),
-  cloudProvider: '',
-  coverImage: '',
+  cloudProvider: "",
+  coverImage: "",
   tags: [],
-  endDate: '',
+  endDate: "",
   privacyCheck: false,
 };
 
 const CreateChallenge = () => {
   const [inputValues, setInputValues] = useState(initialInputValues);
   const [errors, setErrors] = useState({});
-  const [successMessage, setSuccessMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleInputChange = (e) => {
     let { name, value, type, files } = e.target;
@@ -35,13 +35,15 @@ const CreateChallenge = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     setErrors({});
-    setSuccessMessage('');
+    setSuccessMessage("");
     const inputErrors = createChallengeInputValidation(inputValues);
 
     if (isEmptyObject(inputErrors))
       createChallenge({
         ...inputValues,
-        description: JSON.stringify(convertToRaw(inputValues.description.getCurrentContent()))
+        description: JSON.stringify(
+          convertToRaw(inputValues.description.getCurrentContent())
+        ),
       })
         .then(() => setSuccessMessage("Challenge is created!!"))
         .catch((error) => {
@@ -62,7 +64,12 @@ const CreateChallenge = () => {
         </h1>
         <div className="space-y-5">
           <div>
-            <label className="block mb-1 font-bold text-gray-500">Title</label>
+            <label
+              htmlFor="title"
+              className="block mb-1 font-bold text-gray-500"
+            >
+              Title
+            </label>
             <input
               type="text"
               name="title"
@@ -81,7 +88,10 @@ const CreateChallenge = () => {
             )}
           </div>
           <div>
-            <label className="block mb-1 font-bold text-gray-500">
+            <label
+              htmlFor="desription"
+              className="block mb-1 font-bold text-gray-500"
+            >
               Challenge Description
             </label>
             <RichTextEditor
@@ -89,8 +99,8 @@ const CreateChallenge = () => {
               setEditorState={(value) => {
                 setInputValues({
                   ...inputValues,
-                  description: value
-                })
+                  description: value,
+                });
               }}
               placeholder="Type challenge description here"
             />
@@ -104,7 +114,9 @@ const CreateChallenge = () => {
             )}
           </div>
           <div>
-            <label className="block mb-1 font-bold text-gray-500">Cloud Provider</label>
+            <label className="block mb-1 font-bold text-gray-500">
+              Cloud Provider
+            </label>
             <input
               type="text"
               name="cloudProvider"
@@ -120,7 +132,9 @@ const CreateChallenge = () => {
             )}
           </div>
           <div>
-            <label className="block mb-1 font-bold text-gray-500">Cover Image</label>
+            <label className="block mb-1 font-bold text-gray-500">
+              Cover Image
+            </label>
             <input
               type="file"
               accept="image/*"
@@ -142,9 +156,10 @@ const CreateChallenge = () => {
               setTags={(value) => {
                 setInputValues({
                   ...inputValues,
-                  tags: value
-                })
-              }} />
+                  tags: value,
+                });
+              }}
+            />
             <label htmlFor="tags" className="ml-2 text-gray-400 text-sm">
               Please use meaningful tags that makes it easy for others to
               discover your content.
@@ -179,10 +194,12 @@ const CreateChallenge = () => {
                 id="agree"
                 name="privacyCheck"
                 value={inputValues.privacyCheck}
-                onChange={() => setInputValues({
-                  ...inputValues,
-                  privacyCheck: !inputValues.privacyCheck
-                })}
+                onChange={() =>
+                  setInputValues({
+                    ...inputValues,
+                    privacyCheck: !inputValues.privacyCheck,
+                  })
+                }
               />
               <label htmlFor="agree" className="ml-2 text-gray-700 text-sm">
                 I agree to the terms and privacy of TCS.
