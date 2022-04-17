@@ -38,3 +38,17 @@ export const searchChallenges = async (searchQuery, pageNo) => {
   const endpoint = `/api/challenge/search/${searchQuery}/${pageNo}`;
   return await api.get(endpoint);
 };
+
+export const getChallengeComments = async (challengeId, pageNo=1, limit=5) => {
+  const endpoint = `/api/challenge/comment/${challengeId}/${pageNo}/${limit}`;
+  return await api.get(endpoint);
+};
+
+export const postChallengeComment = async (challengeId, commentText) => {
+  const endpoint = `/api/challenge/comment/create`;
+  return await api.post(endpoint, { challengeId, commentText }, {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  });
+};
