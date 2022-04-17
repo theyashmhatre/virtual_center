@@ -100,11 +100,12 @@ router.post("/like", passport.authenticate("jwt", { session: false }), (req, res
         if (!offeringId || !userId || offeringId == null || userId == null) return res.status(400).json({ main: "Something went wrong. Please try again", devMsg: `Either offeringId or userId is invalid. OfferingId: ${offeringId} userId: ${userId}` })
 
         const newLike = {
-            offering_id: offeringId,
-            user_id: userId
+            user_id: userId,
+            post_id: offeringId,
+            type_id: 3
         };
 
-        mysqlConnection.query(`INSERT IGNORE INTO offering_like SET ? `, newLike, (sqlErr, result, fields) => {
+        mysqlConnection.query(`INSERT IGNORE INTO likes SET ? `, newLike, (sqlErr, result, fields) => {
             if (sqlErr) {
                 return res.status(500).json({
                     main: "Something went wrong. Please try again.",
@@ -134,7 +135,7 @@ router.post("/dislike", passport.authenticate("jwt", { session: false }), (req, 
 
         if (!offeringId || !userId || offeringId == null || userId == null) return res.status(400).json({ main: "Something went wrong. Please try again", devMsg: `Either offeringId or userId is invalid. OfferingId: ${offeringId} userId: ${userId}` })
 
-        mysqlConnection.query(`DELETE FROM offering_like WHERE user_id=${userId} AND offering_id = ${offeringId}`, (sqlErr, result, fields) => {
+        mysqlConnection.query(`DELETE FROM likes WHERE user_id=${userId} AND post_id = ${offeringId} AND type_id = 3`, (sqlErr, result, fields) => {
             if (sqlErr) {
                 return res.status(500).json({
                     main: "Something went wrong. Please try again.",
@@ -168,7 +169,7 @@ router.get("/check-like/:userId/:offeringId", passport.authenticate("jwt", { ses
             offering_id: offeringId,
             user_id: userId
         };
-        mysqlConnection.query(`SELECT * from offering_like where offering_id = ${offeringId} AND user_id = ${userId}`, (sqlErr, result, fields) => {
+        mysqlConnection.query(`SELECT * from likes where post_id = ${offeringId} AND user_id = ${userId} AND type_id = 3`, (sqlErr, result, fields) => {
             if (sqlErr) {
                 return res.status(500).json({
                     main: "Something went wrong. Please try again.",
@@ -199,7 +200,7 @@ router.get("/:offeringId/likes/count", passport.authenticate("jwt", { session: f
         if (!offeringId || offeringId == null)
             return res.status(400).json({ main: "Something went wrong. Please try again", devMsg: `offeringId is invalid. OfferingId: ${offeringId}` });
 
-        mysqlConnection.query(`SELECT COUNT(*) as totalLikes from offering_like where offering_id = ${offeringId}`, (sqlErr, result, fields) => {
+        mysqlConnection.query(`SELECT COUNT(*) as totalLikes from likes where post_id = ${offeringId} AND type_id = 3`, (sqlErr, result, fields) => {
             if (sqlErr) {
                 return res.status(500).json({
                     main: "Something went wrong. Please try again.",

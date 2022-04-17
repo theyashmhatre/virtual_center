@@ -15,36 +15,21 @@ router.post("/create", passport.authenticate("jwt", { session: false }), (req, r
 
         const newComment = {
             user_id: userId,
-            offering_id: offeringId,
+            post_id: offeringId,
+            type_id: 3,
             comment_text: commentText,
         };
 
-        mysqlConnection.query(`SELECT * FROM offering_comment WHERE user_id = ${userId} AND offering_id = ${offeringId}`, (sqlErr, result, fields) => {
+        mysqlConnection.query(`INSERT INTO comment SET ?`, newComment, (sqlErr, result, fields) => {
             if (sqlErr) {
                 return res.status(500).json({
                     main: "Something went wrong. Please try again.",
                     devError: sqlErr,
-                    devMsg: "Error occured while checking if user has liked the post",
+                    devMsg: "Error occured while adding comment to db",
                 });
 
-            } else if (result.length) {
-                return res.status(200).json({
-                    main: "Each user is allowed to post a single comment on each offering.",
-                    devMsg: "User's comment already exists on the particular offering"
-                });
             } else {
-                mysqlConnection.query(`INSERT INTO offering_comment SET ?`, newComment, (sqlErr, result, fields) => {
-                    if (sqlErr) {
-                        return res.status(500).json({
-                            main: "Something went wrong. Please try again.",
-                            devError: sqlErr,
-                            devMsg: "Error occured while adding comment to db",
-                        });
-
-                    } else {
-                        return res.status(201).json({ main: "Comment added successfully" });
-                    }
-                });
+                return res.status(201).json({ main: "Comment added successfully" });
             }
         });
     } catch (error) {
@@ -79,20 +64,36 @@ router.get("/multiple/:offeringId/:pageNum/:limit", passport.authenticate("jwt",
 
         mysqlConnection.query(
 
-            `SELECT c.*, IF(v.user_id is NOT NULL,1,0) as isLiked, u.employee_name, u.email, u.display_picture, IF(ocv.offering_comment_id is NOT NULL,COUNT(*),0) as totalLikes
-            FROM offering_comment c
-            INNER JOIN user u 
+            // `SELECT c.*, IF(v.user_id is NOT NULL,1,0) as isLiked, u.employee_name, u.email, u.display_picture, IF(ocv.offering_comment_id is NOT NULL,COUNT(*),0) as totalLikes
+            // FROM offering_comment c
+            // INNER JOIN user u 
+            // ON c.user_id = u.user_id
+            // LEFT JOIN
+            // offering_comment_upvote ocv
+            // ON c.offering_comment_id = ocv.offering_comment_id
+            // LEFT JOIN 
+            // offering_comment_upvote v 
+            // ON c.offering_comment_id = v.offering_comment_id AND v.user_id = ${userId}
+            // where c.offering_id = ${offeringId}
+            // GROUP BY v.offering_comment_id
+            // ORDER BY c.posted_on DESC
+            // LIMIT ? OFFSET ?`,
+
+            `SELECT c.*, IF(v.user_id is NOT NULL,1,0) as isUpvoted, u.employee_name, u.email, u.display_picture, IF(upv.comment_id is NOT NULL,COUNT(*),0) as totalUpvotes
+            FROM comment c
+            INNER JOIN user u
             ON c.user_id = u.user_id
             LEFT JOIN
-            offering_comment_upvote ocv
-            ON c.offering_comment_id = ocv.offering_comment_id
-            LEFT JOIN 
-            offering_comment_upvote v 
-            ON c.offering_comment_id = v.offering_comment_id AND v.user_id = ${userId}
-            where c.offering_id = ${offeringId}
-            GROUP BY v.offering_comment_id
+            upvote upv
+            ON c.comment_id = upv.comment_id AND upv.type_id = 3
+            LEFT JOIN
+            upvote v
+            ON c.comment_id = v.comment_id AND v.user_id = ${userId} AND v.type_id = 3
+            where c.post_id = ${offeringId} AND c.type_id = 3
+            GROUP BY c.comment_id
             ORDER BY c.posted_on DESC
-            LIMIT ? OFFSET ?`,
+            LIMIT ? OFFSET ?
+            `,
 
             [limit, offset], (sqlErr, result, fields) => {
 
@@ -107,27 +108,13 @@ router.get("/multiple/:offeringId/:pageNum/:limit", passport.authenticate("jwt",
                     return res.status(200).json({ comments_count: result.length, main: "No comments found." });
 
                 } else {
-                    mysqlConnection.query(
-                        `SELECT * FROM offering_comment oc INNER JOIN user u ON oc.user_id = u.user_id WHERE oc.user_id = ${res.req.user.user_id} AND oc.offering_id = ${offeringId}`,
-                        (sqlErr2, result2, fields2) => {
-                            if (sqlErr2) {
-                                return res.status(500).json({
-                                    main: "Something went wrong. Please try again.",
-                                    devError: sqlErr2,
-                                    devMsg: "Error occured while fetching single comment of user from db",
-                                });
-                            } else {
+                    let data = {
+                        comments_count: result.length,
+                        page_number: pageNum,
+                        comments_list: result
+                    };
 
-                                let data = {
-                                    comments_count: result.length,
-                                    page_number: pageNum,
-                                    comments_list: result,
-                                    user_comment: result2[0]
-                                };
-
-                                res.status(200).json(data);
-                            }
-                        });
+                    res.status(200).json(data);
                 }
             });
 
@@ -151,11 +138,12 @@ router.post("/upvote", passport.authenticate("jwt", { session: false }), (req, r
         if (!commentId || !userId || commentId == null || userId == null) return res.status(400).json({ main: "Something went wrong. Please try again", devMsg: `Either commentId or userId is invalid. OfferingId: ${commentId} userId: ${userId}` });
 
         const newUpvote = {
-            offering_comment_id: commentId,
-            user_id: userId
+            comment_id: commentId,
+            user_id: userId,
+            type_id: 3
         };
 
-        mysqlConnection.query(`INSERT IGNORE INTO offering_comment_upvote SET ? `, newUpvote, (sqlErr, result, fields) => {
+        mysqlConnection.query(`INSERT IGNORE INTO upvote SET ? `, newUpvote, (sqlErr, result, fields) => {
             if (sqlErr) {
                 return res.status(500).json({
                     main: "Something went wrong. Please try again.",
@@ -185,7 +173,7 @@ router.post("/downvote", passport.authenticate("jwt", { session: false }), (req,
 
         if (!commentId || !userId || commentId == null || userId == null) return res.status(400).json({ main: "Something went wrong. Please try again", devMsg: `Either commentId or userId is invalid. OfferingId: ${commentId} userId: ${userId}` });
 
-        mysqlConnection.query(`DELETE FROM offering_comment_upvote WHERE user_id=${userId} AND offering_comment_id = ${commentId}`, (sqlErr, result, fields) => {
+        mysqlConnection.query(`DELETE FROM upvote WHERE user_id=${userId} AND comment_id = ${commentId} AND type_id = 3`, (sqlErr, result, fields) => {
             if (sqlErr) {
                 return res.status(500).json({
                     main: "Something went wrong. Please try again.",
@@ -216,7 +204,7 @@ router.get("/check-upvote/:userId/:commentId", passport.authenticate("jwt", { se
             return res.status(400).json({ main: "Something went wrong. Please try again", devMsg: `Either commentId or userId is invalid. OfferingId: ${commentId} userId: ${userId}` })
 
 
-        mysqlConnection.query(`SELECT * from offering_comment_upvote where offering_comment_id = ${commentId} AND user_id = ${userId}`, (sqlErr, result, fields) => {
+        mysqlConnection.query(`SELECT * from upvote where comment_id = ${commentId} AND user_id = ${userId} AND type_id = 3`, (sqlErr, result, fields) => {
             if (sqlErr) {
                 return res.status(500).json({
                     main: "Something went wrong. Please try again.",
@@ -247,7 +235,7 @@ router.get("/:commentId/upvotes/count", passport.authenticate("jwt", { session: 
         if (!commentId || commentId == null)
             return res.status(400).json({ main: "Something went wrong. Please try again", devMsg: `commentId is invalid. CommentId: ${commentId}` });
 
-        mysqlConnection.query(`SELECT COUNT(*) as totalUpvotes from offering_comment_upvote where offering_comment_id = ${commentId}`, (sqlErr, result, fields) => {
+        mysqlConnection.query(`SELECT COUNT(*) as totalUpvotes from upvote where comment_id = ${commentId} AND type_id = 3`, (sqlErr, result, fields) => {
             if (sqlErr) {
                 return res.status(500).json({
                     main: "Something went wrong. Please try again.",
@@ -270,7 +258,6 @@ router.get("/:commentId/upvotes/count", passport.authenticate("jwt", { session: 
         });
     }
 });
-
 
 
 module.exports = router;
