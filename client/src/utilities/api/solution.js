@@ -17,7 +17,7 @@ export const createSolution = async ({
   });
 };
 
-export const getSolutions = async (challengeId, pageNo) => {
+export const getSolutions = async (challengeId, pageNo=1) => {
   const endpoint = `/api/solution/get-solutions/${challengeId}/${pageNo}`;
   return await api.get(endpoint);
 };
@@ -27,12 +27,12 @@ export const getSingleSolution = async (solutionId) => {
   return await api.get(endpoint);
 };
 
-export const getComments = async (solutionId, pageNo=1) => {
-  const endpoint = `/api/solution/comments/${solutionId}`;
+export const getSolutionComments = async (solutionId, pageNo=1, limit=5) => {
+  const endpoint = `/api/solution/get-comments/${solutionId}/${pageNo}`;
   return await api.get(endpoint);
 };
 
-export const postComment = async (solutionId, commentText) => {
+export const postSolutionComment = async (solutionId, commentText) => {
   const endpoint = `/api/solution/${solutionId}/comment`;
   return await api.post(endpoint, { commentText }, {
     headers: {

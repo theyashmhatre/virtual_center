@@ -4,18 +4,10 @@ import { useParams } from "react-router";
 import Comments from "../../components/Comments";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
-import {
-  getComments,
-  getSingleOffering,
-  postComment,
-} from "../../utilities/api/offering";
+import { getSingleOffering } from "../../utilities/api/offering";
 
 const Offering = () => {
   const [offering, setOffering] = useState({});
-  const [comments, setComments] = useState([]);
-  const [commentText, setCommentText] = useState("");
-  const [pageNo, setPageNo] = useState(1);
-  const [postSuccess, setPostSuccess] = useState(false);
   const { offeringId } = useParams();
 
   useEffect(() => {
@@ -26,22 +18,6 @@ const Offering = () => {
         })
         .catch(() => {});
   }, []);
-
-  useEffect(() => {
-    if (offeringId)
-      getComments(offeringId, pageNo)
-        .then(({ data }) => {
-          if (data.comments_list) setComments(data.comments_list);
-          setPostSuccess(false);
-        })
-        .catch(() => {});
-  }, [postSuccess]);
-
-  const onPost = () => {
-    postComment(offeringId, commentText)
-      .then(() => setPostSuccess(true))
-      .catch(() => {});
-  };
 
   return (
     <div>
@@ -75,13 +51,8 @@ const Offering = () => {
               )}
             </div>
           </div>
-          <Comments
-            comments={comments}
-            commentText={commentText}
-            setCommentText={setCommentText}
-            onClick={onPost}
-            success={postSuccess}
-          />
+
+          <Comments type="offering" id={offeringId} />
         </div>
       </div>
       <Footer />
