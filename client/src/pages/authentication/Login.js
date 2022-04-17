@@ -1,9 +1,10 @@
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { AuthSidebar } from "../../components/AuthSidebar";
+import { AuthContext } from "../../contexts";
 import { login } from "../../utilities/api/user";
 import { isEmptyObject } from "../../utilities/utils";
 import { loginInputValidation } from "../../utilities/validation/user";
@@ -18,6 +19,7 @@ const Login = () => {
   const [passwordVisibility, setPasswordVisibility] = useState(false);
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+  const context = useContext(AuthContext);
 
   const handleInputChange = (e) => {
     let { name, value, type } = e.target;
@@ -40,7 +42,10 @@ const Login = () => {
     if (isEmptyObject(inputErrors))
       // signin using api
       login(inputValues)
-        .then(() => navigate("/"))
+        .then(({ data }) => {
+          context.storeAuth(data.token);
+          navigate("/");
+        })
         .catch((error) => {
           if (error.response)
             if (error.response.data) setErrors(error.response.data);

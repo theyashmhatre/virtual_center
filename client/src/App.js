@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import AuthNotRequired from "./components/Authentication/AuthNotRequired";
 import AuthRequired from "./components/Authentication/AuthRequired";
+import { AuthProvider } from "./contexts";
 import ForgotPassword from "./pages/authentication/ForgotPassword";
 import Login from "./pages/authentication/Login";
 import Register from "./pages/authentication/Register";
@@ -18,7 +19,7 @@ import Solvers from "./pages/Solvers";
 
 const App = () => {
   return (
-    <div>
+    <AuthProvider>
       <Routes>
         <Route
           path="/"
@@ -133,7 +134,7 @@ const App = () => {
           }
         />
       </Routes>
-    </div>
+    </AuthProvider>
   );
 };
 

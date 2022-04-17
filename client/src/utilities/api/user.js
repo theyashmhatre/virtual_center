@@ -1,5 +1,4 @@
 import axios from "axios";
-import jwt from "jsonwebtoken";
 import { apiURL } from "../../../constants";
 
 export const login = async ({ username, password }) => {
@@ -9,9 +8,6 @@ export const login = async ({ username, password }) => {
       username,
       password,
     })
-    .then((response) => {
-      sessionStorage.setItem("Access Token", response.data.token);
-    });
 };
 
 export const register = async ({
@@ -76,23 +72,4 @@ export const getSecurityQuestions = async () => {
 export const getAccountTypes = async () => {
   const endpoint = new URL("/api/user/get-account-types", apiURL).href;
   return await axios.get(endpoint);
-};
-
-export const isLoggedIn = () => {
-  const token = sessionStorage.getItem("Access Token");
-
-  if (token) {
-    try {
-      user = jwt.decode(token);
-      expiryDateTime = new Date(user.exp * 1000);
-      currentDateTime = new Date();
-
-      if (!user || expiryDateTime < currentDateTime)
-        sessionStorage.removeItem("Access Token");
-      else return true;
-    } catch (err) {
-      sessionStorage.removeItem("Access Token");
-    }
-  }
-  return false;
 };
