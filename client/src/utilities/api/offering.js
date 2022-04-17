@@ -27,3 +27,17 @@ export const postOfferingComment = async (offeringId, commentText) => {
     }
   );
 };
+
+export const upvoteOfferingComment = async (commentId) => {
+  const endpoint = '/api/offering/comment/upvote';
+  return await api.post(endpoint, { commentId }, {
+    headers: { "Content-Type": "application/json" }
+  });
+};
+
+export const downvoteOfferingComment = async (commentId) => {
+  const endpoint = '/api/offering/comment/downvote';
+  return await api.post(endpoint, { commentId }, {
+    headers: { "Content-Type": "application/json" }
+  });
+};

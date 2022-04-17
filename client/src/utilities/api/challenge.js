@@ -52,3 +52,17 @@ export const postChallengeComment = async (challengeId, commentText) => {
     }
   });
 };
+
+export const upvoteChallengeComment = async (commentId) => {
+  const endpoint = '/api/challenge/comment/upvote';
+  return await api.post(endpoint, { commentId }, {
+    headers: { "Content-Type": "application/json" }
+  });
+};
+
+export const downvoteChallengeComment = async (commentId) => {
+  const endpoint = '/api/challenge/comment/downvote';
+  return await api.post(endpoint, { commentId }, {
+    headers: { "Content-Type": "application/json" }
+  });
+};

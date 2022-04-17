@@ -41,7 +41,17 @@ export const postSolutionComment = async (solutionId, commentText) => {
   });
 };
 
+export const upvoteSolutionComment = async (commentId) => {
+  const endpoint = `/api/solution/upvote/${commentId}`;
+  return await api.post(endpoint);
+};
+
+export const downvoteSolutionComment = async (commentId) => {
+  const endpoint = `/api/solution/downvote/${commentId}`;
+  return await api.post(endpoint);
+};
+
 export const getSolvers = async (accountId) => {
   const endpoint = `/api/solution/get-solvers/${accountId}`;
   return await api.get(endpoint);
-}
+};

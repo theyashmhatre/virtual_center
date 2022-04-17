@@ -1,6 +1,7 @@
-import { faSpinner, faThumbsUp, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
+import Comment from "./Comment";
 import { getChallengeComments, postChallengeComment } from "../utilities/api/challenge";
 import { getOfferingComments, postOfferingComment } from "../utilities/api/offering";
 import { getSolutionComments, postSolutionComment } from "../utilities/api/solution";
@@ -87,48 +88,7 @@ const Comments = ({ type, id }) => {
           </button>
         </div>
         {comments.map((comment) => (
-          <div key={comment.id} className="border-4 mt-2 p-3 flex flex-row">
-            {/* DO CHECK ID AGAIN */}
-            <div className="flex flex-col w-10per justify-center align-middle">
-              <div className="w-full flex justify-center mb-3">
-                <div className="bg-gray-200 border-2 rounded-full h-20 w-20">
-                  {!comment.display_picture ? (
-                    <FontAwesomeIcon
-                      icon={faUser}
-                      size="3x"
-                      className=" pl-4 pt-2"
-                    />
-                  ) : (
-                    <img
-                      className="object-fill h-full rounded-3xl"
-                      src={apiURL + "/public/images/" + comment.display_picture}
-                      alt="User Picture"
-                    />
-                  )}
-                </div>
-              </div>
-              <div className="w-full flex justify-center">
-                <p>{comment.employee_name}</p>
-              </div>
-            </div>
-            <div className="w-90per flex flex-col">
-              <div className="m-2 mb-1 border-2 h-14">
-                {comment.comment_text}
-              </div>
-              <div className="ml-2 text-xs text-gray-600">
-                Posted on {comment.posted_on}
-              </div>
-              <div>
-                <button className="bg-pink-700 text-white m-2 p-1 w-22 flex flex-row border-2">
-                  <div>Upvote</div>
-                  <FontAwesomeIcon icon={faThumbsUp} size="1x" className=" p-1" />
-                  <div className="bg-white text-pink-700 rounded-2xl mx-1 px-1">
-                    {comment.totalLikes}
-                  </div>
-                </button>
-              </div>
-            </div>
-          </div>
+          <Comment type={type} comment={comment} />
         ))}
         {moreCommentsAvlbl && loading ? (
           <div className="flex justify-center w-full my-20">
