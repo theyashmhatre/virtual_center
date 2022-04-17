@@ -40,7 +40,8 @@ const Solvers = () => {
     <div>
       <Navbar />
       <div className="flex flex-col items-center">
-        <div className="w-90v">
+        <h1 className="text-3xl text-center font-bold mt-2">Our Solvers</h1>
+        <div className="w-90v  ">
           <div className="flex flex-wrap flex-start mt-10">
             <h2 className="mr-2 ">Account type :</h2>
             <select
@@ -59,44 +60,45 @@ const Solvers = () => {
               ))}
             </select>
           </div>
-
-          <div className="flex flex-wrap md:flex-col sm:flex-col md:items-center sm:items-center mt-10">
-            {solvers.map((solver) => (
-              <div
-                key={solver.id}
-                className="border-2 shadow-sm hover:shadow-xl  rounded-lg  lg:mb-0 mb-4 w-24per  md:w-1/2 sm:w-2/3 xs:w-5/6"
-              >
-                <div className="flex flex-col">
-                  <div className=" flex  flex-col m-4 rounded   shadow-lg border-2 ">
-                    <p className=" font-semibold flex justify-center align-bottom   ">
-                      <FontAwesomeIcon
-                        icon={faUser}
-                        size="sm"
-                        className="p-1"
-                      />
-                      {solver.employee_name}
-                    </p>
-                    <div>
-                      <div className="  flex justify-center   ">
+          <div className="border-2 mt-6 p-4 min-h-100">
+            <div className="flex flex-wrap md:flex-col sm:flex-col md:items-center sm:items-center mt-5">
+              {solvers.map((solver) => (
+                <div
+                  key={solver.id}
+                  className="border-2 shadow-sm hover:shadow-xl  rounded-lg  lg:mb-0 mb-4 w-24per  md:w-1/2 sm:w-2/3 xs:w-5/6"
+                >
+                  <div className="flex flex-col">
+                    <div className=" flex  flex-col m-4 rounded   shadow-lg border-2 ">
+                      <p className=" font-semibold flex justify-center align-bottom   ">
                         <FontAwesomeIcon
-                          icon={faEnvelope}
-                          size="lg"
-                          className=" p-1"
+                          icon={faUser}
+                          size="sm"
+                          className="p-1"
                         />
-                        <p className="font-serif">{solver.email}</p>
+                        {solver.employee_name}
+                      </p>
+                      <div>
+                        <div className="  flex justify-center   ">
+                          <FontAwesomeIcon
+                            icon={faEnvelope}
+                            size="lg"
+                            className=" p-1"
+                          />
+                          <p className="font-serif">{solver.email}</p>
+                        </div>
                       </div>
                     </div>
                   </div>
+                  <div>
+                    <Link className="flex justify-center" to={``}>
+                      <h2 className="text-center m-4 w-20 p-1 rounded-lg bg-pink-700 text-white">
+                        Connect
+                      </h2>
+                    </Link>
+                  </div>
                 </div>
-                <div>
-                  <Link className="flex justify-center" to={``}>
-                    <h2 className="text-center m-4 w-20 p-1 rounded-lg bg-pink-700 text-white">
-                      Connect
-                    </h2>
-                  </Link>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>

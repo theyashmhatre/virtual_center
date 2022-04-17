@@ -1,3 +1,5 @@
+import { faPaperclip } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
@@ -36,7 +38,15 @@ const Offering = () => {
           </div>
 
           <div>
-            <h1>{offering.owner_name}</h1>
+            <div className="flex flex-row w-full">
+              <h1 className=" w-40">{offering.owner_name}</h1>
+              <div className="flex justify-end w-full  ">
+                <button className="  bg-pink-600 text-white ml-4  px-1 rounded ">
+                  View Attachment
+                  <FontAwesomeIcon icon={faPaperclip} className="p-0 pl-1" />
+                </button>
+              </div>
+            </div>
             <h1> {offering.owner_email} </h1>
           </div>
 
