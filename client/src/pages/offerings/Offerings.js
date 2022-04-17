@@ -65,6 +65,17 @@ const Offerings = () => {
 
       <div className="min-h-screen mx-16 my-5">
         <h1 className="text-3xl text-center font-bold mb-10">Offerings</h1>
+        
+        {/* {role == "admin" ? ( */}
+        <div className="flex justify-end mb-10">
+          <Link to={`/create-offering`}>
+            <h2 className="border-2 border-black rounded-3xl hover:scale-110 text-center text-pink-700 p-2">
+              Create Offering
+            </h2>
+          </Link>
+        </div>
+        {/* ) : null} */}
+
         <div className="lg:h-80v w-90v">
           <div className="lg:h-70v lg:w-4/5 flex md:flex-col md:items-center sm:items-center sm:flex-col justify-start flex-wrap">
             {/* Offerings blocks Started */}
