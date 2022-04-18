@@ -1,9 +1,8 @@
 import { EditorState, convertToRaw } from "draft-js";
 import { useState } from "react";
 import TagsInput from "../../components/Challenges/TagsInput";
-import Footer from "../../components/Footer";
-import Navbar from "../../components/Navbar";
 import RichTextEditor from "../../components/RichTextEditor";
+import AdminLayout from "../../layouts/AdminLayout";
 import { createChallenge } from "../../utilities/api/challenge";
 import { isEmptyObject } from "../../utilities/utils";
 import { createChallengeInputValidation } from "../../utilities/validation/challenge";
@@ -56,8 +55,7 @@ const CreateChallenge = () => {
   };
 
   return (
-    <div>
-      <Navbar />
+    <AdminLayout>
       <div className="my-10 mx-40">
         <h1 className="text-3xl text-center font-bold my-5">
           Create Challenge
@@ -231,8 +229,7 @@ const CreateChallenge = () => {
           </div>
         </div>
       </div>
-      <Footer />
-    </div>
+    </AdminLayout>
   );
 };
 

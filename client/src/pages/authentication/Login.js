@@ -3,8 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-import { AuthSidebar } from "../../components/AuthSidebar";
 import { AuthContext } from "../../contexts";
+import AuthLayout from "../../layouts/AuthLayout";
 import { login } from "../../utilities/api/user";
 import { isEmptyObject } from "../../utilities/utils";
 import { loginInputValidation } from "../../utilities/validation/user";
@@ -56,12 +56,7 @@ const Login = () => {
   };
 
   return (
-    /*grid start*/
-    <div className="grid grid-cols-2 divide-x">
-      {/* grid child_1 start*/}
-      <AuthSidebar />
-
-      {/* grid child_1 end*/}
+    <AuthLayout>
       {/* grid child_2 start*/}
       {/* flex parent start*/}
       <div>
@@ -171,7 +166,7 @@ const Login = () => {
 
         {/* grid child_2 end*/}
       </div>
-    </div>
+    </AuthLayout>
   );
 };
 

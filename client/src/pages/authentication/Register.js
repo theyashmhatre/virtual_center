@@ -2,7 +2,7 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { AuthSidebar } from "../../components/AuthSidebar";
+import AuthLayout from "../../layouts/AuthLayout";
 import {
   getAccountTypes,
   getSecurityQuestions,
@@ -105,13 +105,7 @@ const Register = () => {
   };
 
   return (
-    /*grid start*/
-
-    <div className="grid grid-cols-2 divide-x">
-      {/* grid child_1 start*/}
-      <AuthSidebar />
-      {/* grid child_1 end*/}
-
+    <AuthLayout>
       {/* grid child_2 start*/}
       {/* flex parent start*/}
       {/* withscrolling bar */}
@@ -403,7 +397,7 @@ const Register = () => {
           {/* grid child_2 end*/}
         </div>
       </div>
-    </div>
+    </AuthLayout>
   );
 };
 

@@ -3,9 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import draftToHtml from "draftjs-to-html";
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Footer from "../../components/Footer";
-import Navbar from "../../components/Navbar";
 import { AuthContext } from "../../contexts";
+import MainLayout from "../../layouts/MainLayout";
 import { getChallenges, searchChallenges } from "../../utilities/api/challenge";
 import { getTruncatedContentState } from "../../utilities/utils";
 import { apiURL, monthNames } from "../../../constants";
@@ -91,8 +90,7 @@ const Challenges = () => {
   };
   console.log(context);
   return (
-    <div>
-      <Navbar />
+    <MainLayout>
       <div className="min-h-screen">
         <div className="flex items-center justify-center h-20v border">
           <div className="flex border-2 border-gray-200 rounded w-1/2 sm:w-5/6 xs:w-full absolute">
@@ -234,8 +232,7 @@ const Challenges = () => {
           </div>
         </div>
       </div>
-      <Footer />
-    </div>
+    </MainLayout>
   );
 };
 
