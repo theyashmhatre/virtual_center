@@ -1,11 +1,9 @@
 require("dotenv").config();
-const mysql = require("mysql");
 const express = require("express");
 const cors = require("cors");
 const app = express();
 const bodyParser = require("body-parser");
 const passport = require("passport");
-const mysqlConnection = require("./config/dbConnection");
 var cookieParser = require('cookie-parser');
 
 app.use(express.json());
@@ -16,10 +14,12 @@ app.use(cors());
 
 app.use("/api/user", require("./routes/user"));
 app.use("/api/solution", require("./routes/solution"));
-app.use("/api/challenge", require("./routes/challenge"));
+app.use("/api/challenge", require("./routes/challenge/challenge"));
+app.use("/api/challenge/comment", require("./routes/challenge/comment/comment"));
 app.use("/api/dashboard", require("./routes/dashboard"));
 app.use("/api/offering", require("./routes/offering/offering"));
 app.use("/api/offering/comment", require("./routes/offering/comment/comment"));
+app.use("/api/search", require("./routes/search"));
 
 // Passport Middleware
 app.use(passport.initialize());
