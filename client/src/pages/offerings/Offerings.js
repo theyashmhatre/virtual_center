@@ -6,10 +6,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import draftToHtml from "draftjs-to-html";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
+import { AuthContext } from "../../contexts";
 import { getOfferings } from "../../utilities/api/offering";
 import { getTruncatedContentState } from "../../utilities/utils";
 
@@ -20,6 +21,7 @@ const Offerings = () => {
   const [loading, setLoading] = useState(true);
   const [moreOfferingsAvlbl, setMoreOfferingsAvlbl] = useState(true);
   const limit = 8;
+  const context = useContext(AuthContext);
 
   const handleScroll = (e) => {
     const window = e.currentTarget;
@@ -66,15 +68,15 @@ const Offerings = () => {
       <div className="min-h-screen mx-16 my-5">
         <h1 className="text-3xl text-center font-bold mb-10">Offerings</h1>
         
-        {/* {role == "admin" ? ( */}
-        <div className="flex justify-end mb-10">
-          <Link to={`/create-offering`}>
-            <h2 className="border-2 border-black rounded-3xl hover:scale-110 text-center text-pink-700 p-2">
-              Create Offering
-            </h2>
-          </Link>
-        </div>
-        {/* ) : null} */}
+        {context.auth.role == "admin" ? (
+          <div className="flex justify-end mb-10">
+            <Link to={`/create-offering`}>
+              <h2 className="border-2 border-black rounded-3xl hover:scale-110 text-center text-pink-700 p-2">
+                Create Offering
+              </h2>
+            </Link>
+          </div>
+        ) : null}
 
         <div className="lg:h-80v w-90v">
           <div className="lg:h-70v lg:w-4/5 flex md:flex-col md:items-center sm:items-center sm:flex-col justify-start flex-wrap">
