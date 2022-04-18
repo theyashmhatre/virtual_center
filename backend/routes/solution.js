@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const mysqlConnection = require("../config/dbConnection");
 const createSolutionValidation = require("../utils/validation/solution");
-const { generateCurrentDateTime } = require("../utils/utils");
+const { generatePaginationValues } = require("../utils/utils");
 const passport = require("passport");
 
 router.get("/", (req, res) => {
@@ -153,15 +153,18 @@ router.get(
 );
 
 router.get(
-  "/get-solutions/:challengeId/:pageNum",
+  "/get-solutions/:challengeId/:pageNum/:limit",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     try {
-      const { challengeId, pageNum } = req.params; //current page number
+      const { challengeId } = req.params; //current page number
 
-      const limit = 12; //number of items to be sent per request
+      let { limit, pageNum, offset } = generatePaginationValues(req);
 
-      const offset = (pageNum - 1) * limit; //number of rows to skip before selecting records
+      if(!challengeId)
+      return res
+      .status(400)
+      .json({ main: "Something went wrong. Please try again", devMsg: "No challenge id found" });
 
       mysqlConnection.query(
         `SELECT * from solution WHERE challenge_id=${challengeId} LIMIT ? OFFSET ? `,
@@ -212,11 +215,12 @@ router.post("/like/:solutionId",
         solutionId: ${solutionId} userId: ${userId}` })
 
       const newLike = {
-        solution_id: solutionId,
-        user_id: userId
+        post_id: solutionId,
+        user_id: userId,
+        type_id: 2
       };
 
-      mysqlConnection.query(`SELECT * FROM solution_like WHERE user_id=${userId} AND solution_id=${solutionId}`,
+      mysqlConnection.query(`SELECT * FROM likes WHERE user_id=${userId} AND post_id=${solutionId} AND type_id = 2`,
       (sqlErr, result, fields) => {
         if (sqlErr) {
           return res.status(500).json({
@@ -225,8 +229,7 @@ router.post("/like/:solutionId",
               devMsg: "Error occured while inserting like into db",
           });
       } else if(!result[0]){
-        newLike.likes = 1;
-        mysqlConnection.query(`INSERT INTO solution_like SET ?`,
+        mysqlConnection.query(`INSERT INTO likes SET ?`,
         newLike,
         (sqlErr, result, fields) => {
           if (sqlErr) {
@@ -241,7 +244,7 @@ router.post("/like/:solutionId",
         })
       } else {
         // var likes = result[0].likes ^ 1; 
-        mysqlConnection.query(`DELETE FROM solution_like WHERE user_id=${userId} AND solution_id=${solutionId}`,
+        mysqlConnection.query(`DELETE FROM likes WHERE user_id=${userId} AND post_id=${solutionId} AND type_id = 2`,
         (sqlErr, result, fields) => {
           if(sqlErr) {
             return res.status(500).json({
@@ -277,7 +280,7 @@ passport.authenticate("jwt", { session: false }),
              devMsg: `Either solutionId or userId is invalid. SolutionId: ${solutionId} userId: ${userId}` })
 
     let noOfLikes = 0;
-    mysqlConnection.query(`SELECT COUNT(*) as likesCount from solution_like where solution_id = ${solutionId} AND likes = 1`,
+    mysqlConnection.query(`SELECT COUNT(*) as likesCount from likes where post_id = ${solutionId} AND type_id = 2`,
     (sqlErr, result, fields) => {
       if (sqlErr) {
         return res.status(500).json({
@@ -290,7 +293,7 @@ passport.authenticate("jwt", { session: false }),
   }
     })
 
-    mysqlConnection.query(`SELECT COUNT(*) as likesCount from solution_like where solution_id = ${solutionId} AND user_id = ${userId} AND likes=1`,
+    mysqlConnection.query(`SELECT COUNT(*) as likesCount from likes where post_id = ${solutionId} AND user_id = ${userId} AND type_id = 2`,
      (sqlErr, result, fields) => {
       if (sqlErr) {
           return res.status(500).json({
@@ -330,21 +333,12 @@ passport.authenticate("jwt", { session: false }),
 
       const newComment = {
         user_id: userId,
-        solution_id: solutionId,
+        post_id: solutionId,
+        type_id: 2,
         comment_text: commentText
       };
-
-
-      mysqlConnection.query(`SELECT * FROM solution_comment WHERE user_id=${userId} AND solution_id=${solutionId}`,
-      (sqlErr, result, fields) => {
-        if(sqlErr){
-          return res.status(500).json({
-            main: "Something went wrong. Please try again.",
-            devError: sqlErr,
-            devMsg: "Error occured while adding comment to db",
-        });
-        } else if (!result[0]){
-          mysqlConnection.query(`INSERT INTO solution_comment SET ?`, 
+     
+      mysqlConnection.query(`INSERT INTO comment SET ?`, 
       newComment,
       (sqlErr, result, fields) => {
         if(sqlErr) {
@@ -357,21 +351,6 @@ passport.authenticate("jwt", { session: false }),
           return res.status(201).json({ main: "Comment added successfully" });
         }
       });
-        } else {
-          mysqlConnection.query(`UPDATE solution_comment SET comment_text="${commentText}" WHERE user_id=${userId} AND solution_id=${solutionId}`,
-        (sqlErr, result, fields) => {
-          if(sqlErr) {
-            return res.status(500).json({
-              main: "Something went wrong. Please try again.",
-              devError: sqlErr,
-              devMsg: "Error occured while updating comment to db",
-          });
-          } else {
-            return res.status(201).json({ main: "Comment updating successfully" });
-          }
-        });
-        }
-      })
   }catch(error){
     return res.status(500).json({
       main: "Something went wrong. Please try again.",
@@ -382,18 +361,29 @@ passport.authenticate("jwt", { session: false }),
 });
 
 router.get(
-  "/get-comments/:solutionId/:pageNum",
+  "/get-comments/:solutionId/:pageNum/:limit",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     try {
-      const { solutionId, pageNum } = req.params; //current page number
+      const { solutionId } = req.params; //current page number
 
-      const limit = 5; //number of items to be sent per request
+      let { limit, pageNum, offset } = generatePaginationValues(req);
 
-      const offset = (pageNum - 1) * limit; //number of rows to skip before selecting records
+      if(!solutionId)
+      return res
+      .status(400)
+      .json({ main: "Something went wrong. Please try again", devMsg: "No solution id found" });
+      
 
       mysqlConnection.query(
-        `SELECT * from solution_comment WHERE solution_id=${solutionId} ORDER BY posted_on DESC  LIMIT ? OFFSET ?`,
+        `SELECT c.*, u.employee_name, u.email, u.display_picture
+         FROM comment c
+         INNER JOIN user u
+         ON c.user_id = u.user_id
+         WHERE c.post_id = ${solutionId} AND type_id = 2
+         ORDER BY c.posted_on DESC
+         LIMIT ? OFFSET ?
+         `,
         [limit, offset],
         (sqlErr, result, fields) => {
           if (sqlErr) {
@@ -411,7 +401,7 @@ router.get(
               page_number: pageNum,
               comment_list: result,
             };
-            res.status(200).json(data);
+            return res.status(200).json(data);
           }
         }
       );
@@ -441,11 +431,11 @@ passport.authenticate("jwt", { session: false }),
 
     const newUpvote = {
       user_id: userId,
-      solution_comment_id: commentId,
+      comment_id: commentId,
       upvotes:1
     }
 
-    mysqlConnection.query(`SELECT * FROM comment_upvote WHERE user_id=${userId} AND solution_comment_id=${commentId}`,
+    mysqlConnection.query(`SELECT * FROM upvote WHERE user_id=${userId} AND comment_id=${commentId}`,
     (sqlErr, result, fields) => {
       if(sqlErr) {
         return res.status(500).json({
@@ -454,7 +444,7 @@ passport.authenticate("jwt", { session: false }),
           devMsg: "Error occured while adding upvotes to db",
       });
       } else if(!result[0]) {
-        mysqlConnection.query(`INSERT INTO comment_upvote SET ?`,
+        mysqlConnection.query(`INSERT INTO upvote SET ?`,
         newUpvote,
         (sqlErr, result, fields) => {
           if(sqlErr) {
@@ -468,7 +458,7 @@ passport.authenticate("jwt", { session: false }),
           }
         });
       } else {
-        mysqlConnection.query(`UPDATE comment_upvote SET upvotes=1 WHERE user_id=${userId} AND solution_comment_id=${commentId}`,
+        mysqlConnection.query(`UPDATE upvote SET upvotes=1 WHERE user_id=${userId} AND solution_comment_id=${commentId}`,
         (sqlErr, result, fields) => {
           if(sqlErr) {
             return res.status(500).json({
@@ -505,11 +495,11 @@ passport.authenticate("jwt", { session: false }),
 
     const newDownvote = {
       user_id: userId,
-      solution_comment_id: commentId,
+      comment_id: commentId,
       upvotes:-1
     }
 
-    mysqlConnection.query(`SELECT * FROM comment_upvote WHERE user_id="${userId}" AND solution_comment_id="${commentId}"`,
+    mysqlConnection.query(`SELECT * FROM upvote WHERE user_id="${userId}" AND comment_id="${commentId}"`,
     (sqlErr, result, fields) => {
       if(sqlErr) {
         return res.status(500).json({
@@ -518,7 +508,7 @@ passport.authenticate("jwt", { session: false }),
           devMsg: "Error occured while adding downvotes to db",
       });
       } else if(!result[0]) {
-        mysqlConnection.query(`INSERT INTO comment_upvote SET ?`,
+        mysqlConnection.query(`INSERT INTO upvote SET ?`,
         newDownvote,
         (sqlErr, result, fields) => {
           if(sqlErr) {
@@ -532,7 +522,7 @@ passport.authenticate("jwt", { session: false }),
           }
         });
       } else {
-        mysqlConnection.query(`UPDATE comment_upvote SET upvotes=-1 WHERE user_id="${userId}" AND solution_comment_id="${commentId}"`,
+        mysqlConnection.query(`UPDATE upvote SET upvotes=-1 WHERE user_id="${userId}" AND comment_id="${commentId}"`,
         (sqlErr, result, fields) => {
           if(sqlErr) {
             return res.status(500).json({
@@ -570,7 +560,7 @@ router.get("/get-upvotes/:commentId",
 
       let voteStatus = ""; // Gives the status of the vote for respective user and comment 
 
-      mysqlConnection.query(`SELECT upvotes from comment_upvote WHERE user_id=${userId} AND solution_comment_id=${commentId}`,
+      mysqlConnection.query(`SELECT upvotes from upvote WHERE user_id=${userId} AND comment_id=${commentId}`,
       (sqlErr, result, fields) => {
         if(sqlErr){
           return res.status(500).json({
@@ -583,7 +573,7 @@ router.get("/get-upvotes/:commentId",
         }
       })
 
-      mysqlConnection.query(`SELECT solution_comment_id, sum(upvotes) as votes FROM comment_upvote WHERE solution_comment_id=${commentId}`,
+      mysqlConnection.query(`SELECT comment_id, sum(upvotes) as votes FROM upvote WHERE comment_id=${commentId}`,
       (sqlErr, result, fields) => {
         if(sqlErr){
           return res.status(500).json({
@@ -622,7 +612,7 @@ router.get("/get-comments/:solutionId",
     
     try{
       mysqlConnection.query(
-        `SELECT * FROM solution_comment WHERE solution_id=${solutionId} ORDER BY posted_on DESC`,
+        `SELECT * FROM comment WHERE post_id=${solutionId} AND type_id = 2 ORDER BY posted_on DESC`,
         (sqlErr, result, fields) => {
           if(sqlErr){
             return res.status(500).json({
