@@ -80,10 +80,24 @@ CREATE TABLE `solution` (
   UNIQUE KEY `solution_id_UNIQUE` (`solution_id`),
 ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
-> type table
+---------------------------------------------------------------------------------------------------------------------
+Updated Tables for comments, upvotes and likes
+>comment
+CREATE TABLE `comment` (
+  `comment_id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `post_id` int NOT NULL,
+  `type_id` int NOT NULL,
+  `comment_text` TEXT NOT NULL,
+  `posted_on` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`comment_id`),
+  UNIQUE KEY `comment_id_UNIQUE` (`comment_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+>type
 CREATE TABLE `type` (
   `type_id` int NOT NULL AUTO_INCREMENT,
-  `type_name` text NOT NULL,
+  `type_name` TEXT NOT NULL,
   PRIMARY KEY (`type_id`),
   UNIQUE KEY `type_id_UNIQUE` (`type_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
@@ -96,10 +110,11 @@ CREATE TABLE `upvote` (
   UNIQUE KEY `upvoted_item` (`user_id`,`comment_id`,`type_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
->likes table
 CREATE TABLE `likes` (
   `user_id` int NOT NULL,
   `post_id` int NOT NULL,
   `type_id` int NOT NULL,
   UNIQUE KEY `liked_item` (`user_id`,`post_id`,`type_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+

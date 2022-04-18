@@ -21,6 +21,37 @@ router.get("/account-analytics", passport.authenticate("jwt", { session: false }
     });
 });
 
+router.get("/most-submissions/:year",
+passport.authenticate("jwt", { session: false }),
+(req,res) => {
+    const { year } = req.params;
+    mysqlConnection.query(`SELECT u.employee_name AS name, COUNT(s.user_id) AS noOfSubmissions
+    FROM user u 
+    INNER JOIN solution s 
+    ON u.user_id = s.user_id 
+    WHERE YEAR(s.posted_on) = ${year}  
+    GROUP BY u.user_id 
+    ORDER BY COUNT(s.user_id) DESC`,
+    (sqlErr, result, fields) => {
+        if(sqlErr){
+            console.log(sqlErr);
+            return res.status(500).json({
+              main: "Something went wrong. Please try again.",
+              devError: sqlErr,
+              devMsg: "Error occured while fetching solution from db",
+            });
+        } else if(!result[0]){
+            return res.status(200).json({main:"No challenges found"})
+        } else{
+            let data = {
+                challenges_count: result.length,
+                challenge_list: result
+            }
+            return res.status(200).json(data)
+        }
+    })
+});
+
 
 
 
