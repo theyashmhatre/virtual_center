@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import AdminAuthRequired from "./components/Authentication/AdminAuthRequired";
 import AuthNotRequired from "./components/Authentication/AuthNotRequired";
 import AuthRequired from "./components/Authentication/AuthRequired";
 import { AuthProvider } from "./contexts";
@@ -48,9 +49,9 @@ const App = () => {
         <Route
           path="create-challenge"
           element={
-            <AuthRequired>
+            <AdminAuthRequired>
               <CreateChallenge />
-            </AuthRequired>
+            </AdminAuthRequired>
           }
         />
         <Route
@@ -80,9 +81,9 @@ const App = () => {
         <Route
           path="create-offering"
           element={
-            <AuthRequired>
+            <AdminAuthRequired>
               <CreateOffering />
-            </AuthRequired>
+            </AdminAuthRequired>
           }
         />
         <Route
