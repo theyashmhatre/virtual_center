@@ -135,3 +135,47 @@ CREATE TABLE `comment_upvote` (
   PRIMARY KEY(`comment_upvote_id`),
   UNIQUE KEY `comment_upvote_id_UNIQUE` (`comment_upvote_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+---------------------------------------------------------------------------------------------------------------------
+Updated Tables for comments, upvotes and likes
+>comment
+CREATE TABLE `comment` (
+  `comment_id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `post_id` int NOT NULL,
+  `type_id` int NOT NULL,
+  `comment_text` TEXT NOT NULL,
+  `posted_on` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`comment_id`),
+  UNIQUE KEY `comment_id_UNIQUE` (`comment_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+>type
+CREATE TABLE `type` (
+  `type_id` int NOT NULL AUTO_INCREMENT,
+  `type_name` TEXT NOT NULL,
+  PRIMARY KEY (`type_id`),
+  UNIQUE KEY `type_id_UNIQUE` (`type_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+>upvote
+CREATE TABLE `upvote` (
+  `upvote_id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `comment_id` int NOT NULL,
+  `upvotes` int DEFAULT 0,
+  PRIMARY KEY (`upvote_id`),
+  UNIQUE KEY `upvote_id_UNIQUE` (`upvote_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+>likes
+CREATE TABLE `likes` (
+  `like_id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `post_id` int NOT NULL,
+  `type_id` int NOT NULL,
+  PRIMARY KEY (`like_id`),
+  UNIQUE KEY `like_id_UNIQUE` (`like_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+
