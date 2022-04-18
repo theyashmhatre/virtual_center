@@ -60,31 +60,6 @@ CREATE TABLE `offering` (
   UNIQUE KEY `offering_id_UNIQUE` (`offering_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
-> offering_comment
-CREATE TABLE `offering_comment` (
-  `offering_comment_id` int NOT NULL AUTO_INCREMENT,
-  `user_id` int NOT NULL,
-  `offering_id` int NOT NULL,
-  `comment_text` varchar(300) NOT NULL,
-  `posted_on` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`offering_comment_id`),
-  UNIQUE KEY `offering_comment_id_UNIQUE` (`offering_comment_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-
-> offering_like
-CREATE TABLE `offering_like` (
-  `user_id` int NOT NULL,
-  `offering_id` int NOT NULL,
-  UNIQUE KEY `liked_item` (`user_id`,`offering_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-
-> offering_comment_upvote
-CREATE TABLE `offering_comment_upvote` (
-  `user_id` varchar(45) NOT NULL,
-  `offering_comment_id` int NOT NULL,
-  UNIQUE KEY `upvoted_item` (`user_id`,`offering_comment_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-
 > account_type table
 CREATE TABLE `account_type` (
   `account_type_id` int NOT NULL,
@@ -104,37 +79,6 @@ CREATE TABLE `solution` (
   PRIMARY KEY (`solution_id`),
   UNIQUE KEY `solution_id_UNIQUE` (`solution_id`),
 ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-
-> solution_like
-CREATE TABLE `solution_like` (
-  `solution_like_id` int NOT NULL AUTO_INCREMENT,
-  `user_id` int NOT NULL,
-  `solution_id` int NOT NULL,
-  `likes` int default 0,
-  PRIMARY KEY (`solution_like_id`),
-  UNIQUE KEY `solution_like_id_UNIQUE` (`solution_like_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-
-> solution_comment
-CREATE TABLE `solution_comment` (
-  `solution_comment_id` int NOT NULL AUTO_INCREMENT,
-  `user_id` int NOT NULL,
-  `solution_id` int NOT NULL,
-  `comment_text` varchar(300) NOT NULL,
-  `posted_on` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`solution_comment_id`),
-  UNIQUE KEY `solution_comment_id_UNIQUE` (`solution_comment_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-
-> comment_upvotes
-CREATE TABLE `comment_upvote` (
-  `comment_upvote_id` int NOT NULL AUTO_INCREMENT,
-  `user_id` int NOT NULL,
-  `solution_comment_id` int NOT NULL,
-  `upvotes` int DEFAULT 0,
-  PRIMARY KEY(`comment_upvote_id`),
-  UNIQUE KEY `comment_upvote_id_UNIQUE` (`comment_upvote_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 ---------------------------------------------------------------------------------------------------------------------
 Updated Tables for comments, upvotes and likes
@@ -158,24 +102,25 @@ CREATE TABLE `type` (
   UNIQUE KEY `type_id_UNIQUE` (`type_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
->upvote
+> upvote table
 CREATE TABLE `upvote` (
-  `upvote_id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
   `comment_id` int NOT NULL,
-  `upvotes` int DEFAULT 0,
-  PRIMARY KEY (`upvote_id`),
-  UNIQUE KEY `upvote_id_UNIQUE` (`upvote_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+  `type_id` int NOT NULL,
+  UNIQUE KEY `upvoted_item` (`user_id`,`comment_id`,`type_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
->likes
 CREATE TABLE `likes` (
-  `like_id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
   `post_id` int NOT NULL,
   `type_id` int NOT NULL,
-  PRIMARY KEY (`like_id`),
-  UNIQUE KEY `like_id_UNIQUE` (`like_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+  UNIQUE KEY `liked_item` (`user_id`,`post_id`,`type_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
-
+>login_history table
+CREATE TABLE `login_history` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
