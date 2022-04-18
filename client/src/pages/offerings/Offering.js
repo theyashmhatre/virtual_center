@@ -1,21 +1,15 @@
+import { faPaperclip } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import Comments from "../../components/Comments";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
-import {
-  getComments,
-  getSingleOffering,
-  postComment,
-} from "../../utilities/api/offering";
+import { getSingleOffering } from "../../utilities/api/offering";
 
 const Offering = () => {
   const [offering, setOffering] = useState({});
-  const [comments, setComments] = useState([]);
-  const [commentText, setCommentText] = useState("");
-  const [pageNo, setPageNo] = useState(1);
-  const [postSuccess, setPostSuccess] = useState(false);
   const { offeringId } = useParams();
 
   useEffect(() => {
@@ -26,22 +20,6 @@ const Offering = () => {
         })
         .catch(() => {});
   }, []);
-
-  useEffect(() => {
-    if (offeringId)
-      getComments(offeringId, pageNo)
-        .then(({ data }) => {
-          if (data.comments_list) setComments(data.comments_list);
-          setPostSuccess(false);
-        })
-        .catch(() => {});
-  }, [postSuccess]);
-
-  const onPost = () => {
-    postComment(offeringId, commentText)
-      .then(() => setPostSuccess(true))
-      .catch(() => {});
-  };
 
   return (
     <div>
@@ -60,7 +38,15 @@ const Offering = () => {
           </div>
 
           <div>
-            <h1>{offering.owner_name}</h1>
+            <div className="flex flex-row w-full">
+              <h1 className=" w-40">{offering.owner_name}</h1>
+              <div className="flex justify-end w-full  ">
+                <button className="  bg-pink-600 text-white ml-4  px-1 rounded ">
+                  View Attachment
+                  <FontAwesomeIcon icon={faPaperclip} className="p-0 pl-1" />
+                </button>
+              </div>
+            </div>
             <h1> {offering.owner_email} </h1>
           </div>
 
@@ -75,13 +61,8 @@ const Offering = () => {
               )}
             </div>
           </div>
-          <Comments
-            comments={comments}
-            commentText={commentText}
-            setCommentText={setCommentText}
-            onClick={onPost}
-            success={postSuccess}
-          />
+
+          <Comments type="offering" id={offeringId} />
         </div>
       </div>
       <Footer />

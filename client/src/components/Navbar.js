@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -28,20 +28,60 @@ const Navbar = () => {
 
       <ul className="flex  gap-16 decoration-from-font font-medium bg-gray-rgb p-4 ">
         <li>
-          <Link to="/">Home</Link>
+          <NavLink
+            style={({ isActive }) => ({
+              color: isActive ? "rgb(190 24 93)" : "",
+              fontWeight: isActive ? "bold" : "",
+            })}
+            to={"/"}
+          >
+            Home
+          </NavLink>
         </li>
         <li>
-          <Link to="/dashboard">Dashboard</Link>
+          <NavLink
+            style={({ isActive }) => ({
+              color: isActive ? "rgb(190 24 93)" : "",
+              fontWeight: isActive ? "bold" : "",
+            })}
+            to="/dashboard"
+          >
+            Dashboard
+          </NavLink>
         </li>
         <li>
-          <Link to="/challenges">Challenges</Link>
+          <NavLink
+            style={({ isActive }) => ({
+              color: isActive ? "rgb(190 24 93)" : "",
+              fontWeight: isActive ? "bold" : "",
+            })}
+            to="/challenges"
+          >
+            Challenges
+          </NavLink>
         </li>
         <li>
-          <Link to="/solvers">Our Solvers</Link>
+          <NavLink
+            style={({ isActive }) => ({
+              color: isActive ? "rgb(190 24 93)" : "",
+              fontWeight: isActive ? "bold" : "",
+            })}
+            to="/solvers"
+          >
+            Our Solvers
+          </NavLink>
         </li>
         <li>
           {" "}
-          <Link to="/offerings">Our Offerings</Link>
+          <NavLink
+            style={({ isActive }) => ({
+              color: isActive ? "rgb(190 24 93)" : "",
+              fontWeight: isActive ? "bold" : "",
+            })}
+            to="/offerings"
+          >
+            Our Offerings
+          </NavLink>
         </li>
         <li>Resources</li>
         <li>Help</li>

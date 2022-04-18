@@ -26,9 +26,7 @@ const Home = () => {
               ongoing challenges
             </h3>
           </div>
-          <div className="flex-1">
-            <h1></h1>
-          </div>
+          <div className="flex-1"></div>
         </div>
         {/* home */}
         <div className="pl-14 pt-8 pr-8">

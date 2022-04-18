@@ -399,7 +399,7 @@ router.get(
             let data = {
               comments_count: result.length,
               page_number: pageNum,
-              comment_list: result,
+              comments_list: result,
             };
             return res.status(200).json(data);
           }

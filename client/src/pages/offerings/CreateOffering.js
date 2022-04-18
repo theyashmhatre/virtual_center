@@ -1,27 +1,25 @@
 import { EditorState, convertToRaw } from "draft-js";
 import { useState } from "react";
-import TagsInput from "../../components/Challenges/TagsInput";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
 import RichTextEditor from "../../components/RichTextEditor";
-import { createChallenge } from "../../utilities/api/challenge";
+import { createOffering } from "../../utilities/api/offering";
 import { isEmptyObject } from "../../utilities/utils";
-import { createChallengeInputValidation } from "../../utilities/validation/challenge";
+import { createOfferingInputValidation } from "../../utilities/validation/offering";
 
 const initialInputValues = {
-  title: "",
+  title: '',
   description: EditorState.createEmpty(),
-  cloudProvider: "",
-  coverImage: "",
-  tags: [],
-  endDate: "",
+  ownerName: '',
+  ownerEmail: '',
+  attachement: '',
   privacyCheck: false,
 };
 
-const CreateChallenge = () => {
+const CreateOffering = () => {
   const [inputValues, setInputValues] = useState(initialInputValues);
   const [errors, setErrors] = useState({});
-  const [successMessage, setSuccessMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleInputChange = (e) => {
     let { name, value, type, files } = e.target;
@@ -35,17 +33,15 @@ const CreateChallenge = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     setErrors({});
-    setSuccessMessage("");
-    const inputErrors = createChallengeInputValidation(inputValues);
+    setSuccessMessage('');
+    const inputErrors = createOfferingInputValidation(inputValues);
 
     if (isEmptyObject(inputErrors))
-      createChallenge({
+      createOffering({
         ...inputValues,
-        description: JSON.stringify(
-          convertToRaw(inputValues.description.getCurrentContent())
-        ),
+        description: JSON.stringify(convertToRaw(inputValues.description.getCurrentContent()))
       })
-        .then(() => setSuccessMessage("Challenge is created!!"))
+        .then(() => setSuccessMessage("Offering is created!!"))
         .catch((error) => {
           if (error.response)
             if (error.response.data) setErrors(error.response.data);
@@ -60,27 +56,19 @@ const CreateChallenge = () => {
       <Navbar />
       <div className="my-10 mx-40">
         <h1 className="text-3xl text-center font-bold my-5">
-          Create Challenge
+          Create Offering
         </h1>
         <div className="space-y-5">
           <div>
-            <label
-              htmlFor="title"
-              className="block mb-1 font-bold text-gray-500"
-            >
-              Title
-            </label>
+            <label className="block mb-1 font-bold text-gray-500">Title</label>
             <input
               type="text"
               name="title"
               value={inputValues.title}
               onChange={handleInputChange}
-              placeholder="Type the challenge title here"
+              placeholder="Type the offering title here"
               className="w-full border-2 border-gray-200 p-3 rounded-lg outline-none focus:border-purple-500"
             />
-            <label htmlFor="agree" className="ml-2 text-gray-400 text-sm">
-              A crisp and clear title attracts more readers
-            </label>
             {!errors.title ? null : (
               <div className="text-center text-red-700 text-lg mb-5">
                 <p>{errors.title}</p>
@@ -88,25 +76,19 @@ const CreateChallenge = () => {
             )}
           </div>
           <div>
-            <label
-              htmlFor="desription"
-              className="block mb-1 font-bold text-gray-500"
-            >
-              Challenge Description
+            <label className="block mb-1 font-bold text-gray-500">
+              Offering Description
             </label>
             <RichTextEditor
               editorState={inputValues.description}
               setEditorState={(value) => {
                 setInputValues({
                   ...inputValues,
-                  description: value,
-                });
+                  description: value
+                })
               }}
-              placeholder="Type challenge description here"
+              placeholder="Type offering description here"
             />
-            {/* <label htmlFor="agree" className="ml-2 text-gray-400 text-sm">
-              Describe the challenge in max 200 words.
-            </label> */}
             {!errors.description ? null : (
               <div className="text-center text-red-700 text-lg mb-5">
                 <p>{errors.description}</p>
@@ -114,76 +96,50 @@ const CreateChallenge = () => {
             )}
           </div>
           <div>
-            <label className="block mb-1 font-bold text-gray-500">
-              Cloud Provider
-            </label>
+            <label className="block mb-1 font-bold text-gray-500">Owner Name</label>
             <input
               type="text"
-              name="cloudProvider"
-              value={inputValues.cloudProvider}
+              name="ownerName"
+              value={inputValues.ownerName}
               onChange={handleInputChange}
-              placeholder="Type cloud provider"
+              placeholder="Type owner name"
               className="w-full border-2 border-gray-200 p-3 rounded-lg outline-none focus:border-purple-500"
             />
-            {!errors.cloudProvider ? null : (
+            {!errors.ownerName ? null : (
               <div className="text-center text-red-700 text-lg mb-5">
-                <p>{errors.cloudProvider}</p>
+                <p>{errors.ownerName}</p>
               </div>
             )}
           </div>
           <div>
-            <label className="block mb-1 font-bold text-gray-500">
-              Cover Image
-            </label>
+            <label className="block mb-1 font-bold text-gray-500">Owner Email</label>
+            <input
+              type="email"
+              name="ownerEmail"
+              value={inputValues.ownerEmail}
+              onChange={handleInputChange}
+              placeholder="Type owner email"
+              className="w-full border-2 border-gray-200 p-3 rounded-lg outline-none focus:border-purple-500"
+            />
+            {!errors.ownerEmail ? null : (
+              <div className="text-center text-red-700 text-lg mb-5">
+                <p>{errors.ownerEmail}</p>
+              </div>
+            )}
+          </div>
+          <div>
+            <label className="block mb-1 font-bold text-gray-500">Attachement</label>
             <input
               type="file"
-              accept="image/*"
-              name="coverImage"
+              accept=".pdf"
+              name="attachement"
               onChange={handleInputChange}
-              placeholder="Upload photo for cover image"
+              placeholder="Upload attachement in pdf format"
               className="border-2 rounded-lg w-full"
             />
-            {!errors.coverImage ? null : (
+            {!errors.attachement ? null : (
               <div className="text-center text-red-700 text-lg mb-5">
-                <p>{errors.coverImage}</p>
-              </div>
-            )}
-          </div>
-          <div>
-            <label className="block mb-1 font-bold text-gray-500">Tags</label>
-            <TagsInput
-              tags={inputValues.tags}
-              setTags={(value) => {
-                setInputValues({
-                  ...inputValues,
-                  tags: value,
-                });
-              }}
-            />
-            <label htmlFor="tags" className="ml-2 text-gray-400 text-sm">
-              Please use meaningful tags that makes it easy for others to
-              discover your content.
-            </label>
-            {!errors.tags ? null : (
-              <div className="text-center text-red-700 text-lg mb-5">
-                <p>{errors.tags}</p>
-              </div>
-            )}
-          </div>
-          <div>
-            <label className="block mb-1 font-bold text-gray-500">
-              End Date
-            </label>
-            <input
-              type="Date"
-              name="endDate"
-              value={inputValues.endDate}
-              onChange={handleInputChange}
-              className="w-full border-2 border-gray-200 p-3 rounded-lg outline-none focus:border-purple-500"
-            />
-            {!errors.endDate ? null : (
-              <div className="text-center text-red-700 text-lg mb-5">
-                <p>{errors.endDate}</p>
+                <p>{errors.attachement}</p>
               </div>
             )}
           </div>
@@ -194,12 +150,10 @@ const CreateChallenge = () => {
                 id="agree"
                 name="privacyCheck"
                 value={inputValues.privacyCheck}
-                onChange={() =>
-                  setInputValues({
-                    ...inputValues,
-                    privacyCheck: !inputValues.privacyCheck,
-                  })
-                }
+                onChange={() => setInputValues({
+                  ...inputValues,
+                  privacyCheck: !inputValues.privacyCheck
+                })}
               />
               <label htmlFor="agree" className="ml-2 text-gray-700 text-sm">
                 I agree to the terms and privacy of TCS.
@@ -236,4 +190,4 @@ const CreateChallenge = () => {
   );
 };
 
-export default CreateChallenge;
+export default CreateOffering;

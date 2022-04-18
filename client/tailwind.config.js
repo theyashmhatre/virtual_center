@@ -2,6 +2,9 @@ module.exports = {
   mode: "jit",
   content: ["./src/**/*.{html,js}"],
   theme: {
+    minHeight: {
+      100: "400px",
+    },
     extend: {
       flexGrow: {
         2: 2,

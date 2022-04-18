@@ -1,6 +1,7 @@
 import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import Comments from "../../components/Comments";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
 import CreateSolution from "../../components/Solutions/CreateSolution";
@@ -76,28 +77,31 @@ const Challenge = () => {
         </div>
 
         {tab == "overview" ? (
-          <div className="w-full md:w-95v sm:w-95v border-2">
-            <div>
-              <h1 className="text-lg pl-2 pt-2 font-bold">Description</h1>
-              <div className="md:w-full sm:w-full w-60v mb-10 p-2">
-                {!challenge.description ? null : (
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: draftToHtml(JSON.parse(challenge.description)),
-                    }}
-                  />
-                )}
-                <br />
+          <div className="w-full">
+            <div className="w-full md:w-95v sm:w-95v border-2">
+              <div>
+                <h1 className="text-lg pl-2 pt-2 font-bold">Description</h1>
+                <div className="md:w-full sm:w-full w-60v mb-10 p-2">
+                  {!challenge.description ? null : (
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: draftToHtml(JSON.parse(challenge.description)),
+                      }}
+                    />
+                  )}
+                  <br />
+                </div>
+              </div>
+              <div className="mt-10 pl-2 pt-2 flex items-center">
+                <h1 className="text-lg font-bold">Cloud Provider</h1>
+                <div className="ml-10">{challenge.cloud_provider}</div>
+              </div>
+              <div className="my-10 pl-2 pt-2 flex items-center">
+                <h1 className="text-lg font-bold">Account Type</h1>
+                <div className="ml-10">{challenge.account_type_id}</div>
               </div>
             </div>
-            <div className="mt-10 pl-2 pt-2 flex items-center">
-              <h1 className="text-lg font-bold">Cloud Provider</h1>
-              <div className="ml-10">{challenge.cloud_provider}</div>
-            </div>
-            <div className="my-10 pl-2 pt-2 flex items-center">
-              <h1 className="text-lg font-bold">Account Type</h1>
-              <div className="ml-10">{challenge.account_type_id}</div>
-            </div>
+            <Comments type="challenge" id={challengeId} />
           </div>
         ) : tab == "solutions" ? (
           <Solutions />

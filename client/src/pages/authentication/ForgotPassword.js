@@ -98,7 +98,7 @@ const ForgotPassword = () => {
                 className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96"
               />
               {!errors.email ? null : (
-                <div className="text-sm text-pink-700 text-lg mt-2">
+                <div className="text-sm text-pink-700 text-lg mt-2 w-96 whitespace-normal">
                   <p>{errors.email}</p>
                 </div>
               )}
@@ -122,7 +122,7 @@ const ForgotPassword = () => {
                 ))}
               </select>
               {!errors.securityQuestionId ? null : (
-                <div className="text-sm text-pink-700 text-lg mt-2">
+                <div className="text-sm text-pink-700 text-lg mt-2 w-96 whitespace-normal">
                   <p>{errors.securityQuestionId}</p>
                 </div>
               )}
@@ -148,7 +148,7 @@ const ForgotPassword = () => {
                 />
               </div>
               {!errors.securityQuestionAnswer ? null : (
-                <div className="text-sm text-pink-700 text-lg mt-2">
+                <div className="text-sm text-pink-700 text-lg mt-2 w-96 whitespace-normal">
                   <p>{errors.securityQuestionAnswer}</p>
                 </div>
               )}
