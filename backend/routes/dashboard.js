@@ -25,13 +25,13 @@ router.get("/most-submissions/:year",
 passport.authenticate("jwt", { session: false }),
 (req,res) => {
     const { year } = req.params;
-    mysqlConnection.query(`SELECT u.employee_name AS name, COUNT(s.user_id) AS noOfSubmissions
-    FROM user u 
+    mysqlConnection.query(`SELECT c.title AS name, COUNT(s.challenge_id) AS noOfSubmissions
+    FROM challenge c 
     INNER JOIN solution s 
-    ON u.user_id = s.user_id 
+    ON c.challenge_id = s.challenge_id 
     WHERE YEAR(s.posted_on) = ${year}  
-    GROUP BY u.user_id 
-    ORDER BY COUNT(s.user_id) DESC`,
+    GROUP BY c.challenge_id 
+    ORDER BY COUNT(s.challenge_id) DESC`,
     (sqlErr, result, fields) => {
         if(sqlErr){
             console.log(sqlErr);

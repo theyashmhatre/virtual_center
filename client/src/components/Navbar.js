@@ -1,5 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Navbar = () => {
@@ -19,9 +19,10 @@ const Navbar = () => {
           />
         </li>
         <li>
-          <div className="rounded-full bg-white px-11 p-1">
-            <FontAwesomeIcon icon={faUser} size="sm" className=" mr-1" />
+          <div className="rounded-full bg-white px-3 p-1">
+            <FontAwesomeIcon icon={faUser} size="sm" className="mr-4" />
             Shubham
+            <FontAwesomeIcon icon={faAngleDown} size="sm" className="ml-4" />
           </div>
         </li>
       </ul>

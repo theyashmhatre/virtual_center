@@ -18,7 +18,7 @@ const Comment = ({ type, comment }) => {
       else if (type == "challenge") upvoteComment = upvoteChallengeComment;
       else return;
 
-      upvoteComment(comment.solution_comment_id)
+      upvoteComment(comment.comment_id)
         .then(() => {
           setIsLiked(true);
           setTotalLikes(totalLikes + 1);
@@ -31,7 +31,7 @@ const Comment = ({ type, comment }) => {
       else if (type == "challenge") downvoteComment = downvoteChallengeComment;
       else return;
       
-      downvoteComment(comment.solution_comment_id)
+      downvoteComment(comment.comment_id)
         .then(() => {
           setIsLiked(false);
           setTotalLikes(totalLikes - 1);
@@ -41,7 +41,7 @@ const Comment = ({ type, comment }) => {
   };
 
   return (
-    <div key={comment.id} className="border-4 mt-2 p-3 flex flex-row">
+    <div className="border-4 mt-2 p-3 flex flex-row">
       {/* DO CHECK ID AGAIN */}
       <div className="flex flex-col w-10per justify-center align-middle">
         <div className="w-full flex justify-center mb-3">
