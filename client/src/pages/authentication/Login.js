@@ -78,7 +78,7 @@ const Login = () => {
                 } focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none w-96`}
               />
               {!errors.username ? null : (
-                <div className="text-sm text-pink-700 text-lg mt-2 w-96 whitespace-normal">
+                <div className=" text-pink-700 text-lg mt-2 w-96 whitespace-normal">
                   <p>{errors.username}</p>
                 </div>
               )}
@@ -109,14 +109,14 @@ const Login = () => {
               </div>
               {/* flex end */}
               {!errors.password ? null : (
-                <div className="text-sm text-pink-700 text-lg mt-2 w-96 whitespace-normal">
+                <div className="text-pink-700 text-lg mt-2 w-96 whitespace-normal">
                   <p>{errors.password}</p>
                 </div>
               )}
             </div>
           </div>
           {!errors.main ? null : (
-            <div className="text-sm text-center text-pink-700 text-lg mb-5">
+            <div className="text-center text-pink-700 text-lg mb-5">
               <p>{errors.main}</p>
             </div>
           )}

@@ -2,23 +2,25 @@ import { AiOutlineHome } from 'react-icons/ai';
 import {IoIosCalendar} from "react-icons/io";
 import { BsTelephone } from "react-icons/bs";
 import { FaRegCommentAlt } from "react-icons/fa";
+import { Link } from "react-router-dom";
+
 const Side = () => {
   return (
 
-    <div className=" min-h-screen w-28 shadow-md bg-neutral-800 pt-8 px-0 absolute  ">
+    <div className="min-h-screen fixed w-24 shadow-md bg-neutral-800 pt-8 px-0 ">
       {/* sidebar */}
         <ul className="flex flex-col gap-9 pt-8">
           <li className="left">
-          <a class="flex items-center  py-4 px-6 h-12 overflow-hidden text-white text-ellipsis whitespace-nowrap hover:bg-pink-700 transition duration-300 ease-in-out" href="#!" >
+          <Link to="/" class="flex items-center  py-4 px-6 h-12 overflow-hidden text-white text-ellipsis whitespace-nowrap hover:bg-pink-700 transition duration-300 ease-in-out"  >
           <AiOutlineHome size={50}/>
-          </a>
+          </Link>
           </li>
 
           
           <li className="left">
-          <a class="flex items-center  py-4 px-6 h-12 overflow-hidden text-white text-ellipsis whitespace-nowrap hover:bg-pink-700 transition duration-300 ease-in-out" href="#!" >
+          <Link to="/Dashboard" class="flex items-center  py-4 px-6 h-12 overflow-hidden text-white text-ellipsis whitespace-nowrap hover:bg-pink-700 transition duration-300 ease-in-out"  >
           <IoIosCalendar size={50} />
-          </a>
+          </Link>
           </li>
           
           {/* <li className="left">
@@ -34,9 +36,9 @@ const Side = () => {
 
           
           <li className="left">
-          <a class="flex items-center  py-4 px-6 h-12 overflow-hidden text-white text-ellipsis whitespace-nowrap hover:bg-pink-700 transition duration-300 ease-in-out" href="#!" >
+          <Link to="/support" class="flex items-center  py-4 px-6 h-12 overflow-hidden text-white text-ellipsis whitespace-nowrap hover:bg-pink-700 transition duration-300 ease-in-out"  >  
           <BsTelephone  size={40}/>
-          </a>
+          </Link>
           </li>
 
           <li className="left">

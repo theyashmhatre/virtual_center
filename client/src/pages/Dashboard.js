@@ -3,7 +3,7 @@ import { colors } from "../../constants";
 import DoughnutChart from "../components/DoughnutChart";
 import MainLayout from "../layouts/MainLayout";
 import { getChallengesCounts } from "../utilities/api/dashboard";
-
+import { getChallengesCounts, getMostSubmissions } from "../utilities/api/dashboard";
 const Dashboard = () => {
   const [challengeCounts, setChallengeCounts] = useState([]);
   const [mostSubmissions, setMostSubmissions] = useState([]);
