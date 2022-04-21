@@ -3,21 +3,21 @@ const mysqlConnection = require("../../../config/dbConnection");
 const { generatePaginationValues } = require('../../../utils/utils');
 const passport = require("passport");
 const { types } = require('../../../utils/constants');
-const typeId = types.offering;
+const typeId = types.challenge;
 
 
 router.post("/create", passport.authenticate("jwt", { session: false }), (req, res) => {
 
     try {
-        const { offeringId, commentText } = req.body;
+        const { challengeId, commentText } = req.body;
         const userId = res.req.user.user_id;
 
-        if (!offeringId || !userId || offeringId == null || userId == null || !commentText)
-            return res.status(400).json({ main: "Something went wrong. Please try again", devMsg: `Either offeringId, userId, commentText is invalid. OfferingId: ${offeringId} userId: ${userId} commentText: ${commentText}` })
+        if (!challengeId || !userId || challengeId == null || userId == null || !commentText)
+            return res.status(400).json({ main: "Something went wrong. Please try again", devMsg: `Either challengeId, userId, commentText is invalid. ChallengeId: ${challengeId} userId: ${userId} commentText: ${commentText}` });
 
         const newComment = {
             user_id: userId,
-            post_id: offeringId,
+            post_id: challengeId,
             type_id: typeId,
             comment_text: commentText,
         };
@@ -44,18 +44,18 @@ router.post("/create", passport.authenticate("jwt", { session: false }), (req, r
 });
 
 //returns all comments (paginated)
-router.get("/multiple/:offeringId/:pageNum/:limit", passport.authenticate("jwt", { session: false }), (req, res) => {
+router.get("/multiple/:challengeId/:pageNum/:limit", passport.authenticate("jwt", { session: false }), (req, res) => {
 
     try {
-        const { offeringId } = req.params;
+        const { challengeId } = req.params;
         const userId = res.req.user.user_id;
 
         let { limit, pageNum, offset } = generatePaginationValues(req);
 
-        if (!offeringId)
+        if (!challengeId)
             return res
                 .status(400)
-                .json({ main: "Something went wrong. Please try again", devMsg: "No offering id found" });
+                .json({ main: "Something went wrong. Please try again", devMsg: "No challenge id found" });
 
 
         //returns a list of comments
@@ -66,22 +66,7 @@ router.get("/multiple/:offeringId/:pageNum/:limit", passport.authenticate("jwt",
 
         mysqlConnection.query(
 
-            // `SELECT c.*, IF(v.user_id is NOT NULL,1,0) as isLiked, u.employee_name, u.email, u.display_picture, IF(ocv.offering_comment_id is NOT NULL,COUNT(*),0) as totalLikes
-            // FROM offering_comment c
-            // INNER JOIN user u 
-            // ON c.user_id = u.user_id
-            // LEFT JOIN
-            // offering_comment_upvote ocv
-            // ON c.offering_comment_id = ocv.offering_comment_id
-            // LEFT JOIN 
-            // offering_comment_upvote v 
-            // ON c.offering_comment_id = v.offering_comment_id AND v.user_id = ${userId}
-            // where c.offering_id = ${offeringId}
-            // GROUP BY v.offering_comment_id
-            // ORDER BY c.posted_on DESC
-            // LIMIT ? OFFSET ?`,
-
-            `SELECT c.*, IF(v.user_id is NOT NULL,1,0) as isUpvoted, u.employee_name, u.email, u.display_picture, IF(upv.comment_id is NOT NULL,COUNT(*),0) as totalUpvotes
+            `SELECT c.*, IF(v.user_id is NOT NULL,1,0) as isLiked, u.employee_name, u.email, u.display_picture, IF(upv.comment_id is NOT NULL,COUNT(*),0) as totalLikes
             FROM comment c
             INNER JOIN user u
             ON c.user_id = u.user_id
@@ -91,7 +76,7 @@ router.get("/multiple/:offeringId/:pageNum/:limit", passport.authenticate("jwt",
             LEFT JOIN
             upvote v
             ON c.comment_id = v.comment_id AND v.user_id = ${userId} AND v.type_id = ${typeId}
-            where c.post_id = ${offeringId} AND c.type_id = ${typeId}
+            where c.post_id = ${challengeId} AND c.type_id = ${typeId}
             GROUP BY c.comment_id
             ORDER BY c.posted_on DESC
             LIMIT ? OFFSET ?
@@ -137,7 +122,7 @@ router.post("/upvote", passport.authenticate("jwt", { session: false }), (req, r
         const userId = res.req.user.user_id;
 
 
-        if (!commentId || !userId || commentId == null || userId == null) return res.status(400).json({ main: "Something went wrong. Please try again", devMsg: `Either commentId or userId is invalid. OfferingId: ${commentId} userId: ${userId}` });
+        if (!commentId || !userId || commentId == null || userId == null) return res.status(400).json({ main: "Something went wrong. Please try again", devMsg: `Either commentId or userId is invalid. Chall: ${commentId} userId: ${userId}` });
 
         const newUpvote = {
             comment_id: commentId,
@@ -153,7 +138,7 @@ router.post("/upvote", passport.authenticate("jwt", { session: false }), (req, r
                     devMsg: "Error occured while inserting comment upvote into db",
                 });
             } else {
-                res.status(200).json({ main: "Offering comment upvoted Successfully" });
+                res.status(200).json({ main: "comment upvoted Successfully" });
             }
         });
     } catch (error) {
@@ -183,7 +168,7 @@ router.post("/downvote", passport.authenticate("jwt", { session: false }), (req,
                     devMsg: "Error occured while inserting downvote for comment into db",
                 });
             } else {
-                res.status(200).json({ main: "Offering comment downvoted successfully" });
+                res.status(200).json({ main: "comment downvoted successfully" });
             }
         });
     } catch (error) {
@@ -203,7 +188,7 @@ router.get("/check-upvote/:userId/:commentId", passport.authenticate("jwt", { se
         const { userId, commentId } = req.params;
 
         if (!commentId || !userId || commentId == null || userId == null)
-            return res.status(400).json({ main: "Something went wrong. Please try again", devMsg: `Either commentId or userId is invalid. CommentId: ${commentId} userId: ${userId}` })
+            return res.status(400).json({ main: "Something went wrong. Please try again", devMsg: `Either commentId or userId is invalid. CommentId: ${commentId} userId: ${userId}` });
 
 
         mysqlConnection.query(`SELECT * from upvote where comment_id = ${commentId} AND user_id = ${userId} AND type_id = ${typeId}`, (sqlErr, result, fields) => {
@@ -242,7 +227,7 @@ router.get("/:commentId/upvotes/count", passport.authenticate("jwt", { session: 
                 return res.status(500).json({
                     main: "Something went wrong. Please try again.",
                     devError: sqlErr,
-                    devMsg: "Error occured while checking total number of likes on an offering",
+                    devMsg: "Error occured while checking total number of likes on an challenge",
                 });
 
             } else {

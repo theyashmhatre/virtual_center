@@ -43,7 +43,7 @@ const Solutions = () => {
 
     setLoading(true);
     if (challengeId)
-      getSolutions(challengeId, pageNo)
+      getSolutions(challengeId, pageNo, limit)
         .then(({ data }) => {
           if (data.solution_list)
             setSolutions([...solutions, ...data.solution_list]);
@@ -52,7 +52,8 @@ const Solutions = () => {
           if (!data.solutions_count || data.solutions_count < limit)
             setMoreSolutionsAvlbl(false);
         })
-        .catch(() => {
+        .catch((e) => {
+          console.log(e);
           setLoading(false);
         });
   }, [pageNo]);

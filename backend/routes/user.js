@@ -205,10 +205,21 @@ router.post("/login", (req, res) => {
                   });
                 }
 
-                //returns jwt token to be stored in browser's sessionStorage
-                res.status(200).json({
-                  success: true,
-                  token: token,
+                mysqlConnection.query(`INSERT INTO login_history SET username=${username}`, (sqlErr, result, fields) => {
+                  if (err) {
+                    console.log(err);
+                    res.status(500).json({
+                      main: "Something went wrong. Please try again",
+                      devError: err,
+                      devMsg: "Error while signing jwt token",
+                    });
+                  }
+
+                  //returns jwt token to be stored in browser's sessionStorage
+                  res.status(200).json({
+                    success: true,
+                    token: token,
+                  });
                 });
               }
             );

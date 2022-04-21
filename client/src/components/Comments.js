@@ -88,7 +88,7 @@ const Comments = ({ type, id }) => {
           </button>
         </div>
         {comments.map((comment) => (
-          <Comment type={type} comment={comment} />
+          <Comment key={comment.comment_id} type={type} comment={comment} />
         ))}
         {moreCommentsAvlbl && loading ? (
           <div className="flex justify-center w-full my-20">
