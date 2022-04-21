@@ -2,10 +2,9 @@ import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import Comments from "../../components/Comments";
-import Footer from "../../components/Footer";
-import Navbar from "../../components/Navbar";
 import CreateSolution from "../../components/Solutions/CreateSolution";
 import Solutions from "../../components/Solutions/Solutions";
+import MainLayout from "../../layouts/MainLayout";
 import { getSingleChallenge } from "../../utilities/api/challenge";
 import { apiURL } from "../../../constants";
 import challenge_cover from "../../../public/challenge_cover.png";
@@ -25,8 +24,7 @@ const Challenge = () => {
   }, []);
 
   return (
-    <div>
-      <Navbar />
+    <MainLayout>
       <div className="flex items-center flex-col mx-10 mb-10 min-h-screen">
         <div className="flex flex-col mb-1">
           <div className="h-30v flex items-center justify-center">
@@ -109,8 +107,7 @@ const Challenge = () => {
           <CreateSolution />
         ) : null}
       </div>
-      <Footer />
-    </div>
+    </MainLayout>
   );
 };
 

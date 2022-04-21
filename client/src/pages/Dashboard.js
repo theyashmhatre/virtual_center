@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { colors } from "../../constants";
 import DoughnutChart from "../components/DoughnutChart";
-import Footer from "../components/Footer";
-import Navbar from "../components/Navbar";
-import { getChallengesCounts, getMostSubmissions } from "../utilities/api/dashboard";
+import MainLayout from "../layouts/MainLayout";
+import { getChallengesCounts } from "../utilities/api/dashboard";
 
 const Dashboard = () => {
   const [challengeCounts, setChallengeCounts] = useState([]);
@@ -27,8 +26,7 @@ const Dashboard = () => {
   }, [mostSubmissionsYear]);
   
   return (
-    <div>
-      <Navbar />
+    <MainLayout>
       <div className="min-h-screen">
         <div className="grid grid-cols-3 m-10">
           <div className="m-5 p-5 bg-gray-100 border-t-4 border-pink-700 h-fit">
@@ -225,8 +223,7 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-      <Footer />
-    </div>
+    </MainLayout>
   );
 };
 

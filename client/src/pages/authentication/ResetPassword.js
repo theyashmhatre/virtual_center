@@ -2,7 +2,7 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { useParams } from "react-router";
-import { AuthSidebar } from "../../components/AuthSidebar";
+import AuthLayout from "../../layouts/AuthLayout";
 import { resetPassword } from "../../utilities/api/user";
 import { isEmptyObject, passwordValidation } from "../../utilities/utils";
 
@@ -70,12 +70,7 @@ const ResetPassword = () => {
   };
 
   return (
-    /*grid start*/
-    <div className="grid grid-cols-2 divide-x">
-      {/* grid child_1 start*/}
-      <AuthSidebar />
-      {/* grid child_1 end*/}
-      
+    <AuthLayout>
       {/* grid child_2 start*/}
       {/* flex parent start*/}
       <div>
@@ -162,7 +157,7 @@ const ResetPassword = () => {
         </div>
         {/* grid child_2 end*/}
       </div>
-    </div>
+    </AuthLayout>
   );
 };
 

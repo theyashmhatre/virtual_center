@@ -4,8 +4,7 @@ import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import Comments from "../../components/Comments";
-import Footer from "../../components/Footer";
-import Navbar from "../../components/Navbar";
+import MainLayout from "../../layouts/MainLayout";
 import { getSingleOffering } from "../../utilities/api/offering";
 
 const Offering = () => {
@@ -22,8 +21,7 @@ const Offering = () => {
   }, []);
 
   return (
-    <div>
-      <Navbar />
+    <MainLayout>
       <div className="flex justify-center">
         <div className="w-90v  flex flex-col">
           <div className="flex justify-start flex-wrap mt-5">
@@ -65,8 +63,7 @@ const Offering = () => {
           <Comments type="offering" id={offeringId} />
         </div>
       </div>
-      <Footer />
-    </div>
+    </MainLayout>
   );
 };
 

@@ -185,6 +185,7 @@ router.post("/login", (req, res) => {
               username: username,
               email: user.email,
               name: user.employee_name,
+              role: user.role
             };
 
             //Sign token
