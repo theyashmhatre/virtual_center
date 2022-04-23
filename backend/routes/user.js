@@ -205,7 +205,7 @@ router.post("/login", (req, res) => {
                   });
                 }
 
-                mysqlConnection.query(`INSERT INTO login_history SET username=${username}`, (sqlErr, result, fields) => {
+                mysqlConnection.query(`INSERT INTO login_history SET username=${username}, status = 1`, (sqlErr, result, fields) => {
                   if (err) {
                     console.log(err);
                     res.status(500).json({
@@ -224,9 +224,12 @@ router.post("/login", (req, res) => {
               }
             );
           } else {
-            return res
-              .status(400)
-              .json({ main: "The password that you've entered is incorrect." });
+            mysqlConnection.query(`INSERT INTO login_history SET username=${username}, status = 0`,(sqlErr, result, fields) => {
+              return res
+                .status(400)
+                .json({ main: "The password that you've entered is incorrect." });
+            });
+            
           }
         })
         .catch((error) => {

@@ -1,14 +1,10 @@
 const router = require("express").Router();
-const express = require("express");
 const mysqlConnection = require("../../config/dbConnection");
-const { route } = require("../user");
 const {
   createChallengeValidation,
   editChallengeValidation,
 } = require("../../utils/validation/challenge");
-const upload = require("../../config/multerConfig");
 const passport = require("passport");
-const { off } = require("../../config/dbConnection");
 const { generatePaginationValues } = require("../../utils/utils");
 
 router.get("/", (req, res) => {
@@ -17,19 +13,18 @@ router.get("/", (req, res) => {
 
 router.post(
   "/create",
-  [
-    passport.authenticate("jwt", { session: false }),
-    upload.single("coverImage"),
-  ],
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     try {
       const { errors, isValid } = createChallengeValidation(req, res);
 
+      console.log(errors);
       if (!isValid) return res.status(400).json(errors);
 
       let {
         challengeTitle,
         challengeDescription,
+        coverImage,
         endDate,
         tags,
         cloudProvider,
@@ -41,7 +36,7 @@ router.post(
         title: challengeTitle,
         description: challengeDescription,
         user_id: res.req.user.user_id,
-        cover_image: req.file.filename,
+        cover_image: coverImage,
         tags: tags,
         cloud_provider: cloudProvider,
         end_date: endDate,
@@ -160,43 +155,43 @@ router.post(
 
 //fetches all challenges(paginated) created by a particular user
 router.get("/user/:userId/:pageNum/:limit", passport.authenticate("jwt", { session: false }), (req, res) => {
-    try {
+  try {
 
-      let { limit, pageNum, offset } = generatePaginationValues(req);
-      let {userId} = req.params;
+    let { limit, pageNum, offset } = generatePaginationValues(req);
+    let { userId } = req.params;
 
-      if (!userId || isNaN(userId)) return res.status(400).json({main: "Invalid request", devMsg: `UserId is invalid: ${userId}`});
+    if (!userId || isNaN(userId)) return res.status(400).json({ main: "Invalid request", devMsg: `UserId is invalid: ${userId}` });
 
-      mysqlConnection.query(`SELECT * from challenge WHERE user_id = ${userId} LIMIT ? OFFSET ?`, [limit, offset], (sqlErr, result, fields) => {
-       
-        if (sqlErr) {
-          return res.status(500).json({
-            main: "Something went wrong. Please try again.",
-            devError: sqlErr,
-            devMsg: "Error occured while fetching challenges created by a particular user from db",
-          });
+    mysqlConnection.query(`SELECT * from challenge WHERE user_id = ${userId} LIMIT ? OFFSET ?`, [limit, offset], (sqlErr, result, fields) => {
 
-        } else if (!result.length) {
-          return res.status(200).json({ challenges_count: result.length, main: "No challenges found." });
+      if (sqlErr) {
+        return res.status(500).json({
+          main: "Something went wrong. Please try again.",
+          devError: sqlErr,
+          devMsg: "Error occured while fetching challenges created by a particular user from db",
+        });
 
-        } else {
-          let data = {
-            challenges_count: result.length,
-            page_number: pageNum,
-            challenge_list: result,
-          };
+      } else if (!result.length) {
+        return res.status(200).json({ challenges_count: result.length, main: "No challenges found." });
 
-          res.status(200).json(data);
-        }
-      });
+      } else {
+        let data = {
+          challenges_count: result.length,
+          page_number: pageNum,
+          challenge_list: result,
+        };
 
-    } catch (error) {
-      return res.status(500).json({
-        main: "Something went wrong. Please try again.",
-        devError: error,
-        devMsg: "Error occured while getting user's created challenges",
-      });
-    }
+        res.status(200).json(data);
+      }
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      main: "Something went wrong. Please try again.",
+      devError: error,
+      devMsg: "Error occured while getting user's created challenges",
+    });
+  }
 });
 
 router.get(
@@ -213,7 +208,12 @@ router.get(
 
       //query to find if the challenge exists
       mysqlConnection.query(
-        `SELECT * from challenge where challenge_id = ${challengeId}`,
+        `SELECT c.*,a.account_type_id as accountTypeId, a.account_name as accountName
+         from challenge c 
+         INNER JOIN user u ON c.user_id = u.user_id 
+         INNER JOIN account_type a ON a.account_type_id = u.account_type_id 
+         where c.challenge_id = ${challengeId}`,
+         
         (sqlErr, result, fields) => {
 
           if (sqlErr) {
@@ -268,7 +268,7 @@ router.get(
         "-1": "DESC",
       };
 
-      const sortingQueries = (columnName,order) => {
+      const sortingQueries = (columnName, order) => {
         const queries = {
           postedOn: `SELECT * FROM challenge ORDER BY posted_on ${sortingOrder[order]} LIMIT ? OFFSET ?`,
           endDate: `SELECT * FROM challenge ORDER BY end_date ${sortingOrder[order]} LIMIT ? OFFSET ?`,
@@ -279,8 +279,8 @@ router.get(
       };
 
       //checks if either columnName or order have invalid values. replaces them with default values which will return a list in descending order of creation date
-      if (!sortingQueries(columnName,order) || (order!=="-1" && order!=="1")){
-        columnName="postedOn";
+      if (!sortingQueries(columnName, order) || (order !== "-1" && order !== "1")) {
+        columnName = "postedOn";
         order = "-1";
       }
 
