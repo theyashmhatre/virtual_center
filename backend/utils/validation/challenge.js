@@ -4,6 +4,7 @@ function createChallengeValidation(req, res) {
   const {
     challengeTitle,
     challengeDescription,
+    coverImage,
     endDate,
     tags,
     cloudProvider,
@@ -12,6 +13,13 @@ function createChallengeValidation(req, res) {
   } = req.body;
 
   const errors = {};
+
+  console.log(challengeTitle,
+    challengeDescription,
+    coverImage,
+    endDate,
+    tags,
+    cloudProvider);
 
   if (!challengeTitle) errors.challengeTitle = "Challenge name cannot be empty";
 
@@ -28,14 +36,14 @@ function createChallengeValidation(req, res) {
     errors.devMsg = "No userId found in request";
   }
 
+  if (!coverImage) errors.coverImage = "You must select a coverImage";
+
   if (!endDate)
     errors.endDate = "Please choose a valid end date for challenge.";
 
   if (!tags) errors.tags = "You must enter atleast 1 tag";
 
   if(!cloudProvider) errors.cloudProvider = "Please select a valid cloud provider";
-
-  if (!req.file || !req.file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG)$/)) errors.challengeImage = "Please choose a valid cover image for challenge";
 
   return {
     errors,

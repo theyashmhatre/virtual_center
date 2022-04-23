@@ -1,23 +1,22 @@
 const router = require('express').Router();
-const mysqlConnection = require("../../../config/dbConnection");
-const { generatePaginationValues } = require('../../../utils/utils');
+const mysqlConnection = require("../../config/dbConnection");
+const { generatePaginationValues } = require('../../utils/utils');
 const passport = require("passport");
-const { types } = require('../../../utils/constants');
-const typeId = types.challenge;
+const { types } = require('../../utils/constants');
 
 
 router.post("/create", passport.authenticate("jwt", { session: false }), (req, res) => {
 
     try {
-        const { challengeId, commentText } = req.body;
+        const { postId, commentText, typeId } = req.body;
         const userId = res.req.user.user_id;
 
-        if (!challengeId || !userId || challengeId == null || userId == null || !commentText)
-            return res.status(400).json({ main: "Something went wrong. Please try again", devMsg: `Either challengeId, userId, commentText is invalid. ChallengeId: ${challengeId} userId: ${userId} commentText: ${commentText}` });
+        if (!postId || !userId || postId == null || userId == null || !commentText)
+            return res.status(400).json({ main: "Something went wrong. Please try again", devMsg: `Either postId, userId, commentText is invalid. postId: ${postId} userId: ${userId} commentText: ${commentText}` });
 
         const newComment = {
             user_id: userId,
-            post_id: challengeId,
+            post_id: postId,
             type_id: typeId,
             comment_text: commentText,
         };
@@ -44,15 +43,15 @@ router.post("/create", passport.authenticate("jwt", { session: false }), (req, r
 });
 
 //returns all comments (paginated)
-router.get("/multiple/:challengeId/:pageNum/:limit", passport.authenticate("jwt", { session: false }), (req, res) => {
+router.get("/multiple/:postId/:typeId/:pageNum/:limit", passport.authenticate("jwt", { session: false }), (req, res) => {
 
     try {
-        const { challengeId } = req.params;
+        const { postId, typeId } = req.params;
         const userId = res.req.user.user_id;
 
         let { limit, pageNum, offset } = generatePaginationValues(req);
 
-        if (!challengeId)
+        if (!postId)
             return res
                 .status(400)
                 .json({ main: "Something went wrong. Please try again", devMsg: "No challenge id found" });
@@ -66,7 +65,7 @@ router.get("/multiple/:challengeId/:pageNum/:limit", passport.authenticate("jwt"
 
         mysqlConnection.query(
 
-            `SELECT c.*, IF(v.user_id is NOT NULL,1,0) as isLiked, u.employee_name, u.email, u.display_picture, IF(upv.comment_id is NOT NULL,COUNT(*),0) as totalLikes
+            `SELECT c.*, IF(v.user_id is NOT NULL,1,0) as isUpvoted, u.employee_name, u.email, u.display_picture, IF(upv.comment_id is NOT NULL,COUNT(*),0) as totalUpvotes
             FROM comment c
             INNER JOIN user u
             ON c.user_id = u.user_id
@@ -76,7 +75,7 @@ router.get("/multiple/:challengeId/:pageNum/:limit", passport.authenticate("jwt"
             LEFT JOIN
             upvote v
             ON c.comment_id = v.comment_id AND v.user_id = ${userId} AND v.type_id = ${typeId}
-            where c.post_id = ${challengeId} AND c.type_id = ${typeId}
+            where c.post_id = ${postId} AND c.type_id = ${typeId}
             GROUP BY c.comment_id
             ORDER BY c.posted_on DESC
             LIMIT ? OFFSET ?
@@ -118,7 +117,7 @@ router.get("/multiple/:challengeId/:pageNum/:limit", passport.authenticate("jwt"
 router.post("/upvote", passport.authenticate("jwt", { session: false }), (req, res) => {
 
     try {
-        const { commentId } = req.body;
+        const { commentId, typeId } = req.body;
         const userId = res.req.user.user_id;
 
 
@@ -154,7 +153,7 @@ router.post("/upvote", passport.authenticate("jwt", { session: false }), (req, r
 router.post("/downvote", passport.authenticate("jwt", { session: false }), (req, res) => {
 
     try {
-        const { commentId } = req.body;
+        const { commentId, typeId } = req.body;
         const userId = res.req.user.user_id;
 
 
@@ -183,9 +182,9 @@ router.post("/downvote", passport.authenticate("jwt", { session: false }), (req,
 
 
 //checks if a user has upvoted a particular comment
-router.get("/check-upvote/:userId/:commentId", passport.authenticate("jwt", { session: false }), (req, res) => {
+router.get("/check-upvote/:userId/:commentId/:typeId", passport.authenticate("jwt", { session: false }), (req, res) => {
     try {
-        const { userId, commentId } = req.params;
+        const { userId, commentId, typeId } = req.params;
 
         if (!commentId || !userId || commentId == null || userId == null)
             return res.status(400).json({ main: "Something went wrong. Please try again", devMsg: `Either commentId or userId is invalid. CommentId: ${commentId} userId: ${userId}` });
@@ -215,9 +214,9 @@ router.get("/check-upvote/:userId/:commentId", passport.authenticate("jwt", { se
 });
 
 //returns totalUpvotes for a particular comment
-router.get("/:commentId/upvotes/count", passport.authenticate("jwt", { session: false }), (req, res) => {
+router.get("/upvotes/count/:commentId/:typeId", passport.authenticate("jwt", { session: false }), (req, res) => {
     try {
-        const { commentId } = req.params;
+        const { commentId, typeId } = req.params;
 
         if (!commentId || commentId == null)
             return res.status(400).json({ main: "Something went wrong. Please try again", devMsg: `commentId is invalid. CommentId: ${commentId}` });
