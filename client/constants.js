@@ -7,10 +7,29 @@ var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep
 
 var colors = ["red", "yellow", "blue", "green", "gray", "pink", "orange", "voilet"];
 
+var navigationData = {
+  "main": [
+    { title: "Home", link: "/main" },
+    { title: "Our Offerings", link: "/main/offerings" }
+  ],
+  "challenge": [
+    { title: "Challenges", link: "/challenge/challenges" },
+    { title: "Dashboard", link: "/challenge/dashboard" },
+    { title: "Our Solvers", link: "/challenge/solvers" }
+  ],
+  "support": [
+    { title: "Contact", link: "/support" }
+  ],
+  "help": [
+    { title: "help", link: "/help" }
+  ]
+}
+
 module.exports = {
     emailRegex,
     passwordRegex,
     apiURL,
     monthNames,
-    colors
+    colors,
+    navigationData
 };

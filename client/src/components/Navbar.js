@@ -1,8 +1,12 @@
-import { Link, NavLink } from "react-router-dom";
 import { faAngleDown, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useLocation } from "react-router";
+import { NavLink } from "react-router-dom";
+import { navigationData } from "../../constants";
 
 const Navbar = () => {
+  const location = useLocation();
+
   return (
     <main className="flex-2  flex flex-col p-3 grow pl-0 pt-0 pr-0  ">
       <ul className="flex justify-end gap-3 p-7 bg-gradient-to-r from-blue-grd to-green-grd">
@@ -27,67 +31,22 @@ const Navbar = () => {
         </li>
       </ul>
 
-      <ul className="flex  gap-16 decoration-from-font font-medium bg-gray-rgb p-4 ">
-        <li>
-          <NavLink
-            style={({ isActive }) => ({
-              color: isActive ? "rgb(190 24 93)" : "",
-              fontWeight: isActive ? "bold" : "",
-            })}
-            to={"/"}
-          >
-            Home
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            style={({ isActive }) => ({
-              color: isActive ? "rgb(190 24 93)" : "",
-              fontWeight: isActive ? "bold" : "",
-            })}
-            to="/dashboard"
-          >
-            Dashboard
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            style={({ isActive }) => ({
-              color: isActive ? "rgb(190 24 93)" : "",
-              fontWeight: isActive ? "bold" : "",
-            })}
-            to="/challenges"
-          >
-            Challenges
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            style={({ isActive }) => ({
-              color: isActive ? "rgb(190 24 93)" : "",
-              fontWeight: isActive ? "bold" : "",
-            })}
-            to="/solvers"
-          >
-            Our Solvers
-          </NavLink>
-        </li>
-        <li>
-          {" "}
-          <NavLink
-            style={({ isActive }) => ({
-              color: isActive ? "rgb(190 24 93)" : "",
-              fontWeight: isActive ? "bold" : "",
-            })}
-            to="/offerings"
-          >
-            Our Offerings
-          </NavLink>
-        </li>
-        <li>Resources</li>
-        <li>Help</li>
-      </ul>
-      {/* Home Start */}
+      <div className="flex  gap-16 decoration-from-font font-medium bg-gray-rgb p-4 ">
+        {navigationData[location.pathname.split("/")[1]].map(
+          ({ title, link }) => (
+            <NavLink
+              style={({ isActive }) => ({
+                color: isActive ? "rgb(190 24 93)" : "",
+                fontWeight: isActive ? "bold" : "",
+              })}
+              to={link}
+              exact
+            >
+              {title}
+            </NavLink>
+          )
+        )}
+      </div>
     </main>
   );
 };
