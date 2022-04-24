@@ -6,18 +6,18 @@ import { NavLink } from "react-router-dom";
 
 const Sidebar = () => {
   return (
-    <div className="min-h-screen fixed w-24 shadow-md bg-neutral-800 pt-8 px-0">
+    <div className="min-h-screen fixed w-24 shadow-md bg-neutral-800 pt-4 px-0">
       {/* sidebar */}
-      <ul className="flex flex-col gap-9 pt-8">
+      <ul className="flex flex-col gap-9 pr-2">
         <li className="left">
           <NavLink
             style={({ isActive }) => ({
               backgroundColor: isActive ? "rgb(190 24 93)" : "",
             })}
             to="/main"
-            className="flex items-center py-4 px-6 h-12 overflow-hidden text-white text-ellipsis whitespace-nowrap hover:bg-pink-700 transition duration-300 ease-in-out"
+            className="flex items-center justify-center py-4 px-6 h-20 overflow-hidden text-white text-ellipsis whitespace-nowrap hover:bg-pink-700 transition duration-300 ease-in-out rounded-r-lg"
           >
-            <AiOutlineHome size={50}/>
+            <AiOutlineHome size={40}/>
           </NavLink>
         </li>
         <li className="left">
@@ -26,9 +26,9 @@ const Sidebar = () => {
               backgroundColor: isActive ? "rgb(190 24 93)" : "",
             })}
             to="/challenge"
-            className="flex items-center py-4 px-6 h-12 overflow-hidden text-white text-ellipsis whitespace-nowrap hover:bg-pink-700 transition duration-300 ease-in-out"
+            className="flex items-center justify-center py-4 px-6 h-20 overflow-hidden text-white text-ellipsis whitespace-nowrap hover:bg-pink-700 transition duration-300 ease-in-out rounded-r-lg"
           >
-            <IoIosCalendar size={50} />
+            <IoIosCalendar size={40} />
           </NavLink>
         </li>
         <li className="left">
@@ -37,9 +37,9 @@ const Sidebar = () => {
               backgroundColor: isActive ? "rgb(190 24 93)" : "",
             })}
             to="/support"
-            className="flex items-center py-4 px-6 h-12 overflow-hidden text-white text-ellipsis whitespace-nowrap hover:bg-pink-700 transition duration-300 ease-in-out"
+            className="flex items-center justify-center py-4 px-6 h-20 overflow-hidden text-white text-ellipsis whitespace-nowrap hover:bg-pink-700 transition duration-300 ease-in-out rounded-r-lg"
           >
-            <BsTelephone size={40}/>
+            <BsTelephone size={30}/>
           </NavLink>
         </li>
         <li className="left">
@@ -48,9 +48,9 @@ const Sidebar = () => {
               backgroundColor: isActive ? "rgb(190 24 93)" : "",
             })}
             to="/help"
-            className="flex items-center py-4 px-6 h-12 overflow-hidden text-white text-ellipsis whitespace-nowrap hover:bg-pink-700 transition duration-300 ease-in-out"
+            className="flex items-center justify-center py-4 px-6 h-20 overflow-hidden text-white text-ellipsis whitespace-nowrap hover:bg-pink-700 transition duration-300 ease-in-out rounded-r-lg"
           >
-            <FaRegCommentAlt size={40}/>
+            <FaRegCommentAlt size={30}/>
           </NavLink>
         </li>
       </ul>
