@@ -1,10 +1,13 @@
 import { faAngleDown, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useContext } from "react";
 import { useLocation } from "react-router";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { navigationData } from "../../constants";
+import { AuthContext } from "../contexts";
 
 const Navbar = () => {
+  const context = useContext(AuthContext);
   const location = useLocation();
 
   return (
@@ -22,11 +25,31 @@ const Navbar = () => {
             placeholder="Search.."
           />
         </li>
-        <li>
-          <div className="rounded-full bg-white px-3 p-1">
+        <li className="relative group cursor-pointer">
+          <div
+            className="rounded-full bg-white px-3 p-1"
+          >
             <FontAwesomeIcon icon={faUser} size="sm" className="mr-4" />
             Shubham
             <FontAwesomeIcon icon={faAngleDown} size="sm" className="ml-4" />
+          </div>
+          <div className="hidden group-hover:flex absolute right-0 top-0 pt-10 w-40">
+            <div
+              className="flex flex-col items-start bg-white rounded-xl py-4 w-full"
+            >
+              <button
+                className="hover:bg-gray-200 w-full py-2 px-4 flex justify-start"
+                onClick={() => context.removeAuth()}
+              >
+                Logout
+              </button>
+              <Link
+                to="/profile"
+                className="hover:bg-gray-200 w-full py-2 px-4"
+              >
+                Profile
+              </Link>
+            </div>
           </div>
         </li>
       </ul>
