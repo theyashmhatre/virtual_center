@@ -4,7 +4,7 @@ import { BsTelephone } from "react-icons/bs";
 import { FaRegCommentAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
-const Side = () => {
+const Sidebar = () => {
   return (
 
     <div className="min-h-screen fixed w-24 shadow-md bg-neutral-800 pt-8 px-0 ">
@@ -52,4 +52,4 @@ const Side = () => {
  );
 };
 
-export default Side;
+export default Sidebar;
