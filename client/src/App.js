@@ -1,3 +1,4 @@
+import { Navigate } from "react-router";
 import { Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts";
 import ForgotPassword from "./pages/authentication/ForgotPassword";
@@ -19,16 +20,21 @@ const App = () => {
   return (
     <AuthProvider>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="challenges" element={<Challenges />} />
-        <Route path="create-challenge" element={<CreateChallenge />} />
+        <Route path="/" element={<Navigate to="/main" />} />
+        <Route path="/main" element={<Home />} />
+        <Route path="main/create-offering" element={<CreateOffering />} />
+        <Route path="main/offerings" element={<Offerings />} />
+        <Route path="main/offering/:offeringId" element={<Offering />} />
+        <Route path="/challenge" element={<Navigate to="/challenge/challenges" />} />
+        <Route path="challenge/dashboard" element={<Dashboard />} />
+        <Route path="challenge/challenges" element={<Challenges />} />
+        <Route
+          path="challenge/create-challenge"
+          element={<CreateChallenge />}
+        />
         <Route path="challenge/:challengeId" element={<Challenge />} />
-        <Route path="solution/:solutionId" element={<Solution />} />
-        <Route path="solvers" element={<Solvers />} />
-        <Route path="create-offering" element={<CreateOffering />} />
-        <Route path="offerings" element={<Offerings />} />
-        <Route path="offering/:offeringId" element={<Offering />} />
+        <Route path="challenge/solution/:solutionId" element={<Solution />} />
+        <Route path="challenge/solvers" element={<Solvers />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="forgot-password" element={<ForgotPassword />} />

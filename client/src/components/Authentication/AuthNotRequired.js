@@ -6,7 +6,7 @@ const AuthNotRequired = ({children}) => {
   const context = useContext(AuthContext);
 
   if (!context.checkAuth()) return children;
-  else return <Navigate to="/" />;
+  else return <Navigate to="/main" />;
 }
 
 export default AuthNotRequired;

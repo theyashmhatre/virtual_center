@@ -32,10 +32,16 @@ export const AuthProvider = ({ children }) => {
     return false;
   };
 
+  const removeAuth = () => {
+    sessionStorage.removeItem('Access Token');
+    setAuth(null);
+  };
+
   const context = {
     auth: auth,
     storeAuth: storeAuth,
     checkAuth: checkAuth,
+    removeAuth: removeAuth,
   };
 
   return (

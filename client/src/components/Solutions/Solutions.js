@@ -125,7 +125,7 @@ const Solutions = () => {
                   </div>
                 </div>
                 <div>
-                  <Link to={`/solution/${solution.solution_id}`}>
+                  <Link to={`/challenge/solution/${solution.solution_id}`}>
                     <h2 className="text-center p-4 text-pink-700">
                       View Detail
                     </h2>

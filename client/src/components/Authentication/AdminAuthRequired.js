@@ -7,7 +7,7 @@ const AdminAuthRequired = ({children}) => {
 
   if (context.checkAuth())
     if (context.auth.role == "admin") return children;
-    else return <Navigate to="/" />;
+    else return <Navigate to="/main" />;
   else return <Navigate to="/login" />;
 }
 
