@@ -3,21 +3,28 @@ import api from "./index";
 export const createSolution = async ({
   challengeId,
   solutionTitle,
+  teamMembers,
   solutionDescription,
 }) => {
   const endpoint = "/api/solution/create-solution";
-  return await api.post(endpoint, {
-    challengeId,
-    solutionTitle,
-    solutionDescription,
-  }, {
-    headers: {
-      "Content-Type": "application/json"
+  // console.log(teamMembers);
+  return await api.post(
+    endpoint,
+    {
+      challengeId,
+      solutionTitle,
+      teamMembers,
+      solutionDescription,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
     }
-  });
+  );
 };
 
-export const getSolutions = async (challengeId, pageNo=1, limit=5) => {
+export const getSolutions = async (challengeId, pageNo = 1, limit = 5) => {
   const endpoint = `/api/solution/get-solutions/${challengeId}/${pageNo}/${limit}`;
   return await api.get(endpoint);
 };
@@ -27,18 +34,26 @@ export const getSingleSolution = async (solutionId) => {
   return await api.get(endpoint);
 };
 
-export const getSolutionComments = async (solutionId, pageNo=1, limit=5) => {
+export const getSolutionComments = async (
+  solutionId,
+  pageNo = 1,
+  limit = 5
+) => {
   const endpoint = `/api/solution/get-comments/${solutionId}/${pageNo}/${limit}`;
   return await api.get(endpoint);
 };
 
 export const postSolutionComment = async (solutionId, commentText) => {
   const endpoint = `/api/solution/${solutionId}/comment`;
-  return await api.post(endpoint, { commentText }, {
-    headers: {
-      "Content-Type": "application/json"
+  return await api.post(
+    endpoint,
+    { commentText },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
     }
-  });
+  );
 };
 
 export const upvoteSolutionComment = async (commentId) => {

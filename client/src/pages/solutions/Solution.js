@@ -17,7 +17,7 @@ const Solution = () => {
   }, []);
 
   return (
-   <MainLayout>
+    <MainLayout>
       <div className="mx-16">
         <div className="mb-5">
           <div className="w-80v md:w-95v sm:w-95v">
@@ -30,7 +30,12 @@ const Solution = () => {
               <h1>Shubham Patil</h1>
               <h1> patil@tcs.com </h1>
             </div>
-            <div className="md:w-full sm:w-full w-60v mt-10 border-2 p-4">
+            <h1 className="text-lg  pt-2 font-bold mt-2">Team Members</h1>
+            <div className="flex flex-row">
+              <div className="bg-gray-400  rounded p-0.5 mr-1"> 2292394</div>
+            </div>
+            <h1 className="text-lg  pt-2 font-bold mt-2">Description</h1>
+            <div className="md:w-full sm:w-full w-60v  border-2 p-4">
               {!solution.description ? null : (
                 <div
                   dangerouslySetInnerHTML={{

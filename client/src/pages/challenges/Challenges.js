@@ -50,7 +50,7 @@ const Challenges = () => {
         .then(({ data }) => {
           if (data.challenge_list)
             setChallenges([...challenges, ...data.challenge_list]);
-
+          console.log([...challenges, ...data.challenge_list]);
           setLoading(false);
           if (data.challenges_count < limit) setMoreChallengeAvlbl(false);
         })
@@ -88,7 +88,7 @@ const Challenges = () => {
         });
     }
   };
-  
+
   return (
     <MainLayout>
       <div className="min-h-screen">
@@ -120,7 +120,7 @@ const Challenges = () => {
               <div className="flex justify-end flex-wrap">
                 <p className="mr-10">{challenges.length} Results</p>
                 <div className="flex flex-wrap flex-start">
-                  <h2 className="mr-2">Sort By :</h2> 
+                  <h2 className="mr-2">Sort By :</h2>
                   <select
                     className="border-2 px-2"
                     name="sort"
@@ -132,13 +132,10 @@ const Challenges = () => {
                         setSortedBy("postedOn");
                       else if (e.target.value == 3 || e.target.value == 4)
                         setSortedBy("endDate");
-                      else
-                        setSortedBy("status");
+                      else setSortedBy("status");
 
-                      if (Number(e.target.value)%2)
-                        setOrder(1);
-                      else
-                        setOrder(-1);
+                      if (Number(e.target.value) % 2) setOrder(1);
+                      else setOrder(-1);
                     }}
                   >
                     <option value={1} label="Posted On Newest First" />
@@ -171,7 +168,11 @@ const Challenges = () => {
                   monthNames[temp.getMonth()] +
                   " " +
                   temp.getFullYear();
+                let tagArr = challenge.tags.split(",");
+                const totalTags = tagArr.length;
+                if (totalTags > 3) tagArr = tagArr.splice(totalTags - 3);
 
+                // console.log(tagArr);
                 return (
                   <div
                     className="border-2 h-70v lg:mb-0 mb-4 mr-3 w-24per md:w-1/2 sm:w-2/3 xs:w-5/6"
@@ -200,12 +201,31 @@ const Challenges = () => {
                         />
                       </div>
                       <div className="flex flex-col">
-                        <div className=" flex items-center mb-1">
+                        <div className=" flex items-center ">
                           <button className="bg-pink-700 px-1 rounded mr-2">
                             Open
                           </button>
                           <p>Until {endDate}</p>
                         </div>
+                      </div>
+                      <div className="flex flex-row ">
+                        {tagArr.map((tag) => {
+                          return (
+                            <div
+                              key={tag}
+                              className=" bg-gray-400  rounded p-0.5 mr-1 "
+                            >
+                              {tag}
+                            </div>
+                          );
+                        })}
+                        {totalTags > 3 ? (
+                          <div className=" bg-gray-400  rounded p-0.5 mr-1 ">
+                            +{totalTags - 3}
+                          </div>
+                        ) : (
+                          <div></div>
+                        )}
                       </div>
                       <div>
                         <Link to={`/challenge/${challenge.challenge_id}`}>

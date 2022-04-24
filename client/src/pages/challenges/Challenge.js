@@ -22,7 +22,13 @@ const Challenge = () => {
         })
         .catch(() => {});
   }, []);
-
+  let tagArr = [];
+  if (challenge.tags != null) {
+    //  console.log(challenge.tags.split(","));
+    tagArr = challenge.tags.split(",");
+    //challenge.tags.split(",");
+    //  console.log(tagArr);
+  }
   return (
     <MainLayout>
       <div className="flex items-center flex-col mx-10 mb-10 min-h-screen">
@@ -79,7 +85,7 @@ const Challenge = () => {
             <div className="w-full md:w-95v sm:w-95v border-2">
               <div>
                 <h1 className="text-lg pl-2 pt-2 font-bold">Description</h1>
-                <div className="md:w-full sm:w-full w-60v mb-10 p-2">
+                <div className="md:w-full sm:w-full w-60v mb-2 p-2">
                   {!challenge.description ? null : (
                     <div
                       dangerouslySetInnerHTML={{
@@ -89,6 +95,16 @@ const Challenge = () => {
                   )}
                   <br />
                 </div>
+              </div>
+              <h1 className="text-lg pl-2 pt-2 font-bold">Tags</h1>
+              <div className="flex flex-row p-2 ">
+                {tagArr.map((tag) => {
+                  return (
+                    <div key={tag} className="bg-gray-400  rounded p-0.5 mr-1">
+                      {tag}
+                    </div>
+                  );
+                })}
               </div>
               <div className="mt-10 pl-2 pt-2 flex items-center">
                 <h1 className="text-lg font-bold">Cloud Provider</h1>
