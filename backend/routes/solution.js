@@ -10,11 +10,11 @@ router.get("/", (req, res) => {
 
 router.post(
   "/create-solution",
-  passport.authenticate("jwt", { session: false }),
+    passport.authenticate("jwt", { session: false }),
   (req, res) => {
     try {
-      console.log(req.body);
 
+      console.log(req.body)
       const { errors, isValid } = createSolutionValidation(req, res);
 
       if (!isValid) return res.status(400).json(errors);
@@ -24,6 +24,8 @@ router.post(
         solutionTitle,
         solutionDescription,
         supportingMedia,
+        teamMembers,
+        // attachment
       } = req.body;
 
       console.log(res.req.user)
@@ -32,8 +34,10 @@ router.post(
         challenge_id: challengeId,
         user_id: res.req.user.user_id,
         title: solutionTitle,
-        description: solutionDescription
+        description: solutionDescription,
+        // attachment:attachment
       };
+        // attachment: solutionAttachment
 
       mysqlConnection.query(
         `INSERT INTO solution SET ?`,
@@ -45,6 +49,14 @@ router.post(
             });
           }
 
+        mysqlConnection.query(`INSERT INTO user_team (username, solution_id) VALUES ?`,[teamMembers.map(item => [item, result.insertId])],
+        (sqlErr, result, fields) => {
+          if (sqlErr) {
+            return mysqlConnection.rollback(function () {
+              throw sqlErr;
+            });
+          }
+        });
           return res
             .status(201)
             .json({ devMsg: "New solution created successfully" });

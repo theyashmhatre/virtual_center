@@ -7,7 +7,6 @@ const passport = require("passport");
 var cookieParser = require('cookie-parser');
 
 app.use(express.json());
-app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(cors());
@@ -20,6 +19,7 @@ app.use("/api/dashboard", require("./routes/dashboard"));
 app.use("/api/offering", require("./routes/offering/offering"));
 app.use("/api/offering/comment", require("./routes/offering/comment/comment"));
 app.use("/api/search", require("./routes/search"));
+app.use("/api/utils",require("./routes/utils/like"), require("./routes/utils/upvote"));
 
 // Passport Middleware
 app.use(passport.initialize());

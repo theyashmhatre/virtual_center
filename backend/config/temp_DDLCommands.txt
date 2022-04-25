@@ -124,3 +124,10 @@ CREATE TABLE `login_history` (
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+>user_team table
+CREATE TABLE `user_team` (
+  `username` int NOT NULL,
+  `solution_id` int NOT NULL,
+  UNIQUE KEY `team_member` (`username`,`solution_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
