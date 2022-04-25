@@ -1,3 +1,5 @@
+import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
@@ -6,13 +8,11 @@ import CreateSolution from "../../components/Solutions/CreateSolution";
 import Solutions from "../../components/Solutions/Solutions";
 import MainLayout from "../../layouts/MainLayout";
 import { getSingleChallenge } from "../../utilities/api/challenge";
-import { apiURL } from "../../../constants";
-import challenge_cover from "../../../public/challenge_cover.png";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar, faThumbsUp } from "@fortawesome/free-regular-svg-icons";
 
 const Challenge = () => {
   const [challenge, setChallenge] = useState({});
+  const [coverImage, setCoverImage] = useState("");
+  const [tags, setTags] = useState([]);
   const [tab, setTab] = useState("overview");
   const { challengeId } = useParams();
 
@@ -20,29 +20,29 @@ const Challenge = () => {
     if (challengeId)
       getSingleChallenge(challengeId)
         .then(({ data }) => {
+          if (data.cover_image)
+            new Blob(
+              [new Uint8Array(data.cover_image.data)],
+              {type: ".png"}
+            )
+              .text()
+              .then((result) => setCoverImage(result));
+          
+          if (data.tags)
+            setTags(data.tags.split(","));
           setChallenge(data);
         })
         .catch(() => {});
   }, []);
-  let tagArr = [];
-  if (challenge.tags != null) {
-    //  console.log(challenge.tags.split(","));
-    tagArr = challenge.tags.split(",");
-    //challenge.tags.split(",");
-    //  console.log(tagArr);
-  }
+  
   return (
     <MainLayout>
-      <div className="flex items-center flex-col mx-10 mb-10 min-h-screen">
+      <div className="flex items-center flex-col mx-10 my-10 min-h-screen">
         <div className="flex flex-col mb-1">
           <div className="h-30v flex items-center justify-center">
             <img
               className="object-fill h-full rounded-3xl"
-              src={
-                !challenge.cover_image
-                  ? challenge_cover
-                  : apiURL + "/public/images/" + challenge.cover_image
-              }
+              src={coverImage}
               alt="challenge cover"
             />
           </div>
@@ -51,8 +51,8 @@ const Challenge = () => {
           {challenge.title}
         </h1>
 
-        <div className="flex justify-between w-full mb-5  ">
-          <div className="flex w-80v flex-wrap md:w-95v sm:w-95v w-4/5 ">
+        <div className="flex justify-between w-full mb-5">
+          <div className="flex w-80v flex-wrap md:w-95v sm:w-95v w-4/5">
             <button
               className={`${
                 tab == "overview" ? "border-2" : "border-b-2 hover:border-2"
@@ -80,8 +80,8 @@ const Challenge = () => {
               Create solution
             </button>
           </div>
-          <div className=" flex w-full justify-end mr-2 ">
-            <FontAwesomeIcon icon={faThumbsUp} size="2x" className="   " />
+          <div className=" flex w-full justify-end mr-2">
+            <FontAwesomeIcon icon={faThumbsUp} size="2x" />
           </div>
         </div>
 
@@ -103,9 +103,9 @@ const Challenge = () => {
               </div>
               <h1 className="text-lg pl-2 pt-2 font-bold">Tags</h1>
               <div className="flex flex-row p-2 ">
-                {tagArr.map((tag) => {
+                {tags.map((tag) => {
                   return (
-                    <div key={tag} className="bg-gray-400  rounded p-0.5 mr-1">
+                    <div key={tag} className="bg-gray-400 rounded p-0.5 mr-1">
                       {tag}
                     </div>
                   );
@@ -117,7 +117,7 @@ const Challenge = () => {
               </div>
               <div className="my-10 pl-2 pt-2 flex items-center">
                 <h1 className="text-lg font-bold">Account Type</h1>
-                <div className="ml-10">{challenge.account_type_id}</div>
+                <div className="ml-10">{challenge.accountName}</div>
               </div>
             </div>
             <Comments type="challenge" id={challengeId} />

@@ -1,13 +1,11 @@
 import { faSearch, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import draftToHtml from "draftjs-to-html";
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../contexts";
 import MainLayout from "../../layouts/MainLayout";
 import { getChallenges, searchChallenges } from "../../utilities/api/challenge";
-import { getTruncatedContentState } from "../../utilities/utils";
-import { apiURL, monthNames } from "../../../constants";
+import ChallengeCard from "../../components/Challenges/ChallengeCard";
 
 const Challenges = () => {
   const [challenges, setChallenges] = useState([]);
@@ -160,84 +158,9 @@ const Challenges = () => {
             ) : null}
 
             <div className="lg:h-70v flex md:flex-col md:items-center sm:items-center sm:flex-col flex-wrap mb-10">
-              {challenges.map((challenge) => {
-                const temp = new Date(challenge.end_date);
-                const endDate =
-                  temp.getDate() +
-                  " " +
-                  monthNames[temp.getMonth()] +
-                  " " +
-                  temp.getFullYear();
-                let tagArr = challenge.tags.split(",");
-                const totalTags = tagArr.length;
-                if (totalTags > 3) tagArr = tagArr.splice(totalTags - 3);
-
-                // console.log(tagArr);
-                return (
-                  <div
-                    className="border-2 h-70v lg:mb-0 mb-4 mr-3 w-24per md:w-1/2 sm:w-2/3 xs:w-5/6"
-                    key={challenge.challenge_id}
-                  >
-                    <div className="h-40per">
-                      <img
-                        className="object-fill h-full w-full"
-                        src={apiURL + "/public/images/" + challenge.cover_image}
-                        alt="challenge cover"
-                      />
-                    </div>
-                    <div className="h-60per border-gray-500 border-2 flex flex-col justify-between p-3">
-                      <div className="h-25per flex items-center">
-                        <h2>{challenge.title}</h2>
-                      </div>
-                      <div className="h-10per flex items-center">
-                        <div
-                          dangerouslySetInnerHTML={{
-                            __html: draftToHtml(
-                              getTruncatedContentState(
-                                JSON.parse(challenge.description)
-                              )
-                            ),
-                          }}
-                        />
-                      </div>
-                      <div className="flex flex-col">
-                        <div className=" flex items-center ">
-                          <button className="bg-pink-700 px-1 rounded mr-2">
-                            Open
-                          </button>
-                          <p>Until {endDate}</p>
-                        </div>
-                      </div>
-                      <div className="flex flex-row ">
-                        {tagArr.map((tag) => {
-                          return (
-                            <div
-                              key={tag}
-                              className=" bg-gray-400  rounded p-0.5 mr-1 "
-                            >
-                              {tag}
-                            </div>
-                          );
-                        })}
-                        {totalTags > 3 ? (
-                          <div className=" bg-gray-400  rounded p-0.5 mr-1 ">
-                            +{totalTags - 3}
-                          </div>
-                        ) : (
-                          <div></div>
-                        )}
-                      </div>
-                      <div>
-                        <Link to={`/challenge/${challenge.challenge_id}`}>
-                          <h2 className="text-center text-pink-700">
-                            View challenge
-                          </h2>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+              {challenges.map((challenge, index) => (
+                <ChallengeCard challenge={challenge} key={index} />
+              ))}
             </div>
             {moreChallengeAvlbl && loading ? (
               <div className="flex justify-center w-full my-20">

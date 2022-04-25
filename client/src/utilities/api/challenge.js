@@ -8,18 +8,23 @@ export const createChallenge = async ({
   tags,
   endDate,
 }) => {
-  const formData = new FormData();
-  formData.append("coverImage", coverImage);
-  formData.append("challengeTitle", title);
-  formData.append("challengeDescription", description);
-  formData.append("cloudProvider", cloudProvider);
-  formData.append("tags", tags);
-  formData.append("endDate", endDate);
-
   const endpoint = "/api/challenge/create";
-  return await api.post(endpoint, formData, {
+  let tagString = ""
+  tags.map((tag, index) => {
+    if (index) tagString += ","
+    tagString += tag
+  })
+
+  return await api.post(endpoint, {
+    coverImage: coverImage,
+    challengeTitle: title,
+    challengeDescription: description,
+    cloudProvider: cloudProvider,
+    tags: tagString,
+    endDate: endDate,
+  }, {
     headers: {
-      "Content-Type": "multipart/form-data",
+      "Content-Type": "application/json",
     },
   });
 };
