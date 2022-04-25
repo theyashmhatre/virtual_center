@@ -5,10 +5,12 @@ import RichTextEditor from "../RichTextEditor";
 import { createSolution } from "../../utilities/api/solution";
 import { isEmptyObject } from "../../utilities/utils";
 import { createSolutionInputValidation } from "../../utilities/validation/solution";
+import TagsInput from "../Challenges/TagsInput";
 
 const initialInputValues = {
   solutionTitle: "",
   solutionDescription: EditorState.createEmpty(),
+  teamMembers: [],
 };
 
 const CreateSolution = () => {
@@ -36,6 +38,7 @@ const CreateSolution = () => {
       createSolution({
         challengeId,
         solutionTitle: inputValues.solutionTitle,
+        teamMembers: inputValues.teamMembers,
         solutionDescription: JSON.stringify(
           convertToRaw(inputValues.solutionDescription.getCurrentContent())
         ),
@@ -82,8 +85,38 @@ const CreateSolution = () => {
                 </div>
               )}
             </div>
+
             <div>
-              <label className="block mb-1 font-bold text-gray-500">
+              <label
+                htmlFor="Tags"
+                className="block mb-1 font-bold text-gray-500"
+              >
+                Team Members
+              </label>
+              <TagsInput
+                tags={inputValues.teamMembers}
+                setTags={(value) => {
+                  setInputValues({
+                    ...inputValues,
+                    teamMembers: value,
+                  });
+                }}
+              />
+              <label htmlFor="tags" className="ml-2 text-gray-400 text-sm">
+                Enter Employee Id of your Team Members if any.
+              </label>
+              {!errors.tags ? null : (
+                <div className="text-center text-red-700 text-lg mb-5">
+                  <p>{errors.tags}</p>
+                </div>
+              )}
+            </div>
+
+            <div>
+              <label
+                htmlFor="Description"
+                className="block mb-1 font-bold text-gray-500"
+              >
                 Solution Description
               </label>
               <RichTextEditor
