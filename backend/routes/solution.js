@@ -25,7 +25,7 @@ router.post(
         solutionDescription,
         supportingMedia,
         teamMembers,
-        // attachment
+        attachment
       } = req.body;
 
       console.log(res.req.user)
@@ -35,9 +35,8 @@ router.post(
         user_id: res.req.user.user_id,
         title: solutionTitle,
         description: solutionDescription,
-        // attachment:attachment
+        attachment:attachment
       };
-        // attachment: solutionAttachment
 
       mysqlConnection.query(
         `INSERT INTO solution SET ?`,
