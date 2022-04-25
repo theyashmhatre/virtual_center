@@ -34,39 +34,12 @@ export const getSingleSolution = async (solutionId) => {
   return await api.get(endpoint);
 };
 
-export const getSolutionComments = async (
-  solutionId,
-  pageNo = 1,
-  limit = 5
-) => {
-  const endpoint = `/api/solution/get-comments/${solutionId}/${pageNo}/${limit}`;
-  return await api.get(endpoint);
-};
-
-export const postSolutionComment = async (solutionId, commentText) => {
-  const endpoint = `/api/solution/${solutionId}/comment`;
-  return await api.post(
-    endpoint,
-    { commentText },
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
-};
-
-export const upvoteSolutionComment = async (commentId) => {
-  const endpoint = `/api/solution/upvote/${commentId}`;
+export const likeSolution = async (solutionId) => {
+  const endpoint = `/api/solution/like/${solutionId}`;
   return await api.post(endpoint);
 };
 
-export const downvoteSolutionComment = async (commentId) => {
-  const endpoint = `/api/solution/downvote/${commentId}`;
-  return await api.post(endpoint);
-};
-
-export const getSolvers = async (accountId) => {
-  const endpoint = `/api/solution/get-solvers/${accountId}`;
+export const getTotalLikes = async (solutionId) => {
+  const endpoint = `/api/solution/get-likes/${solutionId}`;
   return await api.get(endpoint);
 };

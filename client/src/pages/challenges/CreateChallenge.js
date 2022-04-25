@@ -37,21 +37,32 @@ const CreateChallenge = () => {
     setSuccessMessage("");
     const inputErrors = createChallengeInputValidation(inputValues);
 
-    if (isEmptyObject(inputErrors))
-      createChallenge({
-        ...inputValues,
-        description: JSON.stringify(
-          convertToRaw(inputValues.description.getCurrentContent())
-        ),
-      })
-        .then(() => setSuccessMessage("Challenge is created!!"))
-        .catch((error) => {
-          if (error.response)
-            if (error.response.data) setErrors(error.response.data);
+    if (isEmptyObject(inputErrors)) {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        createChallenge({
+          ...inputValues,
+          coverImage: reader.result,
+          description: JSON.stringify(
+            convertToRaw(inputValues.description.getCurrentContent())
+          ),
+        })
+          .then(() => setSuccessMessage("Challenge is created!!"))
+          .catch((error) => {
+            if (error.response)
+              if (error.response.data) setErrors(error.response.data);
+              else setErrors({ main: "Some Error Occured, Try Again!" });
             else setErrors({ main: "Some Error Occured, Try Again!" });
-          else setErrors({ main: "Some Error Occured, Try Again!" });
-        });
-    else setErrors(inputErrors);
+          });
+      };
+
+      reader.onerror = () => setErrors({
+        main: "Error while reading image data"
+      });
+      
+      reader.readAsDataURL(inputValues.coverImage);
+    } else setErrors(inputErrors);
   };
 
   return (

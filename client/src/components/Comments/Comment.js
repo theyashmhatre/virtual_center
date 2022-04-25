@@ -1,37 +1,23 @@
 import { faThumbsUp, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import { downvoteChallengeComment, upvoteChallengeComment } from "../utilities/api/challenge";
-import { downvoteOfferingComment, upvoteOfferingComment } from "../utilities/api/offering";
-import { downvoteSolutionComment, upvoteSolutionComment } from "../utilities/api/solution";
-import { apiURL } from "../../constants";
+import { apiURL } from "../../../constants";
+import { downvoteComment, upvoteComment } from "../../utilities/api/comment";
 
-const Comment = ({ type, comment }) => {
-  const [isLiked, setIsLiked] = useState(!!comment.isLiked);
-  const [totalLikes, setTotalLikes] = useState(comment.totalLikes || 0);
+const Comment = ({ typeId, comment }) => {
+  const [isLiked, setIsLiked] = useState(!!comment.isUpvoted);
+  const [totalLikes, setTotalLikes] = useState(comment.totalUpvotes || 0);
 
   const upvote = () => {
     if (!isLiked) {
-      let upvoteComment;
-      if (type == "solution") upvoteComment = upvoteSolutionComment;
-      else if (type == "offering") upvoteComment = upvoteOfferingComment;
-      else if (type == "challenge") upvoteComment = upvoteChallengeComment;
-      else return;
-
-      upvoteComment(comment.comment_id)
+      upvoteComment(comment.comment_id, typeId)
         .then(() => {
           setIsLiked(true);
           setTotalLikes(totalLikes + 1);
         })
         .catch((e) => console.log(e.response));
     } else {
-      let downvoteComment;
-      if (type == "solution") downvoteComment = downvoteSolutionComment;
-      else if (type == "offering") downvoteComment = downvoteOfferingComment;
-      else if (type == "challenge") downvoteComment = downvoteChallengeComment;
-      else return;
-      
-      downvoteComment(comment.comment_id)
+      downvoteComment(comment.comment_id, typeId)
         .then(() => {
           setIsLiked(false);
           setTotalLikes(totalLikes - 1);

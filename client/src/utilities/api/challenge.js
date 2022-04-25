@@ -8,18 +8,23 @@ export const createChallenge = async ({
   tags,
   endDate,
 }) => {
-  const formData = new FormData();
-  formData.append("coverImage", coverImage);
-  formData.append("challengeTitle", title);
-  formData.append("challengeDescription", description);
-  formData.append("cloudProvider", cloudProvider);
-  formData.append("tags", tags);
-  formData.append("endDate", endDate);
-
   const endpoint = "/api/challenge/create";
-  return await api.post(endpoint, formData, {
+  let tagString = ""
+  tags.map((tag, index) => {
+    if (index) tagString += ","
+    tagString += tag
+  })
+
+  return await api.post(endpoint, {
+    coverImage: coverImage,
+    challengeTitle: title,
+    challengeDescription: description,
+    cloudProvider: cloudProvider,
+    tags: tagString,
+    endDate: endDate,
+  }, {
     headers: {
-      "Content-Type": "multipart/form-data",
+      "Content-Type": "application/json",
     },
   });
 };
@@ -37,32 +42,4 @@ export const getSingleChallenge = async (challengeId) => {
 export const searchChallenges = async (searchQuery, pageNo) => {
   const endpoint = `/api/challenge/search/${searchQuery}/${pageNo}`;
   return await api.get(endpoint);
-};
-
-export const getChallengeComments = async (challengeId, pageNo=1, limit=5) => {
-  const endpoint = `/api/challenge/comment/multiple/${challengeId}/${pageNo}/${limit}`;
-  return await api.get(endpoint);
-};
-
-export const postChallengeComment = async (challengeId, commentText) => {
-  const endpoint = `/api/challenge/comment/create`;
-  return await api.post(endpoint, { challengeId, commentText }, {
-    headers: {
-      "Content-Type": "application/json"
-    }
-  });
-};
-
-export const upvoteChallengeComment = async (commentId) => {
-  const endpoint = '/api/challenge/comment/upvote';
-  return await api.post(endpoint, { commentId }, {
-    headers: { "Content-Type": "application/json" }
-  });
-};
-
-export const downvoteChallengeComment = async (commentId) => {
-  const endpoint = '/api/challenge/comment/downvote';
-  return await api.post(endpoint, { commentId }, {
-    headers: { "Content-Type": "application/json" }
-  });
 };
