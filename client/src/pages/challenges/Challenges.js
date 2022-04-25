@@ -48,7 +48,7 @@ const Challenges = () => {
         .then(({ data }) => {
           if (data.challenge_list)
             setChallenges([...challenges, ...data.challenge_list]);
-          console.log([...challenges, ...data.challenge_list]);
+          
           setLoading(false);
           if (data.challenges_count < limit) setMoreChallengeAvlbl(false);
         })

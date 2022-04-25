@@ -1,4 +1,4 @@
-import { faStar, faThumbsUp } from "@fortawesome/free-regular-svg-icons";
+import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
 import { faPaperclip } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import draftToHtml from "draftjs-to-html";
@@ -6,19 +6,32 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import Comments from "../../components/Comments";
 import MainLayout from "../../layouts/MainLayout";
-import { getSingleOffering } from "../../utilities/api/offering";
+import {
+  getSingleOffering,
+  getTotalLikes,
+  likeOffering
+} from "../../utilities/api/offering";
 
 const Offering = () => {
   const [offering, setOffering] = useState({});
+  const [totalLikes, setTotalLikes] = useState(0);
+  const [isLiked, setIsLiked] = useState(false);
   const { offeringId } = useParams();
 
   useEffect(() => {
-    if (offeringId)
+    if (offeringId) {
       getSingleOffering(offeringId)
         .then(({ data }) => {
           setOffering(data);
         })
         .catch(() => {});
+
+      getTotalLikes(offeringId)
+        .then(({ data }) => {
+          setTotalLikes(data.totalLikes);
+        })
+        .catch(() => {});
+    }
   }, []);
 
   return (
@@ -39,9 +52,30 @@ const Offering = () => {
           <div>
             <div className="flex flex-row w-full">
               <h1 className=" w-40">{offering.owner_name}</h1>
-              <div className="flex justify-end w-full  ">
-                <FontAwesomeIcon icon={faThumbsUp} size="2x" className="  " />
-                <button className="  bg-pink-600 text-white ml-4  px-1 rounded ">
+              <div className="flex justify-end w-full">
+                <div className="bg-green-500 text-white rounded-2xl mx-2 py-1 px-2">
+                  {totalLikes}
+                </div>
+                <FontAwesomeIcon
+                  icon={faThumbsUp}
+                  size="2x"
+                  className="cursor-pointer"
+                  color={isLiked ? "green" : "black"}
+                  onClick={() => {
+                    likeOffering(offeringId)
+                      .then(() => {
+                        if (!isLiked) {
+                          setIsLiked(true)
+                          setTotalLikes(totalLikes+1)
+                        } else {
+                          setIsLiked(false)
+                          setTotalLikes(totalLikes-1)
+                        }
+                      })
+                      .catch(() => {})
+                  }}
+                />
+                <button className="bg-pink-600 text-white ml-4 px-1 rounded">
                   View Attachment
                   <FontAwesomeIcon icon={faPaperclip} className="p-0 pl-1" />
                 </button>
