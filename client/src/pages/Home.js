@@ -1,19 +1,17 @@
-import Footer from "../components/Footer";
-import Navbar from "../components/Navbar";
-import Home1 from "../../public/Home1.png";
-import Home2 from "../../public/Home2.png";
-import Home3 from "../../public/Home3.png";
-import Home4 from "../../public/Home4.png";
 import {
   faChevronLeft,
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import MainLayout from "../layouts/MainLayout";
+import Home1 from "../../public/Home1.png";
+import Home2 from "../../public/Home2.png";
+import Home3 from "../../public/Home3.png";
+import Home4 from "../../public/Home4.png";
 
 const Home = () => {
   return (
-    <div>
-      <Navbar />
+    <MainLayout>
       <div className="flex flex-col ">
         <div className="flex bg-[url('../public/home_cover.png')] h-80">
           <div className="flex-1 bg-blue-bg-lite/80 pt-8 bg-blue-500 bg-opacity-60  ">
@@ -147,8 +145,7 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <Footer />
-    </div>
+    </MainLayout>
   );
 };
 

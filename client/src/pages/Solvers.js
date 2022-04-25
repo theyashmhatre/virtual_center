@@ -2,7 +2,7 @@ import { faUser, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import MainLayout from "../layouts/MainLayout";
 import { getSolvers } from "../utilities/api/solution";
 import { getAccountTypes } from "../utilities/api/user";
 
@@ -37,8 +37,7 @@ const Solvers = () => {
   }, [accountTypeId]);
 
   return (
-    <div>
-      <Navbar />
+    <MainLayout>
       <div className="flex flex-col items-center">
         <h1 className="text-3xl text-center font-bold mt-2">Our Solvers</h1>
         <div className="w-90v  ">
@@ -102,7 +101,7 @@ const Solvers = () => {
           </div>
         </div>
       </div>
-    </div>
+    </MainLayout>
   );
 };
 

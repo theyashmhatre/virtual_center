@@ -40,7 +40,7 @@ export const searchChallenges = async (searchQuery, pageNo) => {
 };
 
 export const getChallengeComments = async (challengeId, pageNo=1, limit=5) => {
-  const endpoint = `/api/challenge/comment/${challengeId}/${pageNo}/${limit}`;
+  const endpoint = `/api/challenge/comment/multiple/${challengeId}/${pageNo}/${limit}`;
   return await api.get(endpoint);
 };
 

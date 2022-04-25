@@ -2,11 +2,13 @@ import { useContext } from "react";
 import { Navigate } from "react-router-dom";
 import { AuthContext } from "../../contexts";
 
-const AuthRequired = ({children}) => {
+const AdminAuthRequired = ({children}) => {
   const context = useContext(AuthContext);
 
-  if (context.checkAuth()) return children;
+  if (context.checkAuth())
+    if (context.auth.role == "admin") return children;
+    else return <Navigate to="/main" />;
   else return <Navigate to="/login" />;
 }
 
-export default AuthRequired;
+export default AdminAuthRequired;

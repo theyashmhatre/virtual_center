@@ -1,6 +1,6 @@
+import { Navigate } from "react-router";
 import { Routes, Route } from "react-router-dom";
-import AuthNotRequired from "./components/Authentication/AuthNotRequired";
-import AuthRequired from "./components/Authentication/AuthRequired";
+import { AuthProvider } from "./contexts";
 import ForgotPassword from "./pages/authentication/ForgotPassword";
 import Login from "./pages/authentication/Login";
 import Register from "./pages/authentication/Register";
@@ -18,122 +18,32 @@ import Solvers from "./pages/Solvers";
 
 const App = () => {
   return (
-    <div>
+    <AuthProvider>
       <Routes>
+        <Route path="/" element={<Navigate to="/main" />} />
+        <Route path="/main" element={<Home />} />
+        <Route path="main/create-offering" element={<CreateOffering />} />
+        <Route path="main/offerings" element={<Offerings />} />
+        <Route path="main/offering/:offeringId" element={<Offering />} />
+        <Route path="/challenge" element={<Navigate to="/challenge/challenges" />} />
+        <Route path="challenge/dashboard" element={<Dashboard />} />
+        <Route path="challenge/challenges" element={<Challenges />} />
         <Route
-          path="/"
-          element={
-            <AuthRequired>
-              <Home />
-            </AuthRequired>
-          }
+          path="challenge/create-challenge"
+          element={<CreateChallenge />}
         />
-        <Route
-          path="dashboard"
-          element={
-            <AuthRequired>
-              <Dashboard />
-            </AuthRequired>
-          }
-        />
-        <Route
-          path="challenges"
-          element={
-            <AuthRequired>
-              <Challenges />
-            </AuthRequired>
-          }
-        />
-        <Route
-          path="create-challenge"
-          element={
-            <AuthRequired>
-              <CreateChallenge />
-            </AuthRequired>
-          }
-        />
-        <Route
-          path="challenge/:challengeId"
-          element={
-            <AuthRequired>
-              <Challenge />
-            </AuthRequired>
-          }
-        />
-        <Route
-          path="solution/:solutionId"
-          element={
-            <AuthRequired>
-              <Solution />
-            </AuthRequired>
-          }
-        />
-        <Route
-          path="solvers"
-          element={
-            <AuthRequired>
-              <Solvers />
-            </AuthRequired>
-          }
-        />
-        <Route
-          path="create-offering"
-          element={
-            <AuthRequired>
-              <CreateOffering />
-            </AuthRequired>
-          }
-        />
-        <Route
-          path="offerings"
-          element={
-            <AuthRequired>
-              <Offerings />
-            </AuthRequired>
-          }
-        />
-        <Route
-          path="offering/:offeringId"
-          element={
-            <AuthRequired>
-              <Offering />
-            </AuthRequired>
-          }
-        />
-        <Route
-          path="login"
-          element={
-            <AuthNotRequired>
-              <Login />
-            </AuthNotRequired>
-          }
-        />
-        <Route
-          path="register"
-          element={
-            <AuthNotRequired>
-              <Register />
-            </AuthNotRequired>
-          }
-        />
-        <Route
-          path="forgot-password"
-          element={
-            <AuthNotRequired>
-              <ForgotPassword />
-            </AuthNotRequired>
-          }
-        />
+        <Route path="challenge/:challengeId" element={<Challenge />} />
+        <Route path="challenge/solution/:solutionId" element={<Solution />} />
+        <Route path="challenge/solvers" element={<Solvers />} />
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
         <Route
           path="reset-password/:username/:token"
-          element={
-            <AuthNotRequired>
-              <ResetPassword />
-            </AuthNotRequired>
-          }
+          element={<ResetPassword />}
         />
       </Routes>
-    </div>
+    </AuthProvider>
   );
 };
 

@@ -1,8 +1,7 @@
 import { EditorState, convertToRaw } from "draft-js";
 import { useState } from "react";
-import Footer from "../../components/Footer";
-import Navbar from "../../components/Navbar";
 import RichTextEditor from "../../components/RichTextEditor";
+import AdminLayout from "../../layouts/AdminLayout";
 import { createOffering } from "../../utilities/api/offering";
 import { isEmptyObject } from "../../utilities/utils";
 import { createOfferingInputValidation } from "../../utilities/validation/offering";
@@ -52,8 +51,7 @@ const CreateOffering = () => {
   };
 
   return (
-    <div>
-      <Navbar />
+    <AdminLayout>
       <div className="my-10 mx-40">
         <h1 className="text-3xl text-center font-bold my-5">
           Create Offering
@@ -185,8 +183,7 @@ const CreateOffering = () => {
           </div>
         </div>
       </div>
-      <Footer />
-    </div>
+    </AdminLayout>
   );
 };
 

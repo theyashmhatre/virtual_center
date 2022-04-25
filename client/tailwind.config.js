@@ -4,6 +4,7 @@ module.exports = {
   theme: {
     minHeight: {
       100: "400px",
+      "screen": "100vh"
     },
     extend: {
       flexGrow: {
@@ -57,6 +58,10 @@ module.exports = {
       },
     },
   },
-  variants: {},
+  variants: {
+    extend: {
+      display: ['group-hover'],
+    },
+  },
   plugins: [],
 };
