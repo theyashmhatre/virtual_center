@@ -8,6 +8,8 @@ import MainLayout from "../../layouts/MainLayout";
 import { getSingleChallenge } from "../../utilities/api/challenge";
 import { apiURL } from "../../../constants";
 import challenge_cover from "../../../public/challenge_cover.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar, faThumbsUp } from "@fortawesome/free-regular-svg-icons";
 
 const Challenge = () => {
   const [challenge, setChallenge] = useState({});
@@ -22,7 +24,13 @@ const Challenge = () => {
         })
         .catch(() => {});
   }, []);
-
+  let tagArr = [];
+  if (challenge.tags != null) {
+    //  console.log(challenge.tags.split(","));
+    tagArr = challenge.tags.split(",");
+    //challenge.tags.split(",");
+    //  console.log(tagArr);
+  }
   return (
     <MainLayout>
       <div className="flex items-center flex-col mx-10 mb-10 min-h-screen">
@@ -43,8 +51,8 @@ const Challenge = () => {
           {challenge.title}
         </h1>
 
-        <div className="flex justify-between w-full mb-5">
-          <div className="flex w-80v flex-wrap md:w-95v sm:w-95v">
+        <div className="flex justify-between w-full mb-5  ">
+          <div className="flex w-80v flex-wrap md:w-95v sm:w-95v w-4/5 ">
             <button
               className={`${
                 tab == "overview" ? "border-2" : "border-b-2 hover:border-2"
@@ -72,6 +80,9 @@ const Challenge = () => {
               Create solution
             </button>
           </div>
+          <div className=" flex w-full justify-end mr-2 ">
+            <FontAwesomeIcon icon={faThumbsUp} size="2x" className="   " />
+          </div>
         </div>
 
         {tab == "overview" ? (
@@ -79,7 +90,7 @@ const Challenge = () => {
             <div className="w-full md:w-95v sm:w-95v border-2">
               <div>
                 <h1 className="text-lg pl-2 pt-2 font-bold">Description</h1>
-                <div className="md:w-full sm:w-full w-60v mb-10 p-2">
+                <div className="md:w-full sm:w-full w-60v mb-2 p-2">
                   {!challenge.description ? null : (
                     <div
                       dangerouslySetInnerHTML={{
@@ -89,6 +100,16 @@ const Challenge = () => {
                   )}
                   <br />
                 </div>
+              </div>
+              <h1 className="text-lg pl-2 pt-2 font-bold">Tags</h1>
+              <div className="flex flex-row p-2 ">
+                {tagArr.map((tag) => {
+                  return (
+                    <div key={tag} className="bg-gray-400  rounded p-0.5 mr-1">
+                      {tag}
+                    </div>
+                  );
+                })}
               </div>
               <div className="mt-10 pl-2 pt-2 flex items-center">
                 <h1 className="text-lg font-bold">Cloud Provider</h1>

@@ -112,7 +112,10 @@ const CreateChallenge = () => {
             )}
           </div>
           <div>
-            <label className="block mb-1 font-bold text-gray-500">
+            <label
+              htmlFor="Cloud Provider"
+              className="block mb-1 font-bold text-gray-500"
+            >
               Cloud Provider
             </label>
             <input
@@ -130,7 +133,10 @@ const CreateChallenge = () => {
             )}
           </div>
           <div>
-            <label className="block mb-1 font-bold text-gray-500">
+            <label
+              htmlFor="Cover Image"
+              className="block mb-1 font-bold text-gray-500"
+            >
               Cover Image
             </label>
             <input
@@ -148,7 +154,12 @@ const CreateChallenge = () => {
             )}
           </div>
           <div>
-            <label className="block mb-1 font-bold text-gray-500">Tags</label>
+            <label
+              htmlFor="Tags"
+              className="block mb-1 font-bold text-gray-500"
+            >
+              Tags
+            </label>
             <TagsInput
               tags={inputValues.tags}
               setTags={(value) => {
@@ -169,7 +180,10 @@ const CreateChallenge = () => {
             )}
           </div>
           <div>
-            <label className="block mb-1 font-bold text-gray-500">
+            <label
+              htmlFor="End Date"
+              className="block mb-1 font-bold text-gray-500"
+            >
               End Date
             </label>
             <input

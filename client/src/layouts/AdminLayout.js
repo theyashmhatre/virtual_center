@@ -6,10 +6,10 @@ import Sidebar from "../components/Sidebar";
 const AdminLayout = ({ children }) => {
   return (
     <AdminAuthRequired>
-      <div style={{height:'100vh' , float:"left"}}>
+      <div style={{ height: "100vh", float: "left" }}>
         <Sidebar />
       </div>
-      
+
       <div className="ml-24">
         <Navbar />
         {children}

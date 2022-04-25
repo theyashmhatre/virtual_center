@@ -1,3 +1,4 @@
+import { faStar, faThumbsUp } from "@fortawesome/free-regular-svg-icons";
 import { faPaperclip } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import draftToHtml from "draftjs-to-html";
@@ -39,6 +40,7 @@ const Offering = () => {
             <div className="flex flex-row w-full">
               <h1 className=" w-40">{offering.owner_name}</h1>
               <div className="flex justify-end w-full  ">
+                <FontAwesomeIcon icon={faThumbsUp} size="2x" className="  " />
                 <button className="  bg-pink-600 text-white ml-4  px-1 rounded ">
                   View Attachment
                   <FontAwesomeIcon icon={faPaperclip} className="p-0 pl-1" />
