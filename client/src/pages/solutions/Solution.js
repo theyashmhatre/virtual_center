@@ -87,7 +87,7 @@ const Solution = () => {
             </div>
           </div>
         </div>
-        <Comments type="solution" id={solutionId} />
+        <Comments typeId={2} id={solutionId} />
       </div>
     </MainLayout>
   );

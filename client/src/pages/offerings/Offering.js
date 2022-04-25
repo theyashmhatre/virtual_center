@@ -96,7 +96,7 @@ const Offering = () => {
             </div>
           </div>
 
-          <Comments type="offering" id={offeringId} />
+          <Comments typeId={3} id={offeringId} />
         </div>
       </div>
     </MainLayout>
