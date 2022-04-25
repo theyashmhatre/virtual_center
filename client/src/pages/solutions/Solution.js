@@ -5,7 +5,7 @@ import Comments from "../../components/Comments";
 import MainLayout from "../../layouts/MainLayout";
 import { getSingleSolution } from "../../utilities/api/solution";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar } from "@fortawesome/free-regular-svg-icons";
+import { faStar, faThumbsUp } from "@fortawesome/free-regular-svg-icons";
 
 const Solution = () => {
   const [solution, setSolution] = useState({});
@@ -28,11 +28,7 @@ const Solution = () => {
                 {solution.title}
               </h1>
               <div className=" flex w-full justify-end mr-2 ">
-                <FontAwesomeIcon
-                  icon={faStar}
-                  size="2x"
-                  className=" border-2  "
-                />
+                <FontAwesomeIcon icon={faThumbsUp} size="2x" className="  " />
               </div>
             </div>
             <div>
