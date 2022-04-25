@@ -2,9 +2,9 @@ var emailRegex = new RegExp("^[-!#$%&'*+\/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&'*+\/0-9=
 var passwordRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[-+_!@#$%^&*.,?]).+$");
 
 const types = {
-    "challenge": 1,
-    "solution": 2,
-    "offering": 3
+    1 :"challenge",
+    2 :"solution",
+    3 :"offering"
 };
 
 module.exports = {

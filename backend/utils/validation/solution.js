@@ -16,6 +16,9 @@ function createSolutionValidation(req, res) {
 
   if (!solutionDescription) errors.solutionDescription = "Description cannot be empty";
 
+  // if (!req.file || !req.file.originalname.match(/\.(doc|DOC|docx|DOCX|pptx|PPTX|pdf|PDF)$/)) errors.attachment = "Please choose a valid Word, PPT or PDF attachment for solution";
+
+
   return {
     errors,
     isValid: isEmptyObject(errors),
