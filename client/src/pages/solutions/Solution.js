@@ -1,36 +1,21 @@
-import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import Comments from "../../components/Comments";
+import { Like } from "../../components/Like";
 import MainLayout from "../../layouts/MainLayout";
-import {
-  getSingleSolution,
-  getTotalLikes,
-  likeSolution
-} from "../../utilities/api/solution";
+import { getSingleSolution } from "../../utilities/api/solution";
 
 
 const Solution = () => {
   const [solution, setSolution] = useState({});
-  const [totalLikes, setTotalLikes] = useState(0);
-  const [isLiked, setIsLiked] = useState(false);
   const { solutionId } = useParams();
 
   useEffect(() => {
-    if (solutionId) {
+    if (solutionId)
       getSingleSolution(solutionId)
         .then(({ data }) => setSolution(data))
         .catch(() => {});
-      
-      getTotalLikes(solutionId)
-        .then(({ data }) => {
-          setIsLiked(data.isLiked);
-          setTotalLikes(data.noOfLikes);
-        })
-        .catch(() => {});
-    }
   }, []);
 
   return (
@@ -43,28 +28,7 @@ const Solution = () => {
                 {solution.title}
               </h1>
               <div className="flex w-full justify-end mr-2">
-                <div className="bg-green-500 text-white rounded-2xl mx-2 py-1 px-2 h-fit">
-                  {totalLikes}
-                </div>
-                <FontAwesomeIcon
-                  icon={faThumbsUp}
-                  size="2x"
-                  className="cursor-pointer"
-                  color={isLiked ? "green" : "black"}
-                  onClick={() => {
-                    likeSolution(solutionId)
-                      .then(() => {
-                        if (!isLiked) {
-                          setIsLiked(true)
-                          setTotalLikes(totalLikes+1)
-                        } else {
-                          setIsLiked(false)
-                          setTotalLikes(totalLikes-1)
-                        }
-                      })
-                      .catch(() => {})
-                  }}
-                />
+                <Like postId={solutionId} typeId={2} />
               </div>
             </div>
             <div>
@@ -87,7 +51,7 @@ const Solution = () => {
             </div>
           </div>
         </div>
-        <Comments typeId={2} id={solutionId} />
+        <Comments typeId={2} postId={solutionId} />
       </div>
     </MainLayout>
   );

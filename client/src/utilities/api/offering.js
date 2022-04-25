@@ -31,26 +31,3 @@ export const getSingleOffering = async (id) => {
   const endpoint = `/api/offering/single/${id}`;
   return await api.get(endpoint);
 };
-
-export const likeOffering = async (offeringId) => {
-  const endpoint = "/api/offering/like";
-  return await api.post(
-    endpoint,
-    { offeringId },
-    {
-      headers: {
-        "Content-Type": "application/json",
-      }
-    }
-  );
-};
-
-export const getTotalLikes = async (offeringId) => {
-  const endpoint = `/api/offering/${offeringId}/likes/count`;
-  return await api.get(endpoint);
-};
-
-export const checkLikedByUser = async (offeringId, userId) => {
-  const endpoint = `/api/offering/check-like/${userId}/${offeringId}`;
-  return await api.get(endpoint);
-}

@@ -1,9 +1,8 @@
-import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import Comments from "../../components/Comments";
+import { Like } from "../../components/Like";
 import CreateSolution from "../../components/Solutions/CreateSolution";
 import Solutions from "../../components/Solutions/Solutions";
 import MainLayout from "../../layouts/MainLayout";
@@ -80,8 +79,8 @@ const Challenge = () => {
               Create solution
             </button>
           </div>
-          <div className=" flex w-full justify-end mr-2">
-            <FontAwesomeIcon icon={faThumbsUp} size="2x" />
+          <div className="flex w-full justify-end mr-2">
+            <Like postId={challengeId} typeId={1} />
           </div>
         </div>
 
