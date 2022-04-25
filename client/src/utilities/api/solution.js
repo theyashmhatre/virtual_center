@@ -34,6 +34,16 @@ export const getSingleSolution = async (solutionId) => {
   return await api.get(endpoint);
 };
 
+export const likeSolution = async (solutionId) => {
+  const endpoint = `/api/solution/like/${solutionId}`;
+  return await api.post(endpoint);
+};
+
+export const getTotalLikes = async (solutionId) => {
+  const endpoint = `/api/solution/get-likes/${solutionId}`;
+  return await api.get(endpoint);
+};
+
 export const getSolutionComments = async (
   solutionId,
   pageNo = 1,
