@@ -11,6 +11,7 @@ const initialInputValues = {
   solutionTitle: "",
   solutionDescription: EditorState.createEmpty(),
   teamMembers: [],
+  attachment: "",
 };
 
 const CreateSolution = () => {
@@ -20,11 +21,11 @@ const CreateSolution = () => {
   const { challengeId } = useParams();
 
   const handleInputChange = (e) => {
-    let { name, value } = e.target;
+    let { name, value, type, files } = e.target;
 
     setInputValues({
       ...inputValues,
-      [name]: value,
+      [name]: type == "file" ? files[0] : value,
     });
   };
 
@@ -34,23 +35,33 @@ const CreateSolution = () => {
     setSuccessMessage("");
     const inputErrors = createSolutionInputValidation(inputValues);
 
-    if (isEmptyObject(inputErrors))
-      createSolution({
-        challengeId,
-        solutionTitle: inputValues.solutionTitle,
-        teamMembers: inputValues.teamMembers,
-        solutionDescription: JSON.stringify(
-          convertToRaw(inputValues.solutionDescription.getCurrentContent())
-        ),
-      })
-        .then(() => setSuccessMessage("Solution submitted!!"))
-        .catch((error) => {
-          if (error.response)
-            if (error.response.data) setErrors(error.response.data);
+    if (isEmptyObject(inputErrors)) {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        createSolution({
+          challengeId,
+          ...inputValues,
+          attachment: reader.result,
+          solutionDescription: JSON.stringify(
+            convertToRaw(inputValues.solutionDescription.getCurrentContent())
+          ),
+        })
+          .then(() => setSuccessMessage("Solution submitted!!"))
+          .catch((error) => {
+            if (error.response)
+              if (error.response.data) setErrors(error.response.data);
+              else setErrors({ main: "Some Error Occured, Try Again!" });
             else setErrors({ main: "Some Error Occured, Try Again!" });
-          else setErrors({ main: "Some Error Occured, Try Again!" });
-        });
-    else setErrors(inputErrors);
+          });
+      };
+
+      reader.onerror = () => setErrors({
+        main: "Error while reading image data"
+      });
+      
+      reader.readAsDataURL(inputValues.attachment);
+    } else setErrors(inputErrors);
   };
 
   return (
@@ -85,33 +96,6 @@ const CreateSolution = () => {
                 </div>
               )}
             </div>
-
-            <div>
-              <label
-                htmlFor="Tags"
-                className="block mb-1 font-bold text-gray-500"
-              >
-                Team Members
-              </label>
-              <TagsInput
-                tags={inputValues.teamMembers}
-                setTags={(value) => {
-                  setInputValues({
-                    ...inputValues,
-                    teamMembers: value,
-                  });
-                }}
-              />
-              <label htmlFor="tags" className="ml-2 text-gray-400 text-sm">
-                Enter Employee Id of your Team Members if any.
-              </label>
-              {!errors.tags ? null : (
-                <div className="text-center text-red-700 text-lg mb-5">
-                  <p>{errors.tags}</p>
-                </div>
-              )}
-            </div>
-
             <div>
               <label
                 htmlFor="Description"
@@ -132,6 +116,52 @@ const CreateSolution = () => {
               {!errors.solutionDescription ? null : (
                 <div className="text-center text-red-700 text-lg mb-5">
                   <p>{errors.solutionDescription}</p>
+                </div>
+              )}
+            </div>
+            <div>
+              <label
+                htmlFor="Attachment"
+                className="block mb-1 font-bold text-gray-500"
+              >
+                Attachment
+              </label>
+              <input
+                type="file"
+                accept=".doc, .docx, .ppt, .pptx, .pdf"
+                name="attachment"
+                onChange={handleInputChange}
+                placeholder="Upload attachment"
+                className="border-2 rounded-lg w-full"
+              />
+              {!errors.attachment ? null : (
+                <div className="text-center text-red-700 text-lg mb-5">
+                  <p>{errors.attachment}</p>
+                </div>
+              )}
+            </div>
+            <div>
+              <label
+                htmlFor="Tags"
+                className="block mb-1 font-bold text-gray-500"
+              >
+                Team Members
+              </label>
+              <TagsInput
+                tags={inputValues.teamMembers}
+                setTags={(value) => {
+                  setInputValues({
+                    ...inputValues,
+                    teamMembers: value,
+                  });
+                }}
+              />
+              <label htmlFor="tags" className="ml-2 text-gray-400 text-sm">
+                Enter Employee Id of your Team Members if any.
+              </label>
+              {!errors.teamMembers ? null : (
+                <div className="text-center text-red-700 text-lg mb-5">
+                  <p>{errors.teamMembers}</p>
                 </div>
               )}
             </div>

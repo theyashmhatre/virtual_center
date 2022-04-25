@@ -19,15 +19,11 @@ export const postComment = async (postId, typeId, commentText) => {
 };
 
 export const upvoteComment = async (commentId, typeId) => {
-  const endpoint = '/api/utils/comment/upvote';
-  return await api.post(endpoint, { commentId, typeId }, {
-    headers: { "Content-Type": "application/json" }
-  });
+  const endpoint = `/api/utils/upvote/upvote/${commentId}/${typeId}`;
+  return await api.post(endpoint);
 };
 
 export const downvoteComment = async (commentId, typeId) => {
-  const endpoint = '/api/utils/comment/downvote';
-  return await api.post(endpoint, { commentId, typeId }, {
-    headers: { "Content-Type": "application/json" }
-  });
+  const endpoint = `/api/utils/upvote/downvote/${commentId}/${typeId}`;
+  return await api.post(endpoint);
 };

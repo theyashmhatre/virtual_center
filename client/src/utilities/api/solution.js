@@ -3,8 +3,9 @@ import api from "./index";
 export const createSolution = async ({
   challengeId,
   solutionTitle,
-  teamMembers,
   solutionDescription,
+  teamMembers,
+  attachment,
 }) => {
   const endpoint = "/api/solution/create-solution";
   // console.log(teamMembers);
@@ -13,8 +14,9 @@ export const createSolution = async ({
     {
       challengeId,
       solutionTitle,
-      teamMembers,
       solutionDescription,
+      teamMembers,
+      attachment,
     },
     {
       headers: {
@@ -31,15 +33,5 @@ export const getSolutions = async (challengeId, pageNo = 1, limit = 5) => {
 
 export const getSingleSolution = async (solutionId) => {
   const endpoint = `/api/solution/get-single-solution/${solutionId}`;
-  return await api.get(endpoint);
-};
-
-export const likeSolution = async (solutionId) => {
-  const endpoint = `/api/solution/like/${solutionId}`;
-  return await api.post(endpoint);
-};
-
-export const getTotalLikes = async (solutionId) => {
-  const endpoint = `/api/solution/get-likes/${solutionId}`;
   return await api.get(endpoint);
 };

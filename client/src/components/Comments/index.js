@@ -5,7 +5,7 @@ import { getComments, postComment } from "../../utilities/api/comment";
 import Comment from "./Comment";
 
 // typeId = 1 for "challenge", 2 for "solution", 3 for "offering"
-const Comments = ({ typeId, id }) => {
+const Comments = ({ typeId, postId }) => {
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState("");
   const [pageNo, setPageNo] = useState(1);
@@ -15,16 +15,15 @@ const Comments = ({ typeId, id }) => {
   const limit = 5;
   
   const onPost = () => {
-    postComment(id, typeId, commentText)
+    postComment(postId, typeId, commentText)
       .then(() => setSuccess(true))
       .catch(() => {});
   };
 
   const getCommentsFunction = (page) => {
     setLoading(true);
-    getComments(id, typeId, page, limit)
+    getComments(postId, typeId, page, limit)
       .then(({ data }) => {
-        console.log(data);
         if (data.comments_count)
           setComments((prevComments) => [...prevComments, ...data.comments_list]);
         
@@ -33,21 +32,20 @@ const Comments = ({ typeId, id }) => {
         if (!data.comments_count || data.comments_count < limit)
           setMoreCommentsAvlbl(false);
       })
-      .catch((e) => {
-        console.log(e.response);
+      .catch(() => {
         setLoading(false);
       });
   }
   
   useEffect(() => {
-    if (!moreCommentsAvlbl || !id) return;
+    if (!moreCommentsAvlbl || !postId) return;
     if (success) return;
 
     getCommentsFunction(pageNo);
   }, [pageNo]);
 
   useEffect(() => {
-    if (!success || !id) return;
+    if (!success || !postId) return;
 
     setComments([]);
     setPageNo(1);
