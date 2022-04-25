@@ -3,8 +3,9 @@ import api from "./index";
 export const createSolution = async ({
   challengeId,
   solutionTitle,
-  teamMembers,
   solutionDescription,
+  teamMembers,
+  attachment,
 }) => {
   const endpoint = "/api/solution/create-solution";
   // console.log(teamMembers);
@@ -13,8 +14,9 @@ export const createSolution = async ({
     {
       challengeId,
       solutionTitle,
-      teamMembers,
       solutionDescription,
+      teamMembers,
+      attachment,
     },
     {
       headers: {
