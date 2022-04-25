@@ -8,6 +8,8 @@ import MainLayout from "../../layouts/MainLayout";
 import { getSingleChallenge } from "../../utilities/api/challenge";
 import { apiURL } from "../../../constants";
 import challenge_cover from "../../../public/challenge_cover.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from "@fortawesome/free-regular-svg-icons";
 
 const Challenge = () => {
   const [challenge, setChallenge] = useState({});
@@ -49,8 +51,8 @@ const Challenge = () => {
           {challenge.title}
         </h1>
 
-        <div className="flex justify-between w-full mb-5">
-          <div className="flex w-80v flex-wrap md:w-95v sm:w-95v">
+        <div className="flex justify-between w-full mb-5  ">
+          <div className="flex w-80v flex-wrap md:w-95v sm:w-95v w-4/5 ">
             <button
               className={`${
                 tab == "overview" ? "border-2" : "border-b-2 hover:border-2"
@@ -77,6 +79,9 @@ const Challenge = () => {
             >
               Create solution
             </button>
+          </div>
+          <div className=" flex w-full justify-end mr-2 ">
+            <FontAwesomeIcon icon={faStar} size="2x" className=" border-2  " />
           </div>
         </div>
 
