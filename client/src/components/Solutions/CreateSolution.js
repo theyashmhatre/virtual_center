@@ -57,7 +57,7 @@ const CreateSolution = () => {
       };
 
       reader.onerror = () => setErrors({
-        main: "Error while reading image data"
+        main: "Error while reading attachement"
       });
       
       reader.readAsDataURL(inputValues.attachment);

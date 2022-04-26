@@ -1,25 +1,29 @@
 import api from "./index";
 
 export const createOffering = async ({
-  title,
-  description,
+  offeringTitle,
+  offeringDescription,
   ownerName,
   ownerEmail,
-  attachement
+  attachment
 }) => {
-  const formData = new FormData();
-  formData.append("attachement", attachement);
-  formData.append("offeringTitle", title);
-  formData.append("offeringDescription", description);
-  formData.append("ownerName", ownerName);
-  formData.append("ownerEmail", ownerEmail);
-
   const endpoint = "/api/offering/create";
-  return await api.post(endpoint, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  return await api.post(
+    endpoint,
+    {
+      attachment,
+      offeringTitle,
+      offeringDescription,
+      ownerName,
+      ownerEmail,
+      industryName: "industry"
+    }, 
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
 };
 
 export const getOfferings = async (page=1, limit=8) => {
