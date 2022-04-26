@@ -7,11 +7,11 @@ import { isEmptyObject } from "../../utilities/utils";
 import { createOfferingInputValidation } from "../../utilities/validation/offering";
 
 const initialInputValues = {
-  title: '',
-  description: EditorState.createEmpty(),
+  offeringTitle: '',
+  offeringDescription: EditorState.createEmpty(),
   ownerName: '',
   ownerEmail: '',
-  attachement: '',
+  attachment: '',
   privacyCheck: false,
 };
 
@@ -35,19 +35,30 @@ const CreateOffering = () => {
     setSuccessMessage('');
     const inputErrors = createOfferingInputValidation(inputValues);
 
-    if (isEmptyObject(inputErrors))
-      createOffering({
-        ...inputValues,
-        description: JSON.stringify(convertToRaw(inputValues.description.getCurrentContent()))
-      })
-        .then(() => setSuccessMessage("Offering is created!!"))
-        .catch((error) => {
-          if (error.response)
-            if (error.response.data) setErrors(error.response.data);
+    if (isEmptyObject(inputErrors)) {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        createOffering({
+          ...inputValues,
+          attachment: reader.result,
+          offeringDescription: JSON.stringify(convertToRaw(inputValues.offeringDescription.getCurrentContent()))
+        })
+          .then(() => setSuccessMessage("Offering is created!!"))
+          .catch((error) => {
+            if (error.response)
+              if (error.response.data) setErrors(error.response.data);
+              else setErrors({ main: "Some Error Occured, Try Again!" });
             else setErrors({ main: "Some Error Occured, Try Again!" });
-          else setErrors({ main: "Some Error Occured, Try Again!" });
-        });
-    else setErrors(inputErrors);
+          });
+      };
+
+      reader.onerror = () => setErrors({
+        main: "Error while reading attachment"
+      });
+      
+      reader.readAsDataURL(inputValues.attachment);
+    } else setErrors(inputErrors);
   };
 
   return (
@@ -61,15 +72,15 @@ const CreateOffering = () => {
             <label className="block mb-1 font-bold text-gray-500">Title</label>
             <input
               type="text"
-              name="title"
-              value={inputValues.title}
+              name="offeringTitle"
+              value={inputValues.offeringTitle}
               onChange={handleInputChange}
               placeholder="Type the offering title here"
               className="w-full border-2 border-gray-200 p-3 rounded-lg outline-none focus:border-purple-500"
             />
-            {!errors.title ? null : (
+            {!errors.offeringTitle ? null : (
               <div className="text-center text-red-700 text-lg mb-5">
-                <p>{errors.title}</p>
+                <p>{errors.offeringTitle}</p>
               </div>
             )}
           </div>
@@ -78,18 +89,18 @@ const CreateOffering = () => {
               Offering Description
             </label>
             <RichTextEditor
-              editorState={inputValues.description}
+              editorState={inputValues.offeringDescription}
               setEditorState={(value) => {
                 setInputValues({
                   ...inputValues,
-                  description: value
+                  offeringDescription: value
                 })
               }}
               placeholder="Type offering description here"
             />
-            {!errors.description ? null : (
+            {!errors.offeringDescription ? null : (
               <div className="text-center text-red-700 text-lg mb-5">
-                <p>{errors.description}</p>
+                <p>{errors.offeringDescription}</p>
               </div>
             )}
           </div>
@@ -130,14 +141,14 @@ const CreateOffering = () => {
             <input
               type="file"
               accept=".pdf"
-              name="attachement"
+              name="attachment"
               onChange={handleInputChange}
-              placeholder="Upload attachement in pdf format"
+              placeholder="Upload attachment in pdf format"
               className="border-2 rounded-lg w-full"
             />
-            {!errors.attachement ? null : (
+            {!errors.attachment ? null : (
               <div className="text-center text-red-700 text-lg mb-5">
-                <p>{errors.attachement}</p>
+                <p>{errors.attachment}</p>
               </div>
             )}
           </div>

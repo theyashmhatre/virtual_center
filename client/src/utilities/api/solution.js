@@ -8,7 +8,6 @@ export const createSolution = async ({
   attachment,
 }) => {
   const endpoint = "/api/solution/create-solution";
-  // console.log(teamMembers);
   return await api.post(
     endpoint,
     {

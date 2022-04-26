@@ -1,8 +1,7 @@
-import { faPaperclip } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { Attachment } from "../../components/Attachement";
 import Comments from "../../components/Comments";
 import { Like } from "../../components/Like";
 import MainLayout from "../../layouts/MainLayout";
@@ -11,20 +10,12 @@ import { getSingleSolution } from "../../utilities/api/solution";
 
 const Solution = () => {
   const [solution, setSolution] = useState({});
-  const [attachment, setAttachement] = useState("");
   const { solutionId } = useParams();
 
   useEffect(() => {
     if (solutionId)
       getSingleSolution(solutionId)
         .then(({ data }) => {
-          if (data.attachment)
-            new Blob(
-              [new Uint8Array(data.attachment.data)],
-              {type: ".ppt"}
-            )
-              .text()
-              .then((result) => setAttachement(result));
           setSolution(data);
         })
         .catch(() => {});
@@ -41,14 +32,7 @@ const Solution = () => {
               </h1>
               <div className="flex justify-end items-center w-full">
                 <Like postId={solutionId} typeId={2} />
-                <a
-                  className="bg-pink-600 text-white ml-4 px-2 py-1 rounded"
-                  href={attachment}
-                  download="Attachement.ppt"
-                >
-                  View Attachment
-                  <FontAwesomeIcon icon={faPaperclip} className="p-0 pl-1" />
-                </a>
+                <Attachment attachmentData={solution.attachment} />
               </div>
             </div>
             <div>
