@@ -1,5 +1,5 @@
 import AuthNotRequired from "../components/Authentication/AuthNotRequired";
-import { AuthSidebar } from "../components/AuthSidebar";
+import { AuthSidebar } from "../components/Authentication/AuthSidebar";
 
 const AuthLayout = ({ children }) => {
   return (

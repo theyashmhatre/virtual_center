@@ -182,6 +182,7 @@ router.post("/login", (req, res) => {
           if (isMatch) {
             // user password verified, Create JWT Payload
             const payload = {
+              id: user.user_id,
               username: username,
               email: user.email,
               name: user.employee_name,

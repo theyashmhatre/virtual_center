@@ -1,6 +1,7 @@
 import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { postTypeId } from "../../../constants";
 import Comments from "../../components/Comments";
 import { Like } from "../../components/Like";
 import CreateSolution from "../../components/Solutions/CreateSolution";
@@ -80,7 +81,7 @@ const Challenge = () => {
             </button>
           </div>
           <div className="flex w-full justify-end mr-2">
-            <Like postId={challengeId} typeId={1} />
+            <Like postId={challengeId} typeId={postTypeId["challenge"]} />
           </div>
         </div>
 
@@ -119,7 +120,7 @@ const Challenge = () => {
                 <div className="ml-10">{challenge.accountName}</div>
               </div>
             </div>
-            <Comments typeId={1} id={challengeId} />
+            <Comments typeId={postTypeId["challenge"]} id={challengeId} />
           </div>
         ) : tab == "solutions" ? (
           <Solutions />

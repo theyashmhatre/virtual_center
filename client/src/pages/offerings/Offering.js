@@ -1,6 +1,7 @@
 import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { postTypeId } from "../../../constants";
 import { Attachment } from "../../components/Attachement";
 import Comments from "../../components/Comments";
 import { Like } from "../../components/Like";
@@ -39,7 +40,7 @@ const Offering = () => {
             <div className="flex flex-row w-full">
               <h1 className=" w-40">{offering.owner_name}</h1>
               <div className="flex justify-end w-full">
-                <Like postId={offeringId} typeId={3} />
+                <Like postId={offeringId} typeId={postTypeId["offering"]} />
                 <Attachment attachmentData={offering.attachment} />
               </div>
             </div>
@@ -58,7 +59,7 @@ const Offering = () => {
             </div>
           </div>
 
-          <Comments typeId={3} postId={offeringId} />
+          <Comments typeId={postTypeId["offering"]} postId={offeringId} />
         </div>
       </div>
     </MainLayout>

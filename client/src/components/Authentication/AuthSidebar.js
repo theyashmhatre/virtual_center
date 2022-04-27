@@ -8,7 +8,7 @@ export const AuthSidebar = () => {
         </h1>
       </div>
       <div className=" pt-56 flex justify-center items-center">
-                <img src={Log} />
+        <img src={Log} />
       </div> 
       <div className="text-center pl-4 pt-12">
         <h1 className="font-bold text-slate-50 text-4xl">TCS Virtual</h1>

@@ -15,7 +15,7 @@ export const Attachment = ({ attachmentData }) => {
         .text()
         .then((result) => setAttachement(result));
   }, [attachmentData]);
-  console.log(attachment);
+  
   return (
     <a
       className="bg-pink-600 text-white ml-4 px-2 py-1 rounded"
