@@ -67,7 +67,7 @@ const Offerings = () => {
         
         {context.auth && context.auth.role == "admin" ? (
           <div className="flex justify-end mb-10">
-            <Link to={`/challenge/create-offering`}>
+            <Link to={`/main/create-offering`}>
               <h2 className="border-2 border-black rounded-3xl hover:scale-110 text-center text-pink-700 p-2">
                 Create Offering
               </h2>

@@ -37,21 +37,32 @@ const CreateChallenge = () => {
     setSuccessMessage("");
     const inputErrors = createChallengeInputValidation(inputValues);
 
-    if (isEmptyObject(inputErrors))
-      createChallenge({
-        ...inputValues,
-        description: JSON.stringify(
-          convertToRaw(inputValues.description.getCurrentContent())
-        ),
-      })
-        .then(() => setSuccessMessage("Challenge is created!!"))
-        .catch((error) => {
-          if (error.response)
-            if (error.response.data) setErrors(error.response.data);
+    if (isEmptyObject(inputErrors)) {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        createChallenge({
+          ...inputValues,
+          coverImage: reader.result,
+          description: JSON.stringify(
+            convertToRaw(inputValues.description.getCurrentContent())
+          ),
+        })
+          .then(() => setSuccessMessage("Challenge is created!!"))
+          .catch((error) => {
+            if (error.response)
+              if (error.response.data) setErrors(error.response.data);
+              else setErrors({ main: "Some Error Occured, Try Again!" });
             else setErrors({ main: "Some Error Occured, Try Again!" });
-          else setErrors({ main: "Some Error Occured, Try Again!" });
-        });
-    else setErrors(inputErrors);
+          });
+      };
+
+      reader.onerror = () => setErrors({
+        main: "Error while reading image data"
+      });
+      
+      reader.readAsDataURL(inputValues.coverImage);
+    } else setErrors(inputErrors);
   };
 
   return (
@@ -112,7 +123,10 @@ const CreateChallenge = () => {
             )}
           </div>
           <div>
-            <label className="block mb-1 font-bold text-gray-500">
+            <label
+              htmlFor="Cloud Provider"
+              className="block mb-1 font-bold text-gray-500"
+            >
               Cloud Provider
             </label>
             <input
@@ -130,7 +144,10 @@ const CreateChallenge = () => {
             )}
           </div>
           <div>
-            <label className="block mb-1 font-bold text-gray-500">
+            <label
+              htmlFor="Cover Image"
+              className="block mb-1 font-bold text-gray-500"
+            >
               Cover Image
             </label>
             <input
@@ -148,7 +165,12 @@ const CreateChallenge = () => {
             )}
           </div>
           <div>
-            <label className="block mb-1 font-bold text-gray-500">Tags</label>
+            <label
+              htmlFor="Tags"
+              className="block mb-1 font-bold text-gray-500"
+            >
+              Tags
+            </label>
             <TagsInput
               tags={inputValues.tags}
               setTags={(value) => {
@@ -169,7 +191,10 @@ const CreateChallenge = () => {
             )}
           </div>
           <div>
-            <label className="block mb-1 font-bold text-gray-500">
+            <label
+              htmlFor="End Date"
+              className="block mb-1 font-bold text-gray-500"
+            >
               End Date
             </label>
             <input

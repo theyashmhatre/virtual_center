@@ -73,8 +73,9 @@ const Navbar = () => {
         className="flex gap-16 decoration-from-font font-medium bg-gray-rgb p-4"
       >
         {navigationData[location.pathname.split("/")[1]].map(
-          ({ title, link }) => (
+          ({ title, link }, index) => (
             <NavLink
+              key={index}
               style={({ isActive }) => ({
                 color: isActive ? "rgb(190 24 93)" : "",
                 fontWeight: isActive ? "bold" : "",

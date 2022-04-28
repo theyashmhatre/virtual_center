@@ -1,9 +1,9 @@
-import { faPaperclip } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { Attachment } from "../../components/Attachement";
 import Comments from "../../components/Comments";
+import { Like } from "../../components/Like";
 import MainLayout from "../../layouts/MainLayout";
 import { getSingleOffering } from "../../utilities/api/offering";
 
@@ -38,11 +38,9 @@ const Offering = () => {
           <div>
             <div className="flex flex-row w-full">
               <h1 className=" w-40">{offering.owner_name}</h1>
-              <div className="flex justify-end w-full  ">
-                <button className="  bg-pink-600 text-white ml-4  px-1 rounded ">
-                  View Attachment
-                  <FontAwesomeIcon icon={faPaperclip} className="p-0 pl-1" />
-                </button>
+              <div className="flex justify-end w-full">
+                <Like postId={offeringId} typeId={3} />
+                <Attachment attachmentData={offering.attachment} />
               </div>
             </div>
             <h1> {offering.owner_email} </h1>
@@ -60,7 +58,7 @@ const Offering = () => {
             </div>
           </div>
 
-          <Comments type="offering" id={offeringId} />
+          <Comments typeId={3} postId={offeringId} />
         </div>
       </div>
     </MainLayout>
