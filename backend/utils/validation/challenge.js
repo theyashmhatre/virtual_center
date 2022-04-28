@@ -14,13 +14,6 @@ function createChallengeValidation(req, res) {
 
   const errors = {};
 
-  console.log(challengeTitle,
-    challengeDescription,
-    coverImage,
-    endDate,
-    tags,
-    cloudProvider);
-
   if (!challengeTitle) errors.challengeTitle = "Challenge name cannot be empty";
 
   if (!challengeDescription)
@@ -71,7 +64,7 @@ function editChallengeValidation(req, res) {
   if (!challengeDescription)
     errors.challengeDescription = "Description cannot be empty";
 
-  if (res.req.user.role !== "admin") {
+  if (res.req.user.role !== "admin" && res.req.user.role !== "super_admin") {
     errors.main = "Only admins are allowed to post/edit a challenge";
     errors.devMsg = "User is not an admin";
   }

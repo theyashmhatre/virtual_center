@@ -59,6 +59,11 @@ export const editChallenge = async ({
   });
 };
 
+export const deleteChallenge = async (challengeId) => {
+  const endpoint = `/api/challenge/delete/${challengeId}`;
+  return await api.delete(endpoint);
+};
+
 export const getChallenges = async (pageNo, limit, sortedBy, order) => {
   const endpoint = `/api/challenge/multiple/${pageNo}/${limit}/${sortedBy}/${order}`;
   return await api.get(endpoint);
