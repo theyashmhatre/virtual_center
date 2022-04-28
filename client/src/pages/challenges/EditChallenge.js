@@ -1,33 +1,54 @@
-import { EditorState, convertToRaw } from "draft-js";
-import { useState } from "react";
+import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router";
 import TagsInput from "../../components/Challenges/TagsInput";
 import RichTextEditor from "../../components/RichTextEditor";
 import MainLayout from "../../layouts/MainLayout";
-import { createChallenge } from "../../utilities/api/challenge";
+import { editChallenge, getSingleChallenge } from "../../utilities/api/challenge";
 import { isEmptyObject } from "../../utilities/utils";
-import { createChallengeInputValidation } from "../../utilities/validation/challenge";
+import { editChallengeInputValidation } from "../../utilities/validation/challenge";
 
 const initialInputValues = {
   title: "",
   description: EditorState.createEmpty(),
   cloudProvider: "",
-  coverImage: "",
   tags: [],
   endDate: "",
   privacyCheck: false,
 };
 
-const CreateChallenge = () => {
+const EditChallenge = () => {
   const [inputValues, setInputValues] = useState(initialInputValues);
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
+  const { challengeId } = useParams();
+
+  useEffect(() => {
+    if (challengeId)
+      getSingleChallenge(challengeId)
+        .then(({ data }) => {
+          console.log(data.end_date);
+          const endDate = new Date(data.end_date).toISOString().split('T')[0];
+          setInputValues({
+            title: data.title,
+            description: EditorState.createWithContent(
+              convertFromRaw(JSON.parse(data.description))
+            ),
+            cloudProvider: data.cloud_provider,
+            tags: data.tags.split(","),
+            endDate: endDate,
+          });
+        })
+        .catch((error) => console.log(error));
+    else setErrors({ main: "Some error occured while fetching data" })
+  }, []);
 
   const handleInputChange = (e) => {
-    let { name, value, type, files } = e.target;
+    let { name, value } = e.target;
 
     setInputValues({
       ...inputValues,
-      [name]: type == "file" ? files[0] : value,
+      [name]: value,
     });
   };
 
@@ -35,33 +56,24 @@ const CreateChallenge = () => {
     e.preventDefault();
     setErrors({});
     setSuccessMessage("");
-    const inputErrors = createChallengeInputValidation(inputValues);
+    const inputErrors = editChallengeInputValidation(inputValues);
 
     if (isEmptyObject(inputErrors)) {
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        createChallenge({
-          ...inputValues,
-          coverImage: reader.result,
-          description: JSON.stringify(
-            convertToRaw(inputValues.description.getCurrentContent())
-          ),
-        })
-          .then(() => setSuccessMessage("Challenge is created!!"))
-          .catch((error) => {
-            if (error.response)
-              if (error.response.data) setErrors(error.response.data);
-              else setErrors({ main: "Some Error Occured, Try Again!" });
+      editChallenge({
+        ...inputValues,
+        description: JSON.stringify(
+          convertToRaw(inputValues.description.getCurrentContent())
+        ),
+        challengeId: challengeId,
+      })
+        .then(() => setSuccessMessage("Challenge is updated!!"))
+        .catch((error) => {
+          console.log(error.response);
+          if (error.response)
+            if (error.response.data) setErrors(error.response.data);
             else setErrors({ main: "Some Error Occured, Try Again!" });
-          });
-      };
-
-      reader.onerror = () => setErrors({
-        main: "Error while reading image data"
-      });
-      
-      reader.readAsDataURL(inputValues.coverImage);
+          else setErrors({ main: "Some Error Occured, Try Again!" });
+        });
     } else setErrors(inputErrors);
   };
 
@@ -69,7 +81,7 @@ const CreateChallenge = () => {
     <MainLayout role="admin">
       <div className="my-10 mx-40">
         <h1 className="text-3xl text-center font-bold my-5">
-          Create Challenge
+          Edit Challenge
         </h1>
         <div className="space-y-5">
           <div>
@@ -140,27 +152,6 @@ const CreateChallenge = () => {
             {!errors.cloudProvider ? null : (
               <div className="text-center text-red-700 text-lg mb-5">
                 <p>{errors.cloudProvider}</p>
-              </div>
-            )}
-          </div>
-          <div>
-            <label
-              htmlFor="Cover Image"
-              className="block mb-1 font-bold text-gray-500"
-            >
-              Cover Image
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              name="coverImage"
-              onChange={handleInputChange}
-              placeholder="Upload photo for cover image"
-              className="border-2 rounded-lg w-full"
-            />
-            {!errors.coverImage ? null : (
-              <div className="text-center text-red-700 text-lg mb-5">
-                <p>{errors.coverImage}</p>
               </div>
             )}
           </div>
@@ -249,7 +240,7 @@ const CreateChallenge = () => {
               className="py-3 px-14 rounded-full bg-black-btn text-white font-bold"
               onClick={onSubmit}
             >
-              Submit
+              Edit
             </button>
           </div>
         </div>
@@ -258,4 +249,4 @@ const CreateChallenge = () => {
   );
 };
 
-export default CreateChallenge;
+export default EditChallenge;

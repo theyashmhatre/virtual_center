@@ -26,7 +26,7 @@ const Dashboard = () => {
   }, [mostSubmissionsYear]);
   
   return (
-    <MainLayout>
+    <MainLayout role="employee">
       <div className="min-h-screen">
         <div className="grid grid-cols-3 m-10">
           <div className="m-5 p-5 bg-gray-100 border-t-4 border-pink-700 h-fit">

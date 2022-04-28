@@ -61,11 +61,11 @@ const Offerings = () => {
   }, [pageNo]);
 
   return (
-    <MainLayout>
+    <MainLayout role="employee">
       <div className="min-h-screen mx-16 my-5">
         <h1 className="text-3xl text-center font-bold mb-10">Offerings</h1>
         
-        {context.auth && context.auth.role == "admin" ? (
+        {context.auth && (context.auth.role == "admin" || context.auth.role == "super_admin") ? (
           <div className="flex justify-end mb-10">
             <Link to={`/main/create-offering`}>
               <h2 className="border-2 border-black rounded-3xl hover:scale-110 text-center text-pink-700 p-2">
@@ -83,10 +83,10 @@ const Offerings = () => {
               return (
                 <div
                   key={data.offering_id}
-                  className="border-2 shadow-sm hover:shadow-xl rounded-lg lg:mb-0 mb-4 mx-1 w-24per  md:w-1/2 sm:w-2/3 xs:w-5/6"
+                  className="border-2 shadow-sm hover:shadow-xl rounded-lg lg:mb-0 mb-4 mx-1 w-24per md:w-1/2 sm:w-2/3 xs:w-5/6"
                 >
                   <div className="h-25per rounded-lg bg-gradient-to-r from-pink-900 to-blue-grd border-gray-500 border-2 flex flex-col justify-between p-3">
-                    <div className=" flex justify-center">
+                    <div className="flex justify-center">
                       <h2 className="text-2xl font-mono font-semibold text-white">
                         {data.title}
                       </h2>
@@ -116,7 +116,7 @@ const Offerings = () => {
                         {data.owner_name} Patil
                       </p>
                       <div>
-                        <div className="  flex justify-center   ">
+                        <div className="flex justify-center">
                           <FontAwesomeIcon
                             icon={faEnvelope}
                             size="lg"
@@ -128,7 +128,7 @@ const Offerings = () => {
                     </div>
 
                     <div className="flex items-center">
-                      <button className="bg-pink-600 text-white ml-4  px-1 rounded ">
+                      <button className="bg-pink-600 text-white ml-4 px-1 rounded">
                         View Attachment
                         <FontAwesomeIcon
                           icon={faPaperclip}

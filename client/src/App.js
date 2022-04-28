@@ -8,6 +8,7 @@ import ResetPassword from "./pages/authentication/ResetPassword";
 import Challenge from "./pages/challenges/Challenge";
 import Challenges from "./pages/challenges/Challenges";
 import CreateChallenge from "./pages/challenges/CreateChallenge";
+import EditChallenge from "./pages/challenges/EditChallenge";
 import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 import CreateOffering from "./pages/offerings/CreateOffering";
@@ -31,6 +32,10 @@ const App = () => {
         <Route
           path="challenge/create-challenge"
           element={<CreateChallenge />}
+        />
+        <Route
+          path="challenge/edit-challenge/:challengeId"
+          element={<EditChallenge />}
         />
         <Route path="challenge/:challengeId" element={<Challenge />} />
         <Route path="challenge/solution/:solutionId" element={<Solution />} />

@@ -82,6 +82,7 @@ const Navbar = () => {
               })}
               to={link}
               className="text-xl"
+              end
             >
               {title}
             </NavLink>

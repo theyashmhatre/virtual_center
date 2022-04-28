@@ -89,7 +89,8 @@ router.post(
       const {
         challengeTitle,
         challengeDescription,
-        userId,
+        tags,
+        cloudProvider,
         endDate,
         supportingMedia,
         reward,
@@ -99,9 +100,9 @@ router.post(
       const updatedChallenge = {
         title: challengeTitle,
         description: challengeDescription,
-        user_id: userId,
+        tags: tags,
+        cloud_provider: cloudProvider,
         end_date: endDate,
-        status: status,
       };
 
       //query to find if the challenge exists
@@ -121,6 +122,16 @@ router.post(
               devMsg: "Challenge ID is invalid",
             });
           } else {
+            // Confirm that user is either super admin or the admin who created this challenge
+            if (result[0].user_id != res.req.user.user_id) {
+              if (res.req.user.role != "super_admin") {
+                return res.status(200).json({
+                  main: "You don't have rights to update",
+                  devMsg: "User is niether super admin nor the challenge creator",
+                });
+              }
+            }
+
             //Storing updated challenge into db
             mysqlConnection.query(
               `UPDATE challenge SET ? WHERE challenge_id = ?`,
@@ -401,7 +412,7 @@ router.delete(
           } else if (!result.length) {
             //if no challenge found
             return res.status(200).json({ main: "Invalid Challenge ID." });
-          } else if (res.req.user.username !== result[0].username) {
+          } else if (res.req.user.user_id !== result[0].user_id && res.req.user.role != "super_admin") {
             //if user requesting the deletion if not the creator
             res
               .status(401)

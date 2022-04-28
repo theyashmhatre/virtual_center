@@ -23,13 +23,20 @@ var navigationData = {
   "help": [
     { title: "help", link: "/help" }
   ]
-}
+};
+
+const postTypeId = {
+  "challenge": 1,
+  "solution": 2,
+  "offering": 3,
+};
 
 module.exports = {
-    emailRegex,
-    passwordRegex,
-    apiURL,
-    monthNames,
-    colors,
-    navigationData
+  emailRegex,
+  passwordRegex,
+  apiURL,
+  monthNames,
+  colors,
+  navigationData,
+  postTypeId,
 };

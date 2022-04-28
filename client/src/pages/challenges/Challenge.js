@@ -1,12 +1,15 @@
 import draftToHtml from "draftjs-to-html";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router";
+import { Link } from "react-router-dom";
+import { postTypeId } from "../../../constants";
 import Comments from "../../components/Comments";
 import { Like } from "../../components/Like";
 import CreateSolution from "../../components/Solutions/CreateSolution";
 import Solutions from "../../components/Solutions/Solutions";
+import { AuthContext } from "../../contexts";
 import MainLayout from "../../layouts/MainLayout";
-import { getSingleChallenge } from "../../utilities/api/challenge";
+import { deleteChallenge, getSingleChallenge } from "../../utilities/api/challenge";
 
 const Challenge = () => {
   const [challenge, setChallenge] = useState({});
@@ -14,6 +17,8 @@ const Challenge = () => {
   const [tags, setTags] = useState([]);
   const [tab, setTab] = useState("overview");
   const { challengeId } = useParams();
+  const context = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (challengeId)
@@ -34,8 +39,14 @@ const Challenge = () => {
         .catch(() => {});
   }, []);
   
+  const onDelete = () => {
+    deleteChallenge(challengeId)
+      .then(() => navigate("/challenge/challenges"))
+      .catch((error) => console.log(error));
+  };
+  
   return (
-    <MainLayout>
+    <MainLayout role="employee">
       <div className="flex items-center flex-col mx-10 my-10 min-h-screen">
         <div className="flex flex-col mb-1">
           <div className="h-30v flex items-center justify-center">
@@ -80,7 +91,30 @@ const Challenge = () => {
             </button>
           </div>
           <div className="flex w-full justify-end mr-2">
-            <Like postId={challengeId} typeId={1} />
+            {tab == "overview" && (
+              context.auth.role == "super_admin" || 
+              context.auth.id == challenge.user_id
+              ? (
+                <div className="flex">
+                  <Link to={`/challenge/edit-challenge/${challengeId}`}>
+                    <h2 className="border-2 border-black rounded-3xl hover:scale-110 text-center text-pink-700 p-2">
+                      Edit Challenge
+                    </h2>
+                  </Link>
+                  <button
+                    className="border-2 border-black rounded-3xl hover:scale-110 text-center text-pink-700 p-2 ml-2"
+                    onClick={() => {
+                      if(confirm("Are you sure, you want to delete this challenge?"))
+                        onDelete();
+                    }}
+                  >
+                    Delete Challenge
+                  </button>
+                </div>
+              ) : (
+                <Like postId={challengeId} typeId={postTypeId["challenge"]} />
+              )
+            )}
           </div>
         </div>
 
@@ -119,7 +153,7 @@ const Challenge = () => {
                 <div className="ml-10">{challenge.accountName}</div>
               </div>
             </div>
-            <Comments typeId={1} id={challengeId} />
+            <Comments typeId={postTypeId["challenge"]} postId={challengeId} />
           </div>
         ) : tab == "solutions" ? (
           <Solutions />

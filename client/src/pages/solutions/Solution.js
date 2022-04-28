@@ -1,6 +1,7 @@
 import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { postTypeId } from "../../../constants";
 import { Attachment } from "../../components/Attachement";
 import Comments from "../../components/Comments";
 import { Like } from "../../components/Like";
@@ -22,7 +23,7 @@ const Solution = () => {
   }, []);
   
   return (
-    <MainLayout>
+    <MainLayout role="employee">
       <div className="mx-16">
         <div className="mb-5">
           <div className="w-80v md:w-95v sm:w-95v">
@@ -31,7 +32,7 @@ const Solution = () => {
                 {solution.title}
               </h1>
               <div className="flex justify-end items-center w-full">
-                <Like postId={solutionId} typeId={2} />
+                <Like postId={solutionId} typeId={postTypeId["solution"]} />
                 <Attachment attachmentData={solution.attachment} />
               </div>
             </div>
@@ -41,9 +42,9 @@ const Solution = () => {
             </div>
             <h1 className="text-lg  pt-2 font-bold mt-2">Team Members</h1>
             <div className="flex flex-row">
-              <div className="bg-gray-400  rounded p-0.5 mr-1"> 2292394</div>
+              <div className="bg-gray-400 rounded p-0.5 mr-1"> 2292394</div>
             </div>
-            <h1 className="text-lg  pt-2 font-bold mt-2">Description</h1>
+            <h1 className="text-lg pt-2 font-bold mt-2">Description</h1>
             <div className="md:w-full sm:w-full w-60v  border-2 p-4">
               {!solution.description ? null : (
                 <div
@@ -55,7 +56,7 @@ const Solution = () => {
             </div>
           </div>
         </div>
-        <Comments typeId={2} postId={solutionId} />
+        <Comments typeId={postTypeId["solution"]} postId={solutionId} />
       </div>
     </MainLayout>
   );

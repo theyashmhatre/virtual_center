@@ -3,16 +3,18 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 
-const MainLayout = ({ children }) => {
+const MainLayout = ({ children, role }) => {
   return (
-    <AuthRequired>
+    <AuthRequired role={role}>
       <div style={{height:'100vh' , float:"left"}}>
         <Sidebar />
       </div>
       
       <div className="ml-24">
         <Navbar />
-        {children}
+        <div className="min-h-screen">
+          {children}
+        </div>
         <Footer />
       </div>
     </AuthRequired>

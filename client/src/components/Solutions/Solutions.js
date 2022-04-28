@@ -83,7 +83,7 @@ const Solutions = () => {
                   </div>
                 </div>
                 <div className="p-2 font-serif flex items-center justify-center">
-                  <p>
+                  <div>
                     {!solution.description ? null : (
                       <div
                         dangerouslySetInnerHTML={{
@@ -95,7 +95,7 @@ const Solutions = () => {
                         }}
                       />
                     )}
-                  </p>
+                  </div>
                 </div>
               </div>
               <div>

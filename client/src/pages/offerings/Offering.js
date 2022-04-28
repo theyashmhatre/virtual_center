@@ -1,6 +1,7 @@
 import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { postTypeId } from "../../../constants";
 import { Attachment } from "../../components/Attachement";
 import Comments from "../../components/Comments";
 import { Like } from "../../components/Like";
@@ -21,25 +22,25 @@ const Offering = () => {
   }, []);
 
   return (
-    <MainLayout>
+    <MainLayout role="employee">
       <div className="flex justify-center">
-        <div className="w-90v  flex flex-col">
+        <div className="w-90v flex flex-col">
           <div className="flex justify-start flex-wrap mt-5">
-            <button className="bg-gray-300 p-2 mr-2 mb-2"> overview</button>
+            <button className="bg-gray-300 p-2 mr-2 mb-2">Overview</button>
             <button className="bg-gray-300 p-2 mb-2">Analytics</button>
           </div>
 
           <div className="mt-10">
-            <h1 className=" font-mono font-semibold text-4xl ">
+            <h1 className=" font-mono font-semibold text-4xl">
               {offering.title}
             </h1>
           </div>
 
           <div>
             <div className="flex flex-row w-full">
-              <h1 className=" w-40">{offering.owner_name}</h1>
+              <h1 className="w-40">{offering.owner_name}</h1>
               <div className="flex justify-end w-full">
-                <Like postId={offeringId} typeId={3} />
+                <Like postId={offeringId} typeId={postTypeId["offering"]} />
                 <Attachment attachmentData={offering.attachment} />
               </div>
             </div>
@@ -58,7 +59,7 @@ const Offering = () => {
             </div>
           </div>
 
-          <Comments typeId={3} postId={offeringId} />
+          <Comments typeId={postTypeId["offering"]} postId={offeringId} />
         </div>
       </div>
     </MainLayout>

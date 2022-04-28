@@ -14,13 +14,6 @@ function createChallengeValidation(req, res) {
 
   const errors = {};
 
-  console.log(challengeTitle,
-    challengeDescription,
-    coverImage,
-    endDate,
-    tags,
-    cloudProvider);
-
   if (!challengeTitle) errors.challengeTitle = "Challenge name cannot be empty";
 
   if (!challengeDescription)
@@ -55,6 +48,8 @@ function editChallengeValidation(req, res) {
   const {
     challengeTitle,
     challengeDescription,
+    tags,
+    cloudProvider,
     endDate,
     status,
     supportingMedia,
@@ -69,9 +64,7 @@ function editChallengeValidation(req, res) {
   if (!challengeDescription)
     errors.challengeDescription = "Description cannot be empty";
 
-  if (status == null) errors.status = "Status can't be null";
-
-  if (res.req.user.role !== "admin") {
+  if (res.req.user.role !== "admin" && res.req.user.role !== "super_admin") {
     errors.main = "Only admins are allowed to post/edit a challenge";
     errors.devMsg = "User is not an admin";
   }
@@ -83,6 +76,10 @@ function editChallengeValidation(req, res) {
 
   if (!endDate)
     errors.endDate = "Please choose a valid end date for challenge.";
+  
+  if (!tags) errors.tags = "You must enter atleast 1 tag";
+
+  if(!cloudProvider) errors.cloudProvider = "Please select a valid cloud provider";
 
   return {
     errors,
