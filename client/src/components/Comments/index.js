@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { getComments, postComment } from "../../utilities/api/comment";
 import Comment from "./Comment";
 
-// typeId = 1 for "challenge", 2 for "solution", 3 for "offering"
 const Comments = ({ typeId, postId }) => {
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState("");
@@ -85,14 +84,16 @@ const Comments = ({ typeId, postId }) => {
             />
           </div>
         ) : null}
-        <div className="flex justify-end m-2">
-          <button
-            className="text-pink-500 cursor-pointer hover:scale-110 duration-150"
-            onClick={() => setPageNo(pageNo+1)}
-          >
-            View More Comments
-          </button>
-        </div>
+        {!moreCommentsAvlbl ? null : (
+          <div className="flex justify-end m-2">
+            <button
+              className="text-pink-500 cursor-pointer hover:scale-110 duration-150"
+              onClick={() => setPageNo(pageNo+1)}
+            >
+              View More Comments
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

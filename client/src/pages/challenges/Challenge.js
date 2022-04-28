@@ -135,7 +135,7 @@ const Challenge = () => {
                 <div className="ml-10">{challenge.accountName}</div>
               </div>
             </div>
-            <Comments typeId={postTypeId["challenge"]} id={challengeId} />
+            <Comments typeId={postTypeId["challenge"]} postId={challengeId} />
           </div>
         ) : tab == "solutions" ? (
           <Solutions />
