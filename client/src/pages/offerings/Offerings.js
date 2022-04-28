@@ -65,7 +65,7 @@ const Offerings = () => {
       <div className="min-h-screen mx-16 my-5">
         <h1 className="text-3xl text-center font-bold mb-10">Offerings</h1>
         
-        {context.auth && context.auth.role == "admin" ? (
+        {context.auth && (context.auth.role == "admin" || context.auth.role == "super_admin") ? (
           <div className="flex justify-end mb-10">
             <Link to={`/main/create-offering`}>
               <h2 className="border-2 border-black rounded-3xl hover:scale-110 text-center text-pink-700 p-2">

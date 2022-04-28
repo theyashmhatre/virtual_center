@@ -109,7 +109,7 @@ const Challenges = () => {
             </div>
           </div>
         </div>
-        <div className="flex justify-center">
+        <div className="flex justify-center px-10">
           <div className="lg:h-80v w-90v">
             <div className="h-10v flex items-center justify-between sm:flex-col">
               <div className="font-bold">
@@ -147,7 +147,7 @@ const Challenges = () => {
               </div>
             </div>
 
-            {context.auth && context.auth.role == "admin" ? (
+            {context.auth && (context.auth.role == "admin" || context.auth.role == "super_admin") ? (
               <div className="flex justify-end mb-10">
                 <Link to={`/challenge/create-challenge`}>
                   <h2 className="border-2 border-black rounded-3xl hover:scale-110 text-center text-pink-700 p-2">

@@ -24,7 +24,6 @@ const Solvers = () => {
   useEffect(() => {
     getAccountTypes()
       .then(({ data }) => {
-        console.log(data);
         setAccountTypes(data);
         setAccountTypeId(1);
         updateSolvers(1);
@@ -38,9 +37,9 @@ const Solvers = () => {
 
   return (
     <MainLayout role="employee">
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center px-10 py-5">
         <h1 className="text-3xl text-center font-bold mt-2">Our Solvers</h1>
-        <div className="w-90v">
+        <div className="w-full">
           <div className="flex flex-wrap flex-start mt-10">
             <h2 className="mr-2 ">Account type :</h2>
             <select
