@@ -88,7 +88,7 @@ const Challenges = () => {
   };
 
   return (
-    <MainLayout>
+    <MainLayout role="employee">
       <div className="min-h-screen">
         <div className="flex items-center justify-center h-20v border">
           <div className="flex border-2 border-gray-200 rounded w-1/2 sm:w-5/6 xs:w-full absolute">

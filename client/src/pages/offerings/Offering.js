@@ -22,23 +22,23 @@ const Offering = () => {
   }, []);
 
   return (
-    <MainLayout>
+    <MainLayout role="employee">
       <div className="flex justify-center">
-        <div className="w-90v  flex flex-col">
+        <div className="w-90v flex flex-col">
           <div className="flex justify-start flex-wrap mt-5">
-            <button className="bg-gray-300 p-2 mr-2 mb-2"> overview</button>
+            <button className="bg-gray-300 p-2 mr-2 mb-2">Overview</button>
             <button className="bg-gray-300 p-2 mb-2">Analytics</button>
           </div>
 
           <div className="mt-10">
-            <h1 className=" font-mono font-semibold text-4xl ">
+            <h1 className=" font-mono font-semibold text-4xl">
               {offering.title}
             </h1>
           </div>
 
           <div>
             <div className="flex flex-row w-full">
-              <h1 className=" w-40">{offering.owner_name}</h1>
+              <h1 className="w-40">{offering.owner_name}</h1>
               <div className="flex justify-end w-full">
                 <Like postId={offeringId} typeId={postTypeId["offering"]} />
                 <Attachment attachmentData={offering.attachment} />

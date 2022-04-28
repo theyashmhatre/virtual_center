@@ -37,10 +37,10 @@ const Solvers = () => {
   }, [accountTypeId]);
 
   return (
-    <MainLayout>
+    <MainLayout role="employee">
       <div className="flex flex-col items-center">
         <h1 className="text-3xl text-center font-bold mt-2">Our Solvers</h1>
-        <div className="w-90v  ">
+        <div className="w-90v">
           <div className="flex flex-wrap flex-start mt-10">
             <h2 className="mr-2 ">Account type :</h2>
             <select
@@ -64,11 +64,11 @@ const Solvers = () => {
               {solvers.map((solver) => (
                 <div
                   key={solver.id}
-                  className="border-2 shadow-sm hover:shadow-xl  rounded-lg  lg:mb-0 mb-4 w-24per  md:w-1/2 sm:w-2/3 xs:w-5/6"
+                  className="border-2 shadow-sm hover:shadow-xl rounded-lg lg:mb-0 mb-4 w-24per md:w-1/2 sm:w-2/3 xs:w-5/6"
                 >
                   <div className="flex flex-col">
-                    <div className=" flex  flex-col m-4 rounded   shadow-lg border-2 ">
-                      <p className=" font-semibold flex justify-center align-bottom   ">
+                    <div className="flex flex-col m-4 rounded shadow-lg border-2">
+                      <p className="font-semibold flex justify-center align-bottom">
                         <FontAwesomeIcon
                           icon={faUser}
                           size="sm"
@@ -77,7 +77,7 @@ const Solvers = () => {
                         {solver.employee_name}
                       </p>
                       <div>
-                        <div className="  flex justify-center   ">
+                        <div className="flex justify-center">
                           <FontAwesomeIcon
                             icon={faEnvelope}
                             size="lg"

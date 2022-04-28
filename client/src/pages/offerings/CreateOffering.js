@@ -1,7 +1,7 @@
 import { EditorState, convertToRaw } from "draft-js";
 import { useState } from "react";
 import RichTextEditor from "../../components/RichTextEditor";
-import AdminLayout from "../../layouts/AdminLayout";
+import MainLayout from "../../layouts/MainLayout";
 import { createOffering } from "../../utilities/api/offering";
 import { isEmptyObject } from "../../utilities/utils";
 import { createOfferingInputValidation } from "../../utilities/validation/offering";
@@ -62,7 +62,7 @@ const CreateOffering = () => {
   };
 
   return (
-    <AdminLayout>
+    <MainLayout role="admin">
       <div className="my-10 mx-40">
         <h1 className="text-3xl text-center font-bold my-5">
           Create Offering
@@ -194,7 +194,7 @@ const CreateOffering = () => {
           </div>
         </div>
       </div>
-    </AdminLayout>
+    </MainLayout>
   );
 };
 

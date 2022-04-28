@@ -3,18 +3,18 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import MainLayout from "../layouts/MainLayout";
 import Home1 from "../../public/Home1.png";
 import Home2 from "../../public/Home2.png";
 import Home3 from "../../public/Home3.png";
 import Home4 from "../../public/Home4.png";
+import MainLayout from "../layouts/MainLayout";
 
 const Home = () => {
   return (
-    <MainLayout>
-      <div className="flex flex-col ">
+    <MainLayout role="employee">
+      <div className="flex flex-col">
         <div className="flex bg-[url('../public/home_cover.png')] h-80">
-          <div className="flex-1 bg-blue-bg-lite/80 pt-8 bg-blue-500 bg-opacity-60  ">
+          <div className="flex-1 bg-blue-bg-lite/80 pt-8 bg-blue-500 bg-opacity-60">
             <h1 className="  text-4xl pl-14 text-white font-semibold ">
               Where Innovation Meets Reality{" "}
             </h1>
@@ -29,7 +29,7 @@ const Home = () => {
         {/* home */}
         <div className="pl-14 pt-8 pr-8">
           <h2 className="text-2xl">Collaborate , Innovate</h2>
-          <h3 className=" text-zinc-700 my-5">
+          <h3 className="text-zinc-700 my-5">
             Platform to engage innovation evangelist to utlilize technical and
             business expertise to create solutions for the future. Platform,
             SMEs enable users to latest trends, themes, customer pain points for
@@ -37,22 +37,22 @@ const Home = () => {
             support from horizontal teams enable complete platform for smooth
             execution.
           </h3>
-          <div className="flex items-between overflow-hidden mt-10 mb-28  ">
-            <div className="pr-4 ">
+          <div className="flex items-between overflow-hidden mt-10 mb-28">
+            <div className="pr-4">
               <div className="flex flex-row  items-center ">
-                <div className="h-32 w-32 rounded-full bg-pink-700 flex justify-center items-center ">
+                <div className="h-32 w-32 rounded-full bg-pink-700 flex justify-center items-center">
                   <img alt="background_image" src={Home1} />
                 </div>
                 <FontAwesomeIcon
                   icon={faChevronLeft}
                   size="lg"
-                  className="text-gray-400 z-20 ml-9 "
+                  className="text-gray-400 z-20 ml-9"
                 />
-                <div className=" w-44 h-1  border-t-2 border-slate-500 mt-0.5 border-dashed"></div>
+                <div className="w-44 h-1 border-t-2 border-slate-500 mt-0.5 border-dashed"></div>
                 <FontAwesomeIcon
                   icon={faChevronRight}
                   size="lg"
-                  className="text-gray-400 z-20  "
+                  className="text-gray-400 z-20"
                 />
               </div>
               <div className="my-5 border-r-2 border-gray-300 h-full">
@@ -69,20 +69,20 @@ const Home = () => {
               </div>
             </div>
             <div className="px-4">
-              <div className="flex flex-row  items-center ">
-                <div className="h-32 w-32 rounded-full bg-pink-700 flex justify-center items-center ">
+              <div className="flex flex-row items-center">
+                <div className="h-32 w-32 rounded-full bg-pink-700 flex justify-center items-center">
                   <img alt="background_image" src={Home2} />
                 </div>
                 <FontAwesomeIcon
                   icon={faChevronLeft}
                   size="lg"
-                  className="text-gray-400 z-20 ml-9 "
+                  className="text-gray-400 z-20 ml-9"
                 />
-                <div className=" w-44 h-1  border-t-2 border-slate-500 mt-0.5 border-dashed"></div>
+                <div className="w-44 h-1 border-t-2 border-slate-500 mt-0.5 border-dashed"></div>
                 <FontAwesomeIcon
                   icon={faChevronRight}
                   size="lg"
-                  className="text-gray-400 z-20  "
+                  className="text-gray-400 z-20"
                 />
               </div>
               <div className="my-5 border-r-2 border-gray-300 h-full">
@@ -98,8 +98,8 @@ const Home = () => {
               </div>
             </div>
             <div className="px-4">
-              <div className="flex flex-row  items-center ">
-                <div className="h-32 w-32 rounded-full bg-pink-700 flex justify-center items-center ">
+              <div className="flex flex-row items-center ">
+                <div className="h-32 w-32 rounded-full bg-pink-700 flex justify-center items-center">
                   <img alt="background_image" src={Home3} />
                 </div>
                 <FontAwesomeIcon
@@ -107,11 +107,11 @@ const Home = () => {
                   size="lg"
                   className="text-gray-400 z-20 ml-9 "
                 />
-                <div className=" w-44 h-1  border-t-2 border-slate-500 mt-0.5 border-dashed"></div>
+                <div className="w-44 h-1 border-t-2 border-slate-500 mt-0.5 border-dashed"></div>
                 <FontAwesomeIcon
                   icon={faChevronRight}
                   size="lg"
-                  className="text-gray-400 z-20  "
+                  className="text-gray-400 z-20"
                 />
               </div>
               <div className="my-5 border-r-2 border-gray-300 h-full">

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import TagsInput from "../../components/Challenges/TagsInput";
 import RichTextEditor from "../../components/RichTextEditor";
-import AdminLayout from "../../layouts/AdminLayout";
+import MainLayout from "../../layouts/MainLayout";
 import { editChallenge, getSingleChallenge } from "../../utilities/api/challenge";
 import { isEmptyObject } from "../../utilities/utils";
 import { editChallengeInputValidation } from "../../utilities/validation/challenge";
@@ -78,7 +78,7 @@ const EditChallenge = () => {
   };
 
   return (
-    <AdminLayout>
+    <MainLayout role="admin">
       <div className="my-10 mx-40">
         <h1 className="text-3xl text-center font-bold my-5">
           Edit Challenge
@@ -245,7 +245,7 @@ const EditChallenge = () => {
           </div>
         </div>
       </div>
-    </AdminLayout>
+    </MainLayout>
   );
 };
 
