@@ -13,6 +13,7 @@ const {
   passwordsValidation,
 } = require("../utils/utils");
 const { generateCurrentDateTime } = require("../utils/utils");
+const { roles } = require("../utils/constants");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 
@@ -101,19 +102,21 @@ router.post("/register", (req, res) => {
                 account_type_id: accountTypeId
               };
 
-              mysqlConnection.query(`SELECT * from user where account_type_id = ${accountTypeId}`, (sqlErr, result, fields) => {
-                if (sqlErr) {
-                  console.log(sqlErr);
-                  res.status(500).json({
-                    main: "Something went wrong. Please try again.",
-                    devError: sqlErr,
-                    devMsg: "Error occured while adding user into db",
-                  });
-                } else if (!result[0]) {
-                  user.role = "admin";
-                } else {
-                  user.role = "employee";
-                }
+              // mysqlConnection.query(`SELECT * from user where account_type_id = ${accountTypeId}`, (sqlErr, result, fields) => {
+              //   if (sqlErr) {
+              //     console.log(sqlErr);
+              //     res.status(500).json({
+              //       main: "Something went wrong. Please try again.",
+              //       devError: sqlErr,
+              //       devMsg: "Error occured while adding user into db",
+              //     });
+              //   } else if (!result[0]) {
+              //     user.role = "admin";
+              //   } else {
+              //     user.role = "employee";
+              //   }
+
+                user.role = roles["user"];
 
                 console.log(result);
 
@@ -137,7 +140,7 @@ router.post("/register", (req, res) => {
                     }
                   }
                 );
-              });
+              // });
             });
           });
         });
@@ -512,6 +515,44 @@ router.get("/get-account-types", (req, res) => {
     }
   );
 });
+
+router.get("/get-users", passport.authenticate("jwt", { session: false }), (req, res) => {
+  mysqlConnection.query(`SELECT * FROM user WHERE role = ${roles["user"]}`,
+  (err, rows, fields) => {
+    if(err){
+      res.status(500).json({
+        main: "Something went wrong. Please try again",
+        devError: err,
+        devMsg: "MySql query error",
+    })
+  } else if(!rows[0]){
+    res.status(200).json({
+      main:"No Users Found",
+    });
+  } else {
+    //return all the users
+    res.status(200).json(rows);
+  }
+  });
+});
+
+router.get("/get-admins", passport.authenticate("jwt", { session: false }), (req, res) => {
+  mysqlConnection.query(`SELECT * FROM user WHERE role = ${roles["admin"]}`, 
+  (err, rows, fields) => {
+    if(err){
+      res.status(500).json({
+        main: "Something went wrong. Please try again",
+        devError: err,
+        devMsg: "MySql query error",
+    })
+    } else if(!rows[0]){
+      res.status(200).json({main:"No Admins Found"})
+    } else{
+      //return all the admins
+      res.status(200).json(rows);
+    }
+  })
+})
 
 router.get("/get-account-types", (req, res) => {
   mysqlConnection.query(

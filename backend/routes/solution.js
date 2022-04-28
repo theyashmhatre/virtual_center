@@ -14,12 +14,11 @@ router.post(
   (req, res) => {
     try {
 
-      console.log(req.body)
       const { errors, isValid } = createSolutionValidation(req, res);
 
       if (!isValid) return res.status(400).json(errors);
 
-      const {
+      let {
         challengeId,
         solutionTitle,
         solutionDescription,
@@ -28,39 +27,66 @@ router.post(
         attachment
       } = req.body;
 
-      console.log(res.req.user)
+      // console.log(res.req.user);
 
-      const newIdea = {
-        challenge_id: challengeId,
-        user_id: res.req.user.user_id,
-        title: solutionTitle,
-        description: solutionDescription,
-        attachment:attachment
-      };
+      teamMembers = [...teamMembers, parseInt(res.req.user.username)];
 
+      //Handling UnRegistered Members
       mysqlConnection.query(
-        `INSERT INTO solution SET ?`,
-        newIdea,
+        `SELECT username FROM user`,
         (sqlErr, result, fields) => {
-          if (sqlErr) {
-            return mysqlConnection.rollback(function () {
-              throw sqlErr;
+          if(sqlErr){
+            return res.status(500).json({
+              main: "Something went wrong",
+              devError: sqlErr,
+              devMsg: "Error occured while fetching users from db",
             });
-          }
+          } else if(result.length > 0){
+            let users = result.map(item => parseInt(item.username))
+            // console.log(users)
+            let unRegisteredMembers = teamMembers.filter(item => users.indexOf(item) === -1);
+            if(unRegisteredMembers.length > 0){
+              res.status(200).json({
+                main: "These Members are not registered",
+                devMsg: unRegisteredMembers
+              });
+            }
+          } else{
 
-        mysqlConnection.query(`INSERT INTO user_team (username, solution_id) VALUES ?`,[teamMembers.map(item => [item, result.insertId])],
-        (sqlErr, result, fields) => {
-          if (sqlErr) {
-            return mysqlConnection.rollback(function () {
-              throw sqlErr;
-            });
+            //If All the team members are valid then create a solution
+            const newIdea = {
+              challenge_id: challengeId,
+              user_id: res.req.user.user_id,
+              title: solutionTitle,
+              description: solutionDescription,
+              attachment:attachment
+            };
+      
+            mysqlConnection.query(
+              `INSERT INTO solution SET ?`,
+              newIdea,
+              (sqlErr, result, fields) => {
+                if (sqlErr) {
+                  return mysqlConnection.rollback(function () {
+                    throw sqlErr;
+                  });
+                }
+      
+              mysqlConnection.query(`INSERT INTO user_team (username, solution_id) VALUES ?`,[teamMembers.map(item => [item, result.insertId])],
+              (sqlErr, result, fields) => {
+                if (sqlErr) {
+                  return mysqlConnection.rollback(function () {
+                    throw sqlErr;
+                  });
+                }
+              });
+                return res
+                  .status(201)
+                  .json({ devMsg: "New solution created successfully" });
+              }
+            );
           }
         });
-          return res
-            .status(201)
-            .json({ devMsg: "New solution created successfully" });
-        }
-      );
     } catch (error) {
       console.log(error);
       return res.status(500).json({
@@ -88,7 +114,13 @@ router.get(
       //Selects all the fields from the solution
       //checks for the common records in solution(Table) with challenge_id & solution_id
       mysqlConnection.query(
-        `SELECT * FROM solution WHERE solution_id="${solutionId}"`,
+        `SELECT u.username, u.email, u.display_picture, s.* 
+        FROM user u
+        INNER JOIN user_team ut
+        ON u.username = ut.username
+        INNER JOIN solution s
+        ON ut.solution_id = "${solutionId}" AND s.solution_id = "${solutionId}"
+        `,
         (sqlErr, result, fields) => {
           if (sqlErr) {
             console.log(sqlErr);
@@ -136,7 +168,12 @@ router.get(
 
       //Selects all fields from the challenges
       mysqlConnection.query(
-        `SELECT * FROM solution WHERE challenge_id=${challengeId}`,
+        `SELECT u.username, u.email, u.display_picture, s.* 
+        FROM user u
+        INNER JOIN user_team ut
+        ON u.username = ut.username
+        INNER JOIN solution s
+        ON s.challenge_id = ${challengeId}`,
         (sqlErr, result, fields) => {
           if (sqlErr) {
             console.log(sqlErr);
@@ -178,7 +215,12 @@ router.get(
       .json({ main: "Something went wrong. Please try again", devMsg: "No challenge id found" });
 
       mysqlConnection.query(
-        `SELECT * from solution WHERE challenge_id=${challengeId} LIMIT ? OFFSET ? `,
+        `SELECT u.username, u.email, u.display_picture, s.* 
+        FROM user u
+        INNER JOIN user_team ut
+        ON u.username = ut.username
+        INNER JOIN solution s
+        ON s.challenge_id = ${challengeId} LIMIT ? OFFSET ?`,
         [limit, offset],
         (sqlErr, result, fields) => {
           if (sqlErr) {
