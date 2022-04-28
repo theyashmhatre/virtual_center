@@ -7,8 +7,15 @@ const types = {
     3 :"offering"
 };
 
+const roles = {
+    "super_admin": 1,
+    "admin": 2,
+    "user": 3
+};
+
 module.exports = {
     emailRegex,
     passwordRegex,
-    types
+    types,
+    roles
 };
