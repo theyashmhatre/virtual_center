@@ -20,7 +20,7 @@ const ChallengeCard = ({ challenge }) => {
     
     const temp = new Date(challenge.end_date);
     setEndDate(
-      temp.getDate() +
+      temp.getDate()-1 +
       " " +
       monthNames[temp.getMonth()] +
       " " +

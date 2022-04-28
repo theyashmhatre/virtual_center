@@ -1,4 +1,5 @@
-import Log from "../../public/Log.png";
+import Log from "../../../public/Log.png";
+
 export const AuthSidebar = () => {
   return (
     <div className="min-h-screen bg-blue-500 bg-opacity-100 bg-gradient-to-tr from-blue-grd to-green-grd">

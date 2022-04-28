@@ -29,6 +29,36 @@ export const createChallenge = async ({
   });
 };
 
+export const editChallenge = async ({
+  title,
+  description,
+  cloudProvider,
+  coverImage,
+  tags,
+  endDate,
+  challengeId
+}) => {
+  const endpoint = `/api/challenge/edit/${challengeId}`;
+  let tagString = ""
+  tags.map((tag, index) => {
+    if (index) tagString += ","
+    tagString += tag
+  })
+
+  return await api.post(endpoint, {
+    coverImage: coverImage,
+    challengeTitle: title,
+    challengeDescription: description,
+    cloudProvider: cloudProvider,
+    tags: tagString,
+    endDate: endDate,
+  }, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
+
 export const getChallenges = async (pageNo, limit, sortedBy, order) => {
   const endpoint = `/api/challenge/multiple/${pageNo}/${limit}/${sortedBy}/${order}`;
   return await api.get(endpoint);

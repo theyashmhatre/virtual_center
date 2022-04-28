@@ -1,11 +1,13 @@
 import draftToHtml from "draftjs-to-html";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { Link } from "react-router-dom";
 import { postTypeId } from "../../../constants";
 import Comments from "../../components/Comments";
 import { Like } from "../../components/Like";
 import CreateSolution from "../../components/Solutions/CreateSolution";
 import Solutions from "../../components/Solutions/Solutions";
+import { AuthContext } from "../../contexts";
 import MainLayout from "../../layouts/MainLayout";
 import { getSingleChallenge } from "../../utilities/api/challenge";
 
@@ -15,6 +17,7 @@ const Challenge = () => {
   const [tags, setTags] = useState([]);
   const [tab, setTab] = useState("overview");
   const { challengeId } = useParams();
+  const context = useContext(AuthContext);
 
   useEffect(() => {
     if (challengeId)
@@ -81,7 +84,19 @@ const Challenge = () => {
             </button>
           </div>
           <div className="flex w-full justify-end mr-2">
-            <Like postId={challengeId} typeId={postTypeId["challenge"]} />
+            {tab == "overview" && (
+              context.auth.role == "super_admin" || 
+              context.auth.id == challenge.user_id
+              ? (
+                <Link to={`/challenge/edit-challenge/${challengeId}`}>
+                  <h2 className="border-2 border-black rounded-3xl hover:scale-110 text-center text-pink-700 p-2">
+                    Edit Challenge
+                  </h2>
+                </Link>
+              ) : (
+                <Like postId={challengeId} typeId={postTypeId["challenge"]} />
+              )
+            )}
           </div>
         </div>
 
