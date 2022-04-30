@@ -114,12 +114,7 @@ router.get(
       //Selects all the fields from the solution
       //checks for the common records in solution(Table) with challenge_id & solution_id
       mysqlConnection.query(
-        `SELECT u.username, u.email, u.display_picture, s.* 
-        FROM user u
-        INNER JOIN user_team ut
-        ON u.username = ut.username
-        INNER JOIN solution s
-        ON ut.solution_id = "${solutionId}" AND s.solution_id = "${solutionId}"
+        `SELECT * FROM solution WHERE solution_id = "${solutionId}"
         `,
         (sqlErr, result, fields) => {
           if (sqlErr) {
@@ -152,6 +147,50 @@ router.get(
     }
   }
 );
+
+router.get("/get-team-members/:solutionId", passport.authenticate("jwt", { session: false }), (req,res) => {
+  try{
+
+    let { solutionId } = req.params;
+
+    if(!solutionId)
+    return res.status(400).json({
+      main: "Invalid Request",
+      devMsg: "No solution id found",
+    });
+
+    mysqlConnection.query(`SELECT u.employee_name, u.email, u.display_picture, ut.* 
+    FROM user_team ut
+    INNER JOIN user u
+    ON ut.username = u.username AND ut.solution_id = ${solutionId}`,
+    (sqlErr, result, fields) => {
+      if(sqlErr){
+        console.log(sqlErr);
+            return res.status(500).json({
+              main: "Something went wrong",
+              devError: sqlErr,
+              devMsg: "Error occured while fetching solution from db",
+            });
+      } else if(!result[0]){
+        return res.status(200).json({main: "No team members exists for this solution",
+        devError: "Team Members not found in database",})
+      } else{
+        return res.status(200).json({
+          teamSize: result.length,
+          teamMembers: result
+        })
+      }
+    })
+
+  } catch(error){
+    console.log(error);
+    return res.status(500).json({
+      main: "Something went wrong",
+      devError: error,
+      devMsg: "Error occured while fetching team members",
+    });
+  }
+})
 
 router.get(
   "/get-solutions/:challengeId",
@@ -215,12 +254,10 @@ router.get(
       .json({ main: "Something went wrong. Please try again", devMsg: "No challenge id found" });
 
       mysqlConnection.query(
-        `SELECT u.username, u.email, u.display_picture, s.* 
+        `SELECT u.username, u.email, u.display_picture, u.employee_name, s.* 
         FROM user u
-        INNER JOIN user_team ut
-        ON u.username = ut.username
         INNER JOIN solution s
-        ON s.challenge_id = ${challengeId} LIMIT ? OFFSET ?`,
+        ON s.challenge_id = ${challengeId} LIMIT ? OFFSET ?;`,
         [limit, offset],
         (sqlErr, result, fields) => {
           if (sqlErr) {
