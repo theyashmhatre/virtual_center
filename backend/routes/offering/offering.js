@@ -228,7 +228,7 @@ router.get("/multiple/:pageNum/:limit", passport.authenticate("jwt", { session: 
 
         let { limit, pageNum, offset } = generatePaginationValues(req);
 
-        mysqlConnection.query(`SELECT * from offering LIMIT ? OFFSET ?`, [limit, offset], (sqlErr, result, fields) => {
+        mysqlConnection.query(`SELECT * from offering WHERE is_deleted = 0 LIMIT ? OFFSET ?`, [limit, offset], (sqlErr, result, fields) => {
 
             if (sqlErr) {
                 console.log(sqlErr);
@@ -441,6 +441,41 @@ router.get("/:offeringId/likes/count", passport.authenticate("jwt", { session: f
     }
 });
 
+//returns deleted offerings which can be only seen by super_Admin
+router.get("/deleted-offerings/:pageNum/:limit", passport.authenticate("jwt", { session: false }), (req,res) => {
+    try{
+      let { limit, pageNum, offset } = generatePaginationValues(req);
+  
+      mysqlConnection.query(`SELECT * from offering WHERE is_deleted = 1 LIMIT ? OFFSET ?`, [limit, offset], (sqlErr, result, fields) => {
+  
+        if (sqlErr) {
+          return res.status(500).json({
+            main: "Something went wrong. Please try again.",
+            devError: sqlErr,
+            devMsg: "Error occured while fetching offering from db",
+          });
+  
+        } else if (!result.length) {
+          return res.status(200).json({ offerings_count: result.length, main: "No deleted offerings found." });
+  
+        } else {
+          let data = {
+            offerings_count: result.length,
+            page_number: pageNum,
+            offering_list: result,
+          };
+  
+          res.status(200).json(data);
+        }
+      });
+    } catch(error){
+      return res.status(500).json({
+        main: "Something went wrong. Please try again.",
+        devError: error,
+        devMsg: "Error occured while getting deleted offerings",
+      });
+    }
+  })
 
 
 
