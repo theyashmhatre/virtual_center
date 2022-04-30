@@ -4,6 +4,8 @@ const { generatePaginationValues } = require('../../utils/utils');
 const passport = require("passport");
 const { types } = require('../../utils/constants');
 const { createOfferingValidation } = require('../../utils/validation/offering');
+const { off } = require('../../config/dbConnection');
+const { roles } = require("../../utils/constants")
 const typeId = types.offering;
 
 router.post(
@@ -60,14 +62,173 @@ router.post(
     }
 );
 
-//get all offerings(paginated)
+router.post("/edit/:offeringId",
+passport.authenticate("jwt", { session: false }),
+(req,res) => {
+    try{
+        let { offeringId } = req.params;
 
+        if(!offeringId)
+            return res
+            .status(400)
+            .json({ main: "Invalid Request", devMsg: "No offering id found" });
+
+        const { errors, isValid } = editChallengeValidation(req, res);
+
+        if (!isValid) return res.status(400).json(errors);
+
+
+        let {
+            offeringTitle,
+            offeringDescription,
+            attachment,
+            ownerName,
+            ownerEmail,
+            industryName
+        } = req.body;
+
+        const updatedOffering = {
+            title: offeringTitle,
+            description: offeringDescription,
+            attachment: attachment,
+            owner_name: ownerName,
+            owner_email: ownerEmail,
+            industry_name: industryName
+        };
+
+        
+
+      //query to find if the offering exists
+      mysqlConnection.query(
+        `SELECT * from offering where offering_id = ${offeringId}`,
+        (sqlErr, result, fields) => {
+          if (sqlErr) {
+            return res.status(500).json({
+              main: "Something went wrong. Please try again.",
+              devError: sqlErr,
+              devMsg: "Error occured while fetching offering from db",
+            });
+          } else if (!result.length) {
+            //if no offering found
+            return res.status(200).json({
+              main: "No such offering exists",
+              devMsg: "Offering ID is invalid",
+            });
+          } else {
+            // Confirm that user is super admin or the admin who created this offering
+              if (res.req.user.role != roles["super_admin"]) {
+                return res.status(200).json({
+                  main: "You don't have rights to update",
+                  devMsg: "User is not super admin",
+                });
+              }
+            }
+
+            //Storing updated offering into db
+            mysqlConnection.query(
+              `UPDATE offering SET ? WHERE offering_id = ?`,
+              [updatedChallenge, challengeId],
+              (sqlErr, result, fields) => {
+                if (sqlErr) {
+                  console.log(sqlErr);
+                  return res.status(500).json({
+                    main: "Something went wrong. Please try again.",
+                    devError: sqlErr,
+                    devMsg: "Error occured while updating offering in db",
+                  });
+                } else {
+                  res
+                    .status(200)
+                    .json({ main: "Offering updated Successfully." });
+                }
+              }
+            );
+          }
+      );
+
+
+    } catch(error){
+        return res.status(500).json({
+            main: "Something went wrong. Please try again.",
+            devError: error,
+            devMsg: "Error occured while updating offering",
+          });
+    }
+}
+);
+
+router.delete(
+"/delete/:offeringId",
+passport.authenticate("jwt", { session: false}),
+(req, res) => {
+    try{
+
+        const { offeringId } = req.params;
+
+        if(!offeringId)
+            return res
+            .status(400)
+            .json({ main: "Invalid Request", devMsg: "No offering id found" });
+        
+        //query to find if the offering exists
+        mysqlConnection.query(
+            `SELECT * FROM offering WHERE offering_id = ${offeringId}`,
+            (sqlErr, result, fields) => {
+                if (sqlErr) {
+                    console.log(sqlErr);
+                    return res.status(500).json({
+                      main: "Something went wrong. Please try again.",
+                      devError: sqlErr,
+                      devMsg: "Error occured while fetching offering from db",
+                    });
+            } else if(!result.length){
+                //if on offering found
+                return res.status(200).json({ main:"Invalid Offering ID."})
+            } else if(res.req.user.role !== roles["super_admin"]){
+                //if user  or admin requesting the deletion if not the creator 
+            res
+            .status(401)
+            .json({
+              main: "You are not allowed to perform this operation.",
+              devMsg:
+                "Request Unauthorised. Mismatch of user ID and offering creator ID",
+            });
+            } else {
+                mysqlConnection.query(
+                    `UPDATE offering SET is_deleted = 1 WHERE offering_id = ${offeringId}`,
+                    (sqlErr, result, fields) => {
+                        if(sqlErr){
+                            console.log(sqlErr);
+                            return res.status(500).json({
+                              main: "Something went wrong. Please try again.",
+                              devError: sqlErr,
+                              devMsg: "Error occured while deleting offering from db",
+                            }); 
+                        } else {
+                            res.status(200)
+                            .json({main:" Offering deleted successfully."});
+                        }
+                    }
+                )
+            }
+            })
+
+    } catch(error){
+        return res.status(500).json({
+            main: "Something went wrong. Please try again.  ",
+            devError: error,
+            devMsg: "Error occured while deleting offering.",
+          });
+    }
+})
+
+//get all offerings(paginated)
 router.get("/multiple/:pageNum/:limit", passport.authenticate("jwt", { session: false }), (req, res) => {
     try {
 
         let { limit, pageNum, offset } = generatePaginationValues(req);
 
-        mysqlConnection.query(`SELECT * from offering LIMIT ? OFFSET ?`, [limit, offset], (sqlErr, result, fields) => {
+        mysqlConnection.query(`SELECT * from offering WHERE is_deleted = 0 LIMIT ? OFFSET ?`, [limit, offset], (sqlErr, result, fields) => {
 
             if (sqlErr) {
                 console.log(sqlErr);
@@ -280,6 +441,41 @@ router.get("/:offeringId/likes/count", passport.authenticate("jwt", { session: f
     }
 });
 
+//returns deleted offerings which can be only seen by super_Admin
+router.get("/deleted-offerings/:pageNum/:limit", passport.authenticate("jwt", { session: false }), (req,res) => {
+    try{
+      let { limit, pageNum, offset } = generatePaginationValues(req);
+  
+      mysqlConnection.query(`SELECT * from offering WHERE is_deleted = 1 LIMIT ? OFFSET ?`, [limit, offset], (sqlErr, result, fields) => {
+  
+        if (sqlErr) {
+          return res.status(500).json({
+            main: "Something went wrong. Please try again.",
+            devError: sqlErr,
+            devMsg: "Error occured while fetching offering from db",
+          });
+  
+        } else if (!result.length) {
+          return res.status(200).json({ offerings_count: result.length, main: "No deleted offerings found." });
+  
+        } else {
+          let data = {
+            offerings_count: result.length,
+            page_number: pageNum,
+            offering_list: result,
+          };
+  
+          res.status(200).json(data);
+        }
+      });
+    } catch(error){
+      return res.status(500).json({
+        main: "Something went wrong. Please try again.",
+        devError: error,
+        devMsg: "Error occured while getting deleted offerings",
+      });
+    }
+  })
 
 
 

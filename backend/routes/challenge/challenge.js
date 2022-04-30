@@ -174,7 +174,7 @@ router.get("/user/:userId/:pageNum/:limit", passport.authenticate("jwt", { sessi
 
     if (!userId || isNaN(userId)) return res.status(400).json({ main: "Invalid request", devMsg: `UserId is invalid: ${userId}` });
 
-    mysqlConnection.query(`SELECT * from challenge WHERE user_id = ${userId} LIMIT ? OFFSET ?`, [limit, offset], (sqlErr, result, fields) => {
+    mysqlConnection.query(`SELECT * from challenge WHERE user_id = ${userId} AND is_deleted = 0 LIMIT ? OFFSET ?`, [limit, offset], (sqlErr, result, fields) => {
 
       if (sqlErr) {
         return res.status(500).json({
@@ -282,9 +282,9 @@ router.get(
 
       const sortingQueries = (columnName, order) => {
         const queries = {
-          postedOn: `SELECT * FROM challenge ORDER BY posted_on ${sortingOrder[order]} LIMIT ? OFFSET ?`,
-          endDate: `SELECT * FROM challenge ORDER BY end_date ${sortingOrder[order]} LIMIT ? OFFSET ?`,
-          status: `SELECT * FROM challenge WHERE NOW() < end_date LIMIT ? OFFSET ?`
+          postedOn: `SELECT * FROM challenge WHERE is_deleted = 0 ORDER BY posted_on ${sortingOrder[order]} LIMIT ? OFFSET ?`,
+          endDate: `SELECT * FROM challenge WHERE is_deleted = 0 ORDER BY end_date ${sortingOrder[order]} LIMIT ? OFFSET ?`,
+          status: `SELECT * FROM challenge WHERE NOW() < end_date AND is_deleted = 0 LIMIT ? OFFSET ?`
         };
 
         return queries[columnName];
@@ -353,7 +353,7 @@ router.get(
           .json({ main: "Invalid Request", devMsg: "No tag found in request" });
 
       mysqlConnection.query(
-        `SELECT * from challenge where tags REGEXP "${tagString}" LIMIT ? OFFSET ?`,   //e.g. tagString = tagExample|anothertag|great
+        `SELECT * from challenge where tags REGEXP "${tagString}" AND is_deleted = 0 LIMIT ? OFFSET ?`,   //e.g. tagString = tagExample|anothertag|great
         [limit, offset],
         (sqlErr, result, fields) => {
 
@@ -413,8 +413,8 @@ router.delete(
           } else if (!result.length) {
             //if no challenge found
             return res.status(200).json({ main: "Invalid Challenge ID." });
-          } else if (res.req.user.user_id !== result[0].user_id && res.req.user.role != roles["super_admin"]) {
-            //if user requesting the deletion if not the creator
+          } else if (res.req.user.user_id !== result[0].user_id && res.req.user.role !== roles["super_admin"]) {
+            //if user requesting the deletion if not the creator 
             res
               .status(401)
               .json({
@@ -424,7 +424,7 @@ router.delete(
               });
           } else {
             mysqlConnection.query(
-              `DELETE from challenge WHERE challenge_id = ${challengeId}`,
+              `UPDATE challenge SET is_deleted = 1 WHERE challenge_id = ${challengeId}`,
               (sqlErr, result, fields) => {
                 if (sqlErr) {
                   console.log(sqlErr);
@@ -452,5 +452,42 @@ router.delete(
     }
   }
 );
+
+//returns deleted challenges which can be only seen by super_Admin
+router.get("/deleted-challenges/:pageNum/:limit", passport.authenticate("jwt", { session: false }), (req,res) => {
+  try{
+    let { limit, pageNum, offset } = generatePaginationValues(req);
+
+    mysqlConnection.query(`SELECT * from challenge WHERE is_deleted = 1 LIMIT ? OFFSET ?`, [limit, offset], (sqlErr, result, fields) => {
+
+      if (sqlErr) {
+        return res.status(500).json({
+          main: "Something went wrong. Please try again.",
+          devError: sqlErr,
+          devMsg: "Error occured while fetching challenges from db",
+        });
+
+      } else if (!result.length) {
+        return res.status(200).json({ challenges_count: result.length, main: "No deleted challenges found." });
+
+      } else {
+        let data = {
+          challenges_count: result.length,
+          page_number: pageNum,
+          challenge_list: result,
+        };
+
+        res.status(200).json(data);
+      }
+    });
+  } catch(error){
+    return res.status(500).json({
+      main: "Something went wrong. Please try again.",
+      devError: error,
+      devMsg: "Error occured while getting deleted challenges",
+    });
+  }
+})
+
 
 module.exports = router;
