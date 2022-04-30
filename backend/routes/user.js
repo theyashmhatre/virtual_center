@@ -518,41 +518,55 @@ router.get("/get-account-types", (req, res) => {
 });
 
 router.get("/get-users", passport.authenticate("jwt", { session: false }), (req, res) => {
-  mysqlConnection.query(`SELECT * FROM user WHERE role = ${roles["user"]}`,
-  (err, rows, fields) => {
-    if(err){
-      res.status(500).json({
-        main: "Something went wrong. Please try again",
-        devError: err,
-        devMsg: "MySql query error",
-    })
-  } else if(!rows[0]){
-    res.status(200).json({
-      main:"No Users Found",
-    });
-  } else {
-    //return all the users
-    res.status(200).json(rows);
-  }
-  });
+  mysqlConnection.query(
+    `SELECT u.user_id, u.employee_name, u.email, u.username, u.display_picture,
+    u.location, u.contact_number, u.creation_date, u.role, u.status,
+    a.account_name as account_type from user u
+    inner join account_type a
+    on a.account_type_id = u.account_type_id
+    where u.role = ${roles["user"]}`,
+    (err, rows, fields) => {
+      if(err){
+        res.status(500).json({
+          main: "Something went wrong. Please try again",
+          devError: err,
+          devMsg: "MySql query error",
+        })
+      } else if(!rows[0]){
+        res.status(200).json({
+          main:"No Users Found",
+        });
+      } else {
+        //return all the users
+        res.status(200).json(rows);
+      }
+    }
+  );
 });
 
 router.get("/get-admins", passport.authenticate("jwt", { session: false }), (req, res) => {
-  mysqlConnection.query(`SELECT * FROM user WHERE role = ${roles["admin"]}`, 
-  (err, rows, fields) => {
-    if(err){
-      res.status(500).json({
-        main: "Something went wrong. Please try again",
-        devError: err,
-        devMsg: "MySql query error",
-    })
-    } else if(!rows[0]){
-      res.status(200).json({main:"No Admins Found"})
-    } else{
-      //return all the admins
-      res.status(200).json(rows);
+  mysqlConnection.query(
+    `SELECT u.user_id, u.employee_name, u.email, u.username, u.display_picture,
+    u.location, u.contact_number, u.creation_date, u.role, u.status,
+    a.account_name as account_type from user u
+    inner join account_type a
+    on a.account_type_id = u.account_type_id
+    where u.role = ${roles["admin"]}`,
+    (err, rows, fields) => {
+      if(err){
+        res.status(500).json({
+          main: "Something went wrong. Please try again",
+          devError: err,
+          devMsg: "MySql query error",
+      })
+      } else if(!rows[0]){
+        res.status(200).json({main:"No Admins Found"})
+      } else{
+        //return all the admins
+        res.status(200).json(rows);
+      }
     }
-  })
-})
+  );
+});
 
 module.exports = router;

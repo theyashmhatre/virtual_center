@@ -22,6 +22,10 @@ var navigationData = {
   ],
   "help": [
     { title: "help", link: "/help" }
+  ],
+  "account": [
+    { title: "Profile", link: "/account/profile" },
+    { title: "Settings", link: "/account/settings" }
   ]
 };
 

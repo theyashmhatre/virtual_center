@@ -14,6 +14,7 @@ import Home from "./pages/Home";
 import CreateOffering from "./pages/offerings/CreateOffering";
 import Offering from "./pages/offerings/Offering";
 import Offerings from "./pages/offerings/Offerings";
+import Settings from "./pages/Settings";
 import Solution from "./pages/solutions/Solution";
 import Solvers from "./pages/Solvers";
 
@@ -40,6 +41,7 @@ const App = () => {
         <Route path="challenge/:challengeId" element={<Challenge />} />
         <Route path="challenge/solution/:solutionId" element={<Solution />} />
         <Route path="challenge/solvers" element={<Solvers />} />
+        <Route path="account/settings" element={<Settings />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="forgot-password" element={<ForgotPassword />} />
