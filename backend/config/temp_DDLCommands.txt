@@ -14,7 +14,7 @@ CREATE TABLE `user` (
   `security_question_answer` varchar(200) NOT NULL,
   `reset_token` varchar(200) DEFAULT NULL,
   `token_expiry_time` datetime(1) DEFAULT NULL,
-  `role` varchar(100) NOT NULL,
+  `role` int NOT NULL,
   `status` tinyint NOT NULL DEFAULT '1',
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `userId_UNIQUE` (`user_id`),

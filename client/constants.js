@@ -31,6 +31,12 @@ const postTypeId = {
   "offering": 3,
 };
 
+const roleIds = {
+  "super_admin": 1,
+  "admin": 2,
+  "user": 3
+};
+
 module.exports = {
   emailRegex,
   passwordRegex,
@@ -39,4 +45,5 @@ module.exports = {
   colors,
   navigationData,
   postTypeId,
+  roleIds
 };

@@ -1,5 +1,6 @@
 import { EditorState, convertToRaw } from "draft-js";
 import { useState } from "react";
+import { roleIds } from "../../../constants";
 import RichTextEditor from "../../components/RichTextEditor";
 import MainLayout from "../../layouts/MainLayout";
 import { createOffering } from "../../utilities/api/offering";
@@ -62,7 +63,7 @@ const CreateOffering = () => {
   };
 
   return (
-    <MainLayout role="admin">
+    <MainLayout role={roleIds["admin"]}>
       <div className="my-10 mx-40">
         <h1 className="text-3xl text-center font-bold my-5">
           Create Offering

@@ -1,5 +1,6 @@
 import { EditorState, convertToRaw } from "draft-js";
 import { useState } from "react";
+import { roleIds } from "../../../constants";
 import TagsInput from "../../components/Challenges/TagsInput";
 import RichTextEditor from "../../components/RichTextEditor";
 import MainLayout from "../../layouts/MainLayout";
@@ -66,7 +67,7 @@ const CreateChallenge = () => {
   };
 
   return (
-    <MainLayout role="admin">
+    <MainLayout role={roleIds["admin"]}>
       <div className="my-10 mx-40">
         <h1 className="text-3xl text-center font-bold my-5">
           Create Challenge

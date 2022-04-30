@@ -555,23 +555,4 @@ router.get("/get-admins", passport.authenticate("jwt", { session: false }), (req
   })
 })
 
-router.get("/get-account-types", (req, res) => {
-  mysqlConnection.query(
-    "Select account_type_id as accountId, account_name as accountName from account_type",
-    (err, rows, fields) => {
-      if (err) {
-        console.log(err);
-        res.status(500).json({
-          main: "Something went wrong. Please try again",
-          devError: error,
-          devMsg: "MySql query error",
-        });
-      } else {
-        //return list containing multiple objects having accountId and accountName
-        res.status(200).send(rows);
-      }
-    }
-  );
-});
-
 module.exports = router;
