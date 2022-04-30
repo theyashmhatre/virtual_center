@@ -110,7 +110,7 @@ const Solutions = () => {
                         size="sm"
                         className="p-1"
                       />
-                      Patil
+                      {solution.employee_name}
                     </p>
                     <div>
                       <div className="flex justify-center">
@@ -119,7 +119,7 @@ const Solutions = () => {
                           size="lg"
                           className=" p-1"
                         />
-                        <p className="font-serif">patil@hmail.com</p>
+                        <p className="font-serif">{solution.email}</p>
                       </div>
                     </div>
                   </div>
