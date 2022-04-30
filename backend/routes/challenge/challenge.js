@@ -6,7 +6,7 @@ const {
 } = require("../../utils/validation/challenge");
 const passport = require("passport");
 const { generatePaginationValues } = require("../../utils/utils");
-const { roles } = require("../../utils/constants")
+const { roles } = require("../../utils/constants");
 
 router.get("/", (req, res) => {
   res.status(200).send("Challenge");

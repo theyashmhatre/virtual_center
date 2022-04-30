@@ -1,7 +1,7 @@
 import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { postTypeId } from "../../../constants";
+import { postTypeId, roleIds } from "../../../constants";
 import { Attachment } from "../../components/Attachement";
 import Comments from "../../components/Comments";
 import { Like } from "../../components/Like";
@@ -23,7 +23,7 @@ const Solution = () => {
   }, []);
   
   return (
-    <MainLayout role="employee">
+    <MainLayout role={roleIds["user"]}>
       <div className="mx-16">
         <div className="mb-5">
           <div className="w-80v md:w-95v sm:w-95v">

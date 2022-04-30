@@ -3,6 +3,7 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { roleIds } from "../../constants";
 import Home1 from "../../public/Home1.png";
 import Home2 from "../../public/Home2.png";
 import Home3 from "../../public/Home3.png";
@@ -11,7 +12,7 @@ import MainLayout from "../layouts/MainLayout";
 
 const Home = () => {
   return (
-    <MainLayout role="employee">
+    <MainLayout role={roleIds["user"]}>
       <div className="flex flex-col">
         <div className="flex bg-[url('../public/home_cover.png')] h-80">
           <div className="flex-1 bg-blue-bg-lite/80 pt-8 bg-blue-500 bg-opacity-60">

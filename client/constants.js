@@ -22,6 +22,10 @@ var navigationData = {
   ],
   "help": [
     { title: "help", link: "/help" }
+  ],
+  "account": [
+    { title: "Profile", link: "/account/profile" },
+    { title: "Settings", link: "/account/settings" }
   ]
 };
 
@@ -29,6 +33,12 @@ const postTypeId = {
   "challenge": 1,
   "solution": 2,
   "offering": 3,
+};
+
+const roleIds = {
+  "super_admin": 1,
+  "admin": 2,
+  "user": 3
 };
 
 module.exports = {
@@ -39,4 +49,5 @@ module.exports = {
   colors,
   navigationData,
   postTypeId,
+  roleIds
 };

@@ -1,6 +1,7 @@
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { roleIds } from "../../../constants";
 import TagsInput from "../../components/Challenges/TagsInput";
 import RichTextEditor from "../../components/RichTextEditor";
 import MainLayout from "../../layouts/MainLayout";
@@ -27,7 +28,6 @@ const EditChallenge = () => {
     if (challengeId)
       getSingleChallenge(challengeId)
         .then(({ data }) => {
-          console.log(data.end_date);
           const endDate = new Date(data.end_date).toISOString().split('T')[0];
           setInputValues({
             title: data.title,
@@ -68,7 +68,6 @@ const EditChallenge = () => {
       })
         .then(() => setSuccessMessage("Challenge is updated!!"))
         .catch((error) => {
-          console.log(error.response);
           if (error.response)
             if (error.response.data) setErrors(error.response.data);
             else setErrors({ main: "Some Error Occured, Try Again!" });
@@ -78,7 +77,7 @@ const EditChallenge = () => {
   };
 
   return (
-    <MainLayout role="admin">
+    <MainLayout role={roleIds["admin"]}>
       <div className="my-10 mx-40">
         <h1 className="text-3xl text-center font-bold my-5">
           Edit Challenge

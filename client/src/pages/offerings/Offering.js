@@ -1,7 +1,7 @@
 import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { postTypeId } from "../../../constants";
+import { postTypeId, roleIds } from "../../../constants";
 import { Attachment } from "../../components/Attachement";
 import Comments from "../../components/Comments";
 import { Like } from "../../components/Like";
@@ -22,7 +22,7 @@ const Offering = () => {
   }, []);
 
   return (
-    <MainLayout role="employee">
+    <MainLayout role={roleIds["user"]}>
       <div className="flex justify-center">
         <div className="w-90v flex flex-col">
           <div className="flex justify-start flex-wrap mt-5">

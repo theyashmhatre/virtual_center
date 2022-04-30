@@ -2,10 +2,11 @@ import { faSearch, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { roleIds } from "../../../constants";
+import ChallengeCard from "../../components/Challenges/ChallengeCard";
 import { AuthContext } from "../../contexts";
 import MainLayout from "../../layouts/MainLayout";
 import { getChallenges, searchChallenges } from "../../utilities/api/challenge";
-import ChallengeCard from "../../components/Challenges/ChallengeCard";
 
 const Challenges = () => {
   const [challenges, setChallenges] = useState([]);
@@ -88,7 +89,7 @@ const Challenges = () => {
   };
 
   return (
-    <MainLayout role="employee">
+    <MainLayout role={roleIds["user"]}>
       <div className="min-h-screen">
         <div className="flex items-center justify-center h-20v border">
           <div className="flex border-2 border-gray-200 rounded w-1/2 sm:w-5/6 xs:w-full absolute">
@@ -147,7 +148,7 @@ const Challenges = () => {
               </div>
             </div>
 
-            {context.auth && (context.auth.role == "admin" || context.auth.role == "super_admin") ? (
+            {context.auth && (context.auth.role == roleIds["admin"] || context.auth.role == roleIds["super_admin"]) ? (
               <div className="flex justify-end mb-10">
                 <Link to={`/challenge/create-challenge`}>
                   <h2 className="border-2 border-black rounded-3xl hover:scale-110 text-center text-pink-700 p-2">

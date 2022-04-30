@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { colors } from "../../constants";
+import { colors, roleIds } from "../../constants";
 import DoughnutChart from "../components/DoughnutChart";
 import MainLayout from "../layouts/MainLayout";
 import { getChallengesCounts, getMostSubmissions } from "../utilities/api/dashboard";
@@ -22,11 +22,11 @@ const Dashboard = () => {
         if (data.challenges_count)
           setMostSubmissions(data.challenge_list);
       })
-      .catch(() => console.log(e));
+      .catch((e) => console.log(e));
   }, [mostSubmissionsYear]);
   
   return (
-    <MainLayout role="employee">
+    <MainLayout role={roleIds["user"]}>
       <div className="min-h-screen">
         <div className="grid grid-cols-3 m-10">
           <div className="m-5 p-5 bg-gray-100 border-t-4 border-pink-700 h-fit">
