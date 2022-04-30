@@ -1,4 +1,5 @@
 const { isEmptyObject } = require("../utils");
+const { roles } = require("../constants");
 
 function createChallengeValidation(req, res) {
   const {
@@ -19,9 +20,9 @@ function createChallengeValidation(req, res) {
   if (!challengeDescription)
     errors.challengeDescription = "Description cannot be empty";
 
-  if (res.req.user.role !== "admin") { 
+  if (res.req.user.role !== roles["admin"]) { 
     errors.main = "Only admins are allowed to post a challenge"; 
-    errors.devMsg = "User is not an admin"; 
+    errors.devMsg = "User is not an admin or a super-admin"; 
   }
 
   if (!res.req.user.user_id) {
@@ -64,8 +65,8 @@ function editChallengeValidation(req, res) {
   if (!challengeDescription)
     errors.challengeDescription = "Description cannot be empty";
 
-  if (res.req.user.role !== "admin" && res.req.user.role !== "super_admin") {
-    errors.main = "Only admins are allowed to post/edit a challenge";
+  if (res.req.user.role !== roles["admin"] && res.req.user.role !== roles["super_admin"]) {
+    errors.main = "Only admins and super_admins are allowed to post/edit a challenge";
     errors.devMsg = "User is not an admin";
   }
 
