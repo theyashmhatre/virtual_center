@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext } from "react";
 import { useLocation } from "react-router";
 import { Link, NavLink } from "react-router-dom";
-import { navigationData } from "../../constants";
+import { navigationData, roleIds } from "../../constants";
 import Log from "../../public/Log.png"
 import { AuthContext } from "../contexts";
 
@@ -52,18 +52,26 @@ const Navbar = () => {
             <div
               className="flex flex-col items-start bg-white rounded-xl py-4 w-full"
             >
+              <Link
+                to="/account/profile"
+                className="hover:bg-gray-200 w-full py-2 px-4"
+              >
+                Profile
+              </Link>
+              {context.auth.role == roleIds["super_admin"] && (
+                <Link
+                  to="/account/settings"
+                  className="hover:bg-gray-200 w-full py-2 px-4"
+                >
+                  Settings
+                </Link>
+              )}
               <button
                 className="hover:bg-gray-200 w-full py-2 px-4 flex justify-start"
                 onClick={() => context.removeAuth()}
               >
                 Logout
               </button>
-              <Link
-                to="/profile"
-                className="hover:bg-gray-200 w-full py-2 px-4"
-              >
-                Profile
-              </Link>
             </div>
           </div>
         </li>

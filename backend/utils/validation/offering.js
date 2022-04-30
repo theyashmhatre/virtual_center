@@ -1,3 +1,4 @@
+const { roles } = require("../constants");
 const { isEmptyObject } = require("../utils");
 
 function createOfferingValidation(req, res) {
@@ -17,7 +18,7 @@ function createOfferingValidation(req, res) {
     if (!offeringDescription)
         errors.offeringDescription = "Offering Description cannot be empty";
 
-    if (res.req.user.role !== "admin") {
+    if (res.req.user.role !== roles["admin"]) {
         errors.main = "Only admins are allowed to create an offering";
         errors.devMsg = "User is not an admin";
     }

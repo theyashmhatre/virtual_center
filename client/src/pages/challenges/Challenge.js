@@ -2,7 +2,7 @@ import draftToHtml from "draftjs-to-html";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
-import { postTypeId } from "../../../constants";
+import { postTypeId, roleIds } from "../../../constants";
 import Comments from "../../components/Comments";
 import { Like } from "../../components/Like";
 import CreateSolution from "../../components/Solutions/CreateSolution";
@@ -46,7 +46,7 @@ const Challenge = () => {
   };
   
   return (
-    <MainLayout role="employee">
+    <MainLayout role={roleIds["user"]}>
       <div className="flex items-center flex-col mx-10 my-10 min-h-screen">
         <div className="flex flex-col mb-1">
           <div className="h-30v flex items-center justify-center">
@@ -92,7 +92,7 @@ const Challenge = () => {
           </div>
           <div className="flex w-full justify-end mr-2">
             {tab == "overview" && (
-              context.auth.role == "super_admin" || 
+              context.auth.role == roleIds["super_admin"] || 
               context.auth.id == challenge.user_id
               ? (
                 <div className="flex">

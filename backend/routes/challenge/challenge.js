@@ -6,6 +6,7 @@ const {
 } = require("../../utils/validation/challenge");
 const passport = require("passport");
 const { generatePaginationValues } = require("../../utils/utils");
+const { roles } = require("../../utils/constants");
 
 router.get("/", (req, res) => {
   res.status(200).send("Challenge");
@@ -124,7 +125,7 @@ router.post(
           } else {
             // Confirm that user is either super admin or the admin who created this challenge
             if (result[0].user_id != res.req.user.user_id) {
-              if (res.req.user.role != "super_admin") {
+              if (res.req.user.role != roles["super_admin"]) {
                 return res.status(200).json({
                   main: "You don't have rights to update",
                   devMsg: "User is niether super admin nor the challenge creator",
@@ -412,7 +413,7 @@ router.delete(
           } else if (!result.length) {
             //if no challenge found
             return res.status(200).json({ main: "Invalid Challenge ID." });
-          } else if (res.req.user.user_id !== result[0].user_id && res.req.user.role != "super_admin") {
+          } else if (res.req.user.user_id !== result[0].user_id && res.req.user.role != roles["super_admin"]) {
             //if user requesting the deletion if not the creator
             res
               .status(401)
