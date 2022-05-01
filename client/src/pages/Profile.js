@@ -53,12 +53,12 @@ const Profile = () => {
         <form className=" max-w-2xl ml-96  pt-10  border-2 p-6 mb-5 ">
           <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0  flex flex-col align-middle justify-center">
             <div className=" w-full flex justify-center  ">
-              <div className=" w-32 h-32 border-2 rounded-full  ">
+              <div className=" ">
                 {displayPicture ? (
                   <img
                     alt="profile"
                     src={displayPicture}
-                    className=" rounded-full object-cover  h-max w-max "
+                    className=" w-32 h-32 border-2 rounded-full "
                   ></img>
                 ) : (
                   <FontAwesomeIcon
