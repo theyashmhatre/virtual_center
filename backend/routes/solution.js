@@ -114,7 +114,11 @@ router.get(
       //Selects all the fields from the solution
       //checks for the common records in solution(Table) with challenge_id & solution_id
       mysqlConnection.query(
-        `SELECT * FROM solution WHERE solution_id = "${solutionId}"
+        `SELECT u.employee_name, u.email, u.display_picture, s.* 
+        FROM solution s
+        INNER JOIN user u
+        ON u.user_id = s.user_id
+        WHERE s.solution_id = "${solutionId}"
         `,
         (sqlErr, result, fields) => {
           if (sqlErr) {
@@ -207,7 +211,7 @@ router.get(
 
       //Selects all fields from the challenges
       mysqlConnection.query(
-        `SELECT u.username, u.email, u.display_picture, s.* 
+        `SELECT u.employee_name, u.email, u.display_picture, s.* 
         FROM user u
         INNER JOIN user_team ut
         ON u.username = ut.username
@@ -254,10 +258,11 @@ router.get(
       .json({ main: "Something went wrong. Please try again", devMsg: "No challenge id found" });
 
       mysqlConnection.query(
-        `SELECT u.username, u.email, u.display_picture, u.employee_name, s.* 
+        `SELECT u.employee_name, u.email, u.display_picture, u.employee_name, s.* 
         FROM user u
         INNER JOIN solution s
-        ON s.challenge_id = ${challengeId} LIMIT ? OFFSET ?;`,
+        ON u.user_id = s.user_id
+        WHERE s.challenge_id = ${challengeId} LIMIT ? OFFSET ?`,
         [limit, offset],
         (sqlErr, result, fields) => {
           if (sqlErr) {

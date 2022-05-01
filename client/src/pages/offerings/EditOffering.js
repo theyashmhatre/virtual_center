@@ -1,11 +1,12 @@
-import { EditorState, convertToRaw } from "draft-js";
-import { useState } from "react";
+import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router";
 import { roleIds } from "../../../constants";
 import RichTextEditor from "../../components/RichTextEditor";
 import MainLayout from "../../layouts/MainLayout";
-import { createOffering } from "../../utilities/api/offering";
+import { editOffering, getSingleOffering } from "../../utilities/api/offering";
 import { isEmptyObject } from "../../utilities/utils";
-import { createOfferingInputValidation } from "../../utilities/validation/offering";
+import { editOfferingInputValidation } from "../../utilities/validation/offering";
 
 const initialInputValues = {
   offeringTitle: '',
@@ -13,13 +14,15 @@ const initialInputValues = {
   ownerName: '',
   ownerEmail: '',
   attachment: '',
+  attachmentValue: '',
   privacyCheck: false,
 };
 
-const CreateOffering = () => {
+const EditOffering = () => {
   const [inputValues, setInputValues] = useState(initialInputValues);
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
+  const { offeringId } = useParams();
 
   const handleInputChange = (e) => {
     let { name, value, type, files } = e.target;
@@ -30,28 +33,45 @@ const CreateOffering = () => {
     });
   };
 
+  const handleEdit = (attachment) => {
+    editOffering({
+      offeringId: offeringId,
+      ...inputValues,
+      attachment: attachment,
+      offeringDescription: JSON.stringify(convertToRaw(inputValues.offeringDescription.getCurrentContent()))
+    })
+      .then(() => setSuccessMessage("Offering is updated!!"))
+      .catch((error) => {
+        if (error.response)
+          if (error.response.data) setErrors(error.response.data);
+          else setErrors({ main: "Some Error Occured, Try Again!" });
+        else setErrors({ main: "Some Error Occured, Try Again!" });
+      });
+  };
+
   const onSubmit = (e) => {
     e.preventDefault();
     setErrors({});
     setSuccessMessage('');
-    const inputErrors = createOfferingInputValidation(inputValues);
+    const inputErrors = editOfferingInputValidation(inputValues);
 
     if (isEmptyObject(inputErrors)) {
+      if (!inputValues.attachment) {
+        new Blob(
+          [new Uint8Array(inputValues.attachmentValue.data)],
+          {type: ".pdf"}
+        )
+          .text()
+          .then((result) => {
+            handleEdit(result);
+          });
+        return;
+      }
+
       const reader = new FileReader();
 
       reader.onload = () => {
-        createOffering({
-          ...inputValues,
-          attachment: reader.result,
-          offeringDescription: JSON.stringify(convertToRaw(inputValues.offeringDescription.getCurrentContent()))
-        })
-          .then(() => setSuccessMessage("Offering is created!!"))
-          .catch((error) => {
-            if (error.response)
-              if (error.response.data) setErrors(error.response.data);
-              else setErrors({ main: "Some Error Occured, Try Again!" });
-            else setErrors({ main: "Some Error Occured, Try Again!" });
-          });
+        handleEdit(reader.result);
       };
 
       reader.onerror = () => setErrors({
@@ -62,11 +82,27 @@ const CreateOffering = () => {
     } else setErrors(inputErrors);
   };
 
+  useEffect(() => {
+    getSingleOffering(offeringId)
+      .then(({ data }) => {
+        setInputValues({
+          offeringTitle: data.title,
+          offeringDescription: EditorState.createWithContent(
+            convertFromRaw(JSON.parse(data.description))
+          ),
+          attachmentValue: data.attachment,
+          ownerName: data.owner_name,
+          ownerEmail: data.owner_email,
+        });
+      })
+      .catch((error) => console.log(error));
+  }, []);
+
   return (
     <MainLayout role={roleIds["super_admin"]}>
       <div className="my-10 mx-40">
         <h1 className="text-3xl text-center font-bold my-5">
-          Create Offering
+          Edit Offering
         </h1>
         <div className="space-y-5">
           <div>
@@ -190,7 +226,7 @@ const CreateOffering = () => {
               className="py-3 px-14 rounded-full bg-black-btn text-white font-bold"
               onClick={onSubmit}
             >
-              Submit
+              Update
             </button>
           </div>
         </div>
@@ -199,4 +235,4 @@ const CreateOffering = () => {
   );
 };
 
-export default CreateOffering;
+export default EditOffering;
