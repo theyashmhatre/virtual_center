@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import { roleIds } from "../../constants";
 import MainLayout from "../layouts/MainLayout";
 import { getDeletedChallenges } from "../utilities/api/challenge";
+import { getDeletedOfferings } from "../utilities/api/offering";
 import { getAdminDetails, getUserDetails } from "../utilities/api/userDetails";
 
 const Settings = () => {
   const [users, setUsers] = useState([]);
   const [admins, setAdmins] = useState([]);
   const [deletedChallenges, setDeletedChallenges] = useState([]);
+  const [deletedOfferings, setDeletedOfferings] = useState([]);
   const [pageNo, setPageNo] = useState(1);
   const limit = 10;
 
@@ -22,16 +24,22 @@ const Settings = () => {
     
     getDeletedChallenges(pageNo, limit)
       .then(({ data }) => {
-        console.log(data);
         if (data.challenges_count)
           setDeletedChallenges(data.challenge_list);
       })
       .catch((e) => console.log(e));
-  }, [])
+    
+    getDeletedOfferings(pageNo, limit)
+      .then(({ data }) => {
+        if (data.offerings_count)
+          setDeletedOfferings(data.offering_list);
+      })
+      .catch((e) => console.log(e));
+  }, []);
  
   return (
     <MainLayout role={roleIds["super_admin"]}>
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center mb-10">
         <div>
           <h1 className="text-3xl text-center font-bold my-10">User Details</h1>
           <div className="w-90v flex justify-center">
@@ -195,6 +203,49 @@ const Settings = () => {
                       </td>
                       <td className="border p-2">
                         {new Date(challenge.end_date).toISOString().split('T')[0]}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h1 className="text-3xl text-center font-bold my-10">Deleted Offerings</h1>
+          <div className="w-90v flex justify-center">
+            <div className="overflow-x-auto whitespace-nowrap pb-5 sm:pb-10">
+              <table className="border p-2">
+                <thead>
+                  <tr>
+                    <th className="border p-2 sticky left-0 z-10">
+                      Offering Id
+                    </th>
+                    <th className="border p-2">
+                      Title
+                    </th>
+                    <th className="border p-2">
+                      Owner Name
+                    </th>
+                    <th className="border p-2">
+                      Owner Email
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {deletedOfferings.map((offering, index) => (
+                    <tr key={index}>
+                      <td className="border p-2">
+                        {offering.offering_id}
+                      </td>
+                      <td className="border p-2">
+                        {offering.title}
+                      </td>
+                      <td className="border p-2">
+                        {offering.owner_name}
+                      </td>
+                      <td className="border p-2">
+                        {offering.owner_email}
                       </td>
                     </tr>
                   ))}

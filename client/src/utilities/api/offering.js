@@ -67,3 +67,8 @@ export const getSingleOffering = async (id) => {
   const endpoint = `/api/offering/single/${id}`;
   return await api.get(endpoint);
 };
+
+export const getDeletedOfferings = async (pageNo=1, limit=10) => {
+  const endpoint = `/api/offering/deleted-offerings/${pageNo}/${limit}`;
+  return await api.get(endpoint);
+};
