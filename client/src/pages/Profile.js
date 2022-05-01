@@ -11,26 +11,35 @@ const Profile = () => {
   //  const { username } = jwt.decode(sessionStorage.getItem("Access Token"));
 
   const [userDetail, setUserDetail] = useState({});
+  const [displayPicture, setDisplayPicture] = useState("");
+
   const context = useContext(AuthContext);
   const userId = context.auth.id;
   useEffect(() => {
     if (userId)
       profile(userId)
         .then(({ data }) => {
+          if (data.display_picture)
+            new Blob([new Uint8Array(data.display_picture.data)], {
+              type: ".png",
+            })
+              .text()
+              .then((result) => setDisplayPicture(result));
+
           setUserDetail(data);
         })
         .catch(() => {});
   }, []);
-  console.log(userDetail);
 
   const {
     username,
     employee_name,
     email,
     contact_number,
-    display_picture,
+
     location,
   } = userDetail;
+  console.log();
 
   return (
     <MainLayout role={roleIds["user"]}>
@@ -45,8 +54,12 @@ const Profile = () => {
           <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0  flex flex-col align-middle justify-center">
             <div className=" w-full flex justify-center  ">
               <div className=" w-32 h-32 border-2 rounded-full  ">
-                {display_picture ? (
-                  <img alt="profile" src={display_picture}></img>
+                {displayPicture ? (
+                  <img
+                    alt="profile"
+                    src={displayPicture}
+                    className=" rounded-full object-cover  h-max w-max "
+                  ></img>
                 ) : (
                   <FontAwesomeIcon
                     icon={faUser}
