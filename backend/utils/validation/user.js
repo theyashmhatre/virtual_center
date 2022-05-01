@@ -75,8 +75,37 @@ function validateForgotPasswordParams(data) {
     };
 }
 
+function updateProfileValidation(data) {
+    let errors = {};
+
+    let {
+      employeeName,
+      email,
+      contactNumber,
+      location,
+      displayPicture
+      } = data;
+
+
+
+    //Name validation
+    if (!employeeName) errors.employeeName = "Employee name cannot be empty";
+
+    //email validation
+    errors = emailValidation(email, errors);
+
+    //contact number validation
+    if (isNaN(contactNumber)) errors.contactNumber = "Please enter a valid contact number"; 
+
+    return {
+        errors,
+        isValid: isEmptyObject(errors)
+    };
+}
+
 module.exports = { 
     validateRegisterParams, 
     validateLoginParams, 
-    validateForgotPasswordParams 
+    validateForgotPasswordParams,
+    updateProfileValidation
 };
