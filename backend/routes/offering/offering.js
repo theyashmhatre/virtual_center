@@ -3,9 +3,8 @@ const mysqlConnection = require("../../config/dbConnection");
 const { generatePaginationValues } = require('../../utils/utils');
 const passport = require("passport");
 const { types } = require('../../utils/constants');
-const { createOfferingValidation } = require('../../utils/validation/offering');
-const { off } = require('../../config/dbConnection');
-const { roles } = require("../../utils/constants")
+const { createOfferingValidation, editOfferingValidation } = require('../../utils/validation/offering');
+const { roles } = require("../../utils/constants");
 const typeId = types.offering;
 
 router.post(
@@ -40,7 +39,7 @@ router.post(
                     return res.status(500).json({
                         main: "Something went wrong. Please try again.",
                         devError: sqlErr,
-                        devMsg: "Error occured while adding challenge into db",
+                        devMsg: "Error occured while adding offering into db",
                     });
                 }
 
@@ -56,7 +55,7 @@ router.post(
             return res.status(500).json({
                 main: "Something went wrong. Please try again.",
                 devError: error,
-                devMsg: "Error occured while creating challenge",
+                devMsg: "Error occured while creating offering",
             });
         }
     }
@@ -73,7 +72,7 @@ passport.authenticate("jwt", { session: false }),
             .status(400)
             .json({ main: "Invalid Request", devMsg: "No offering id found" });
 
-        const { errors, isValid } = editChallengeValidation(req, res);
+        const { errors, isValid } = editOfferingValidation(req, res);
 
         if (!isValid) return res.status(400).json(errors);
 
@@ -115,19 +114,18 @@ passport.authenticate("jwt", { session: false }),
               devMsg: "Offering ID is invalid",
             });
           } else {
-            // Confirm that user is super admin or the admin who created this offering
-              if (res.req.user.role != roles["super_admin"]) {
-                return res.status(200).json({
-                  main: "You don't have rights to update",
-                  devMsg: "User is not super admin",
-                });
-              }
+            // Confirm that user is super admin
+            if (res.req.user.role != roles["super_admin"]) {
+              return res.status(200).json({
+                main: "You don't have rights to update",
+                devMsg: "User is not super admin",
+              });
             }
 
             //Storing updated offering into db
             mysqlConnection.query(
               `UPDATE offering SET ? WHERE offering_id = ?`,
-              [updatedChallenge, challengeId],
+              [updatedOffering, offeringId],
               (sqlErr, result, fields) => {
                 if (sqlErr) {
                   console.log(sqlErr);
@@ -144,6 +142,7 @@ passport.authenticate("jwt", { session: false }),
               }
             );
           }
+        }
       );
 
 
@@ -272,7 +271,7 @@ router.get("/single/:offeringId", passport.authenticate("jwt", { session: false 
                 .status(400)
                 .json({ main: "Something went wrong. Please try again", devMsg: "No offering id found" });
 
-        //query to find if the challenge exists
+        //query to find if the offering exists
         mysqlConnection.query(
 
             `SELECT * from offering where offering_id = ${offeringId}`,
@@ -284,16 +283,16 @@ router.get("/single/:offeringId", passport.authenticate("jwt", { session: false 
                         devMsg: "Error occured while fetching offering from db",
                     });
                 } else if (!result.length) {
-                    //if no challenge found with the given challengeID
+                    //if no offering found with the given offeringID
 
                     return res.status(200).json({
                         main: "Offering you were looking for doesn't exist.",
                         devError: "Offering not found in database",
                     });
                 } else {
-                    let challenge = result[0];
+                    let offering = result[0];
 
-                    return res.status(200).json(challenge);
+                    return res.status(200).json(offering);
                 }
             }
         );

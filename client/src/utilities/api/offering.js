@@ -17,7 +17,34 @@ export const createOffering = async ({
       ownerName,
       ownerEmail,
       industryName: "industry"
-    }, 
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
+
+export const editOffering = async ({
+  offeringId,
+  offeringTitle,
+  offeringDescription,
+  ownerName,
+  ownerEmail,
+  attachment
+}) => {
+  const endpoint = `/api/offering/edit/${offeringId}`;
+  return await api.post(
+    endpoint,
+    {
+      offeringTitle,
+      offeringDescription,
+      ownerName,
+      ownerEmail,
+      attachment,
+      industryName: "industry"
+    },
     {
       headers: {
         "Content-Type": "application/json",

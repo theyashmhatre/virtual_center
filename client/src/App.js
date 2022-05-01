@@ -12,6 +12,7 @@ import EditChallenge from "./pages/challenges/EditChallenge";
 import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 import CreateOffering from "./pages/offerings/CreateOffering";
+import EditOffering from "./pages/offerings/EditOffering";
 import Offering from "./pages/offerings/Offering";
 import Offerings from "./pages/offerings/Offerings";
 import Settings from "./pages/Settings";
@@ -27,6 +28,7 @@ const App = () => {
         <Route path="main/create-offering" element={<CreateOffering />} />
         <Route path="main/offerings" element={<Offerings />} />
         <Route path="main/offering/:offeringId" element={<Offering />} />
+        <Route path="main/edit-offering/:offeringId" element={<EditOffering />} />
         <Route path="/challenge" element={<Navigate to="/challenge/challenges" />} />
         <Route path="challenge/dashboard" element={<Dashboard />} />
         <Route path="challenge/challenges" element={<Challenges />} />

@@ -191,7 +191,7 @@ const Settings = () => {
                         {challenge.employee_name}
                       </td>
                       <td className="border p-2">
-                        {challenge.posted_on}
+                        {new Date(challenge.posted_on).toISOString().split('T')[0]}
                       </td>
                       <td className="border p-2">
                         {new Date(challenge.end_date).toISOString().split('T')[0]}
