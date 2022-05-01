@@ -1,10 +1,11 @@
 import MainLayout from "../layouts/MainLayout";
 import { roleIds } from "../../constants";
 import { AuthContext } from "../contexts";
-import { getUserDetails } from "../utilities/api/user";
+import { profile } from "../utilities/api/userDetails";
 import { useContext, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 
 const Profile = () => {
   //  const { username } = jwt.decode(sessionStorage.getItem("Access Token"));
@@ -14,7 +15,7 @@ const Profile = () => {
   const userId = context.auth.id;
   useEffect(() => {
     if (userId)
-      getUserDetails(userId)
+      profile(userId)
         .then(({ data }) => {
           setUserDetail(data);
         })
@@ -22,8 +23,14 @@ const Profile = () => {
   }, []);
   console.log(userDetail);
 
-  const { username, employee_name, email, contact_number, display_picture } =
-    userDetail;
+  const {
+    username,
+    employee_name,
+    email,
+    contact_number,
+    display_picture,
+    location,
+  } = userDetail;
 
   return (
     <MainLayout role={roleIds["user"]}>
@@ -34,7 +41,7 @@ const Profile = () => {
         >
           User Profile
         </div>
-        <form className=" max-w-2xl ml-96  pt-10  border-2 p-6 ">
+        <form className=" max-w-2xl ml-96  pt-10  border-2 p-6 mb-5 ">
           <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0  flex flex-col align-middle justify-center">
             <div className=" w-full flex justify-center  ">
               <div className=" w-32 h-32 border-2 rounded-full  ">
@@ -114,6 +121,24 @@ const Profile = () => {
               ></input>
             </div>
           </div>
+          <div className="flex flex-wrap -mx-3 mb-6">
+            <div className="w-full px-3">
+              <div
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                htmlFor="grid-email"
+              >
+                Location
+              </div>
+              <input
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                id="grid-email"
+                type="text"
+                placeholder="location"
+                value={location}
+                disabled
+              ></input>
+            </div>
+          </div>
 
           <div className="flex flex-wrap -mx-3 mb-2">
             <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
@@ -133,14 +158,17 @@ const Profile = () => {
               ></input>
             </div>
 
-            <div className="pl-4 flex justify-center w-full ">
+            <Link
+              to={`edit-profile`}
+              className="pl-4 flex justify-center w-full "
+            >
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="button"
               >
                 Edit
               </button>
-            </div>
+            </Link>
           </div>
         </form>
       </div>

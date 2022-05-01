@@ -73,8 +73,3 @@ export const getAccountTypes = async () => {
   const endpoint = new URL("/api/user/get-account-types", apiURL).href;
   return await axios.get(endpoint);
 };
-
-export const getUserDetails = async (user_id) => {
-  const endpoint = `/api/user/profile/${user_id}`;
-  return await api.post(endpoint);
-};

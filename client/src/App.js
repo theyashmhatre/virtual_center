@@ -15,16 +15,18 @@ import CreateOffering from "./pages/offerings/CreateOffering";
 import EditOffering from "./pages/offerings/EditOffering";
 import Offering from "./pages/offerings/Offering";
 import Offerings from "./pages/offerings/Offerings";
+import EditProfile from "./pages/EditProfile";
+import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import Solution from "./pages/solutions/Solution";
 import Solvers from "./pages/Solvers";
-import Profile from "./pages/Profile";
 
 const App = () => {
   return (
     <AuthProvider>
       <Routes>
         <Route path="account/profile" element={<Profile />} />
+        <Route path="account/profile/edit-profile" element={<EditProfile />} />
 
         <Route path="/" element={<Navigate to="/main" />} />
         <Route path="/main" element={<Home />} />
@@ -52,6 +54,7 @@ const App = () => {
         <Route path="challenge/:challengeId" element={<Challenge />} />
         <Route path="challenge/solution/:solutionId" element={<Solution />} />
         <Route path="challenge/solvers" element={<Solvers />} />
+        <Route path="account/profile" element={<Profile />} />
         <Route path="account/settings" element={<Settings />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
