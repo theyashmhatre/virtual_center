@@ -458,7 +458,14 @@ router.get("/deleted-challenges/:pageNum/:limit", passport.authenticate("jwt", {
   try{
     let { limit, pageNum, offset } = generatePaginationValues(req);
 
-    mysqlConnection.query(`SELECT * from challenge WHERE is_deleted = 1 LIMIT ? OFFSET ?`, [limit, offset], (sqlErr, result, fields) => {
+    mysqlConnection.query(
+      `SELECT c.*, a.account_name as account_type, u.employee_name
+      from challenge c 
+      INNER JOIN user u ON c.user_id = u.user_id
+      INNER JOIN account_type a ON a.account_type_id = u.account_type_id 
+      WHERE c.is_deleted = 1
+      LIMIT ? OFFSET ?`,
+      [limit, offset], (sqlErr, result, fields) => {
 
       if (sqlErr) {
         return res.status(500).json({

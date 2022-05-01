@@ -1,6 +1,5 @@
 import {
   faEnvelope,
-  faPaperclip,
   faSpinner,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
@@ -9,6 +8,7 @@ import draftToHtml from "draftjs-to-html";
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { roleIds } from "../../../constants";
+import { Attachment } from "../../components/Attachement";
 import { AuthContext } from "../../contexts";
 import MainLayout from "../../layouts/MainLayout";
 import { getOfferings } from "../../utilities/api/offering";
@@ -66,7 +66,7 @@ const Offerings = () => {
       <div className="min-h-screen mx-16 my-5">
         <h1 className="text-3xl text-center font-bold mb-10">Offerings</h1>
         
-        {context.auth && (context.auth.role == roleIds["admin"] || context.auth.role == roleIds["super_admin"]) ? (
+        {context.auth && (context.auth.role == roleIds["super_admin"]) ? (
           <div className="flex justify-end mb-10">
             <Link to={`/main/create-offering`}>
               <h2 className="border-2 border-black rounded-3xl hover:scale-110 text-center text-pink-700 p-2">
@@ -80,70 +80,70 @@ const Offerings = () => {
           <div className="lg:h-70v lg:w-4/5 flex md:flex-col md:items-center sm:items-center sm:flex-col justify-start flex-wrap">
             {/* Offerings blocks Started */}
 
-            {offeringData.map((data) => {
+            {offeringData.map((offering) => {
               return (
                 <div
-                  key={data.offering_id}
+                  key={offering.offering_id}
                   className="border-2 shadow-sm hover:shadow-xl rounded-lg lg:mb-0 mb-4 mx-1 w-24per md:w-1/2 sm:w-2/3 xs:w-5/6"
                 >
-                  <div className="h-25per rounded-lg bg-gradient-to-r from-pink-900 to-blue-grd border-gray-500 border-2 flex flex-col justify-between p-3">
-                    <div className="flex justify-center">
-                      <h2 className="text-2xl font-mono font-semibold text-white">
-                        {data.title}
-                      </h2>
-                    </div>
-                  </div>
-                  <div className="p-2 font-serif flex items-center justify-center">
-                    {data.description && (
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html: draftToHtml(
-                            getTruncatedContentState(
-                              JSON.parse(data.description)
-                            )
-                          ),
-                        }}
-                      />
-                    )}
-                  </div>
-                  <div className="flex flex-col">
-                    <div className="flex flex-col m-4 rounded shadow-lg border-2">
-                      <p className="font-semibold flex justify-center align-bottom">
-                        <FontAwesomeIcon
-                          icon={faUser}
-                          size="sm"
-                          className="p-1"
-                        />
-                        {data.owner_name} Patil
-                      </p>
-                      <div>
-                        <div className="flex justify-center">
-                          <FontAwesomeIcon
-                            icon={faEnvelope}
-                            size="lg"
-                            className=" p-1"
-                          />
-                          <p className="font-serif">{data.owner_email}</p>
+                  <div className="flex flex-col justify-between h-full">
+                    <div className="h-full">
+                      <div className="h-50per rounded-lg bg-gradient-to-r from-pink-900 to-blue-grd border-gray-500 border-2 p-3">
+                        <div className="flex justify-center items-center h-full">
+                          <h2 className="text-2xl font-mono font-semibold text-white">
+                            {offering.title}
+                          </h2>
                         </div>
                       </div>
+                      <div className="p-2 font-serif">
+                        {offering.description && (
+                          <div
+                            dangerouslySetInnerHTML={{
+                              __html: draftToHtml(
+                                getTruncatedContentState(
+                                  JSON.parse(offering.description)
+                                )
+                              ),
+                            }}
+                          />
+                        )}
+                      </div>
                     </div>
+                    <div>
+                      <div className="flex flex-col">
+                        <div className="flex flex-col m-4 rounded shadow-lg border-2">
+                          <p className="font-semibold flex justify-center align-bottom">
+                            <FontAwesomeIcon
+                              icon={faUser}
+                              size="sm"
+                              className="p-1"
+                            />
+                            {offering.owner_name}
+                          </p>
+                          <div>
+                            <div className="flex justify-center">
+                              <FontAwesomeIcon
+                                icon={faEnvelope}
+                                size="lg"
+                                className=" p-1"
+                              />
+                              <p className="font-serif">{offering.owner_email}</p>
+                            </div>
+                          </div>
+                        </div>
 
-                    <div className="flex items-center">
-                      <button className="bg-pink-600 text-white ml-4 px-1 rounded">
-                        View Attachment
-                        <FontAwesomeIcon
-                          icon={faPaperclip}
-                          className="p-0 pl-1"
-                        />
-                      </button>
+                        <div className="flex items-center">
+                          <Attachment attachmentData={offering.attachment} />
+                        </div>
+                      </div>
+                      <div>
+                        <Link to={`/main/offering/${offering.offering_id}`}>
+                          <h2 className="text-center p-4 text-pink-700">
+                            View Detail
+                          </h2>
+                        </Link>
+                      </div>
                     </div>
-                  </div>
-                  <div>
-                    <Link to={`/main/offering/${data.offering_id}`}>
-                      <h2 className="text-center p-4 text-pink-700">
-                        View Detail
-                      </h2>
-                    </Link>
                   </div>
                 </div>
               );

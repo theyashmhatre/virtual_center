@@ -60,7 +60,7 @@ function editOfferingValidation(req, res) {
 
     if (res.req.user.role !== roles["super_admin"]) {
         errors.main = "Only super_admin is allowed to create/edit an offering";
-        errors.devMsg = "User is not an super_admin";
+        errors.devMsg = "User is not a super admin";
     }
 
     if (!res.req.user.user_id) {

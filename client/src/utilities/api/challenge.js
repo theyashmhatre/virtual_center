@@ -78,3 +78,8 @@ export const searchChallenges = async (searchQuery, pageNo) => {
   const endpoint = `/api/challenge/search/${searchQuery}/${pageNo}`;
   return await api.get(endpoint);
 };
+
+export const getDeletedChallenges = async (pageNo=1, limit=10) => {
+  const endpoint = `/api/challenge/deleted-challenges/${pageNo}/${limit}`;
+  return await api.get(endpoint);
+};
