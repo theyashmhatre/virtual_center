@@ -53,6 +53,11 @@ export const editOffering = async ({
   );
 };
 
+export const deleteOffering = async (offeringId) => {
+  const endpoint = `/api/offering/delete/${offeringId}`;
+  return await api.delete(endpoint);
+};
+
 export const getOfferings = async (page=1, limit=8) => {
   const endpoint = `/api/offering/multiple/${page}/${limit}`;
   return await api.get(endpoint);

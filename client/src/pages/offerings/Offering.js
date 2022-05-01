@@ -1,6 +1,6 @@
 import draftToHtml from "draftjs-to-html";
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { postTypeId, roleIds } from "../../../constants";
 import { Attachment } from "../../components/Attachement";
@@ -8,12 +8,13 @@ import Comments from "../../components/Comments";
 import { Like } from "../../components/Like";
 import { AuthContext } from "../../contexts";
 import MainLayout from "../../layouts/MainLayout";
-import { getSingleOffering } from "../../utilities/api/offering";
+import { deleteOffering, getSingleOffering } from "../../utilities/api/offering";
 
 const Offering = () => {
   const [offering, setOffering] = useState({});
   const { offeringId } = useParams();
   const context = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (offeringId)
@@ -23,6 +24,12 @@ const Offering = () => {
         })
         .catch(() => {});
   }, []);
+  
+  const onDelete = () => {
+    deleteOffering(offeringId)
+      .then(() => navigate("/main/offerings"))
+      .catch((error) => console.log(error));
+  };
 
   return (
     <MainLayout role={roleIds["user"]}>
@@ -48,8 +55,8 @@ const Offering = () => {
                   <button
                     className="border-2 border-black rounded-3xl hover:scale-110 text-center text-pink-700 p-2 ml-2"
                     onClick={() => {
-                      // if(confirm("Are you sure, you want to delete this challenge?"))
-                      //   onDelete();
+                      if(confirm("Are you sure, you want to delete this challenge?"))
+                        onDelete();
                     }}
                   >
                     Delete Offering
