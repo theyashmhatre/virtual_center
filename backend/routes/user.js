@@ -6,6 +6,7 @@ const {
   validateRegisterParams,
   validateLoginParams,
   validateForgotPasswordParams,
+  updateProfileValidation
 } = require("../utils/validation/user");
 const passport = require("passport");
 const {
@@ -298,6 +299,87 @@ router.post(
   }
 );
 
+router.post("/update-profile", passport.authenticate("jwt", { session: false }) , (req, res) => {
+  try{
+
+    let {
+      employeeName,
+      email,
+      contactNumber,
+      location,
+      displayPicture
+    } = req.body;
+
+    let userId = res.req.user.user_id;
+
+    const { errors, isValid } = updateProfileValidation(req.body);  //validating all parameters before updating user
+
+    if (!isValid) return res.status(400).json(errors);
+
+    const updatedProfile = {
+      employee_name: employeeName,
+      email: email,
+      contact_number: contactNumber,
+      location: location,
+      display_picture: displayPicture
+    }
+
+    mysqlConnection.query(
+      `SELECT *FROM user WHERE user_id = ${userId}`,
+      (sqlErr, result, fields) => {
+        if(sqlErr){
+          return res.status(500).json({
+            main: "Something went wrong. Please try again.",
+            devError: sqlErr,
+            devMsg: "Error occured while fetching user from db",
+          });
+        } else if(!result[0]){
+          //no user found
+          return res.status(200).json({
+            main: "No such user exists",
+            devMsg: "User ID is invalid",
+          });
+        } else{
+          
+          if(result[0].user_id != res.req.user.user_id){
+            return res.status(200).json({
+              main: "You don't have rights to update",
+              devMsg: "User is Unauthorized",
+            });
+          }
+
+          //storing updating user into db
+          mysqlConnection.query(
+            `UPDATE user SET ? WHERE user_id = ?`,
+            [updatedProfile, userId],
+            (sqlErr, result, fields) => {
+              if(sqlErr){
+                console.log(sqlErr);
+                  return res.status(500).json({
+                    main: "Something went wrong. Please try again.",
+                    devError: sqlErr,
+                    devMsg: "Error occured while updating challenge in db",
+                  });
+              } else{
+                res.status(200).json({
+                  main: "User updated Successfully"
+                })
+              }
+            }
+          )
+        }
+      }
+    )
+  } catch(error){
+    return res.status(500).json({
+      main: "Something went wrong. Please try again.",
+      devError: error,
+      devMsg: "Error occured while updating user profile",
+    });
+  }
+})
+
+
 router.post("/forgot-password", (req, res) => {
   const { email, securityQuestionId, securityQuestionAnswer } = req.body;
 
@@ -478,6 +560,46 @@ router.post("/reset-password/:username/:token", (req, res) => {
     }
   );
 });
+
+router.post("/change-password", passport.authenticate("jwt", { session: false }), (req, res) => {
+  try{
+
+    const { password, confirmPassword } = req.body;
+    const userId = res.req.user.user_id;
+
+    let errors = {};
+
+      errors = passwordsValidation(password, confirmPassword, errors);
+
+      //Check validation
+      if (!isEmptyObject(errors)) return res.status(400).json(errors);
+
+      bcrypt.genSalt(10, (err, salt) => {
+        //encrypting user's password
+        bcrypt.hash(password, salt, (err, hash) => {
+          if (err) console.log("bcrypt error for password", err);
+          mysqlConnection.query(
+            `UPDATE user SET password = "${hash}" WHERE user_id = "${userId}"`,
+            (err, result, fields) => {
+              if (err) {
+                console.log(err);
+              } else {
+                console.log("User Password Updated");
+                return res.status(201).json({ main: "Password is updated" });
+              }
+            }
+          );
+        });
+      });
+  } catch(error){
+    console.log(error);
+    return res.status(500).json({
+      main: "Something went wrong",
+      devError: error,
+      devMsg: "Error occured while changing user's password",
+    });
+  }
+})
 
 router.get("/get-security-questions", (req, res) => {
   mysqlConnection.query(

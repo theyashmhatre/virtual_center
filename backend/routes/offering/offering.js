@@ -36,6 +36,7 @@ router.post(
 
             mysqlConnection.query(`INSERT INTO offering SET ?`, newOffering, (sqlErr, result, fields) => {
                 if (sqlErr) {
+                    console.log(sqlErr);
                     return res.status(500).json({
                         main: "Something went wrong. Please try again.",
                         devError: sqlErr,
