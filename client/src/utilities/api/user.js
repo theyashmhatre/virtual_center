@@ -1,13 +1,13 @@
 import axios from "axios";
+import api from ".";
 import { apiURL } from "../../../constants";
 
 export const login = async ({ username, password }) => {
   const endpoint = new URL("/api/user/login", apiURL).href;
-  return await axios
-    .post(endpoint, {
-      username,
-      password,
-    })
+  return await axios.post(endpoint, {
+    username,
+    password,
+  });
 };
 
 export const register = async ({
@@ -72,4 +72,9 @@ export const getSecurityQuestions = async () => {
 export const getAccountTypes = async () => {
   const endpoint = new URL("/api/user/get-account-types", apiURL).href;
   return await axios.get(endpoint);
+};
+
+export const getUserDetails = async (user_id) => {
+  const endpoint = `/api/user/profile/${user_id}`;
+  return await api.post(endpoint);
 };
