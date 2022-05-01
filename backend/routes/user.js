@@ -479,6 +479,46 @@ router.post("/reset-password/:username/:token", (req, res) => {
   );
 });
 
+router.post("/change-password", passport.authenticate("jwt", { session: false }), (req, res) => {
+  try{
+
+    const { password, confirmPassword } = req.body;
+    const userId = res.req.user.user_id;
+
+    let errors = {};
+
+      errors = passwordsValidation(password, confirmPassword, errors);
+
+      //Check validation
+      if (!isEmptyObject(errors)) return res.status(400).json(errors);
+
+      bcrypt.genSalt(10, (err, salt) => {
+        //encrypting user's password
+        bcrypt.hash(password, salt, (err, hash) => {
+          if (err) console.log("bcrypt error for password", err);
+          mysqlConnection.query(
+            `UPDATE user SET password = "${hash}" WHERE user_id = "${userId}"`,
+            (err, result, fields) => {
+              if (err) {
+                console.log(err);
+              } else {
+                console.log("User Password Updated");
+                return res.status(201).json({ main: "Password is updated" });
+              }
+            }
+          );
+        });
+      });
+  } catch(error){
+    console.log(error);
+    return res.status(500).json({
+      main: "Something went wrong",
+      devError: error,
+      devMsg: "Error occured while changing user's password",
+    });
+  }
+})
+
 router.get("/get-security-questions", (req, res) => {
   mysqlConnection.query(
     "Select question_id as securityQuestionId, question_text as securityQuestionText from security_question",

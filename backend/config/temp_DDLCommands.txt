@@ -48,12 +48,12 @@ CREATE TABLE `challenge` (
 
 > offering table
 CREATE TABLE `offering` (
-  `offering_id` int NOT NULL,
+  `offering_id` int NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NOT NULL,
   `description` TEXT NOT NULL,
   `owner_name` varchar(100) NOT NULL,
   `owner_email` varchar(100) NOT NULL,
-  `attachment` varchar(100) NOT NULL,
+  `attachment` LONGBLOB NOT NULL,
   `industry_name` varchar(100) NOT NULL,
   PRIMARY KEY (`offering_id`),
   UNIQUE KEY `offering_id_UNIQUE` (`offering_id`)
