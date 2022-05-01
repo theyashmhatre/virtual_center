@@ -61,3 +61,19 @@ export const forgotPasswordInputValidation = ({
   
   return errors;
 };
+
+export const updateProfileInputValidation = ({
+  name,
+  email,
+  contact,
+}) => {
+  errors = {}
+
+  if (!name) errors.name = "Name is required";
+
+  if (!email) errors.email = "Username is required";
+
+  if (!contact) errors.contact = "Username is required";
+  
+  return errors;
+};
