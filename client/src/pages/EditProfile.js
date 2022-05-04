@@ -97,13 +97,13 @@ const EditProfile = () => {
 
   return (
     <MainLayout role={roleIds["user"]}>
-      <div className="my-10">
+      <div className="py-10">
         <h1 className="text-center text-2xl block uppercase tracking-wide text-gray-700 font-bold mb-2">
           User Profile
         </h1>
-        <div className="flex  border-2 mx-32">
-          <div className="w-1/2 px-32 pt-10">
-            <div className="flex flex-wrap -mx-3 mb-6">
+        <div className="flex border-2 mx-32 my-10">
+          <div className="w-1/2 pl-24 pr-12 py-10">
+            <div className="flex flex-wrap my-5">
               <div className="w-full md:w-1/2 px-3 md:mb-0">
                 <label
                   className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
@@ -122,7 +122,7 @@ const EditProfile = () => {
                 />
               </div>
             </div>
-            <div className="flex flex-wrap -mx-3 mb-6">
+            <div className="flex flex-wrap my-5">
               <div className="w-full md:w-1/2 px-3 md:mb-0">
                 <label
                   className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
@@ -146,7 +146,7 @@ const EditProfile = () => {
                 )}
               </div>
             </div>
-            <div className="flex flex-wrap -mx-3 mb-6">
+            <div className="flex flex-wrap my-5">
               <div className="w-full px-3">
                 <label
                   className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
@@ -170,7 +170,7 @@ const EditProfile = () => {
                 )}
               </div>
             </div>
-            <div className="flex flex-wrap -mx-3 mb-6">
+            <div className="flex flex-wrap my-5">
               <div className="w-full md:w-1/2 px-3 md:mb-0">
                 <label
                   className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
@@ -189,7 +189,7 @@ const EditProfile = () => {
                 />
               </div>
             </div>
-            <div className="flex flex-wrap -mx-3 mb-6">
+            <div className="flex flex-wrap my-5">
               <div className="w-full px-3">
                 <label
                   className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
@@ -213,7 +213,7 @@ const EditProfile = () => {
                 )}
               </div>
             </div>
-            <div className="flex flex-wrap -mx-3 mb-2">
+            <div className="flex flex-wrap my-5">
               <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                 <label
                   className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
@@ -237,7 +237,7 @@ const EditProfile = () => {
                 )}
               </div>
             </div>
-            <div className="flex flex-wrap -mx-3 mb-2">
+            <div className="flex flex-wrap my-5">
               <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                 <label
                   htmlFor="Profile Image"
@@ -276,12 +276,12 @@ const EditProfile = () => {
               </button>
             </div>
           </div>
-          <div className="w-1/2 px-32 pt-10">
-            <h2 className="pt-16 text-center text-2xl block uppercase tracking-wide text-gray-700 font-bold mb-2">
+          <div className="w-1/2 pl-12 pr-24 py-10">
+            <h2 className="pt-16 text-center text-xl block uppercase tracking-wide text-gray-700 font-bold mb-2">
               Change Password
             </h2>
             <div>
-              <div className="flex flex-wrap -mx-3 mb-6">
+              <div className="flex flex-wrap my-5">
                 <div className="w-full px-3">
                   <label
                     className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
@@ -307,7 +307,7 @@ const EditProfile = () => {
                   )}
                 </div>
               </div>
-              <div className="flex flex-wrap -mx-3 mb-6">
+              <div className="flex flex-wrap my-5">
                 <div className="w-full px-3">
                   <label
                     className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
