@@ -14,7 +14,6 @@ const initialInputValues = {
   ownerName: '',
   ownerEmail: '',
   attachment: '',
-  attachmentValue: '',
   privacyCheck: false,
 };
 
@@ -27,26 +26,27 @@ const EditOffering = () => {
   const handleInputChange = (e) => {
     let { name, value, type, files } = e.target;
 
-    setInputValues({
-      ...inputValues,
-      [name]: type == "file" ? files[0] : value,
-    });
-  };
+    if (type == "file") {
+      const reader = new FileReader();
 
-  const handleEdit = (attachment) => {
-    editOffering({
-      offeringId: offeringId,
-      ...inputValues,
-      attachment: attachment,
-      offeringDescription: JSON.stringify(convertToRaw(inputValues.offeringDescription.getCurrentContent()))
-    })
-      .then(() => setSuccessMessage("Offering is updated!!"))
-      .catch((error) => {
-        if (error.response)
-          if (error.response.data) setErrors(error.response.data);
-          else setErrors({ main: "Some Error Occured, Try Again!" });
-        else setErrors({ main: "Some Error Occured, Try Again!" });
+      reader.onload = () => {
+        setInputValues({
+          ...inputValues,
+          attachment: reader.result,
+        });
+      };
+
+      reader.onerror = () => setErrors({
+        attachment: "Error while reading attachment"
       });
+      
+      reader.readAsDataURL(files[0]);
+    } else {
+      setInputValues({
+        ...inputValues,
+        [name]: value,
+      });
+    }
   };
 
   const onSubmit = (e) => {
@@ -55,45 +55,51 @@ const EditOffering = () => {
     setSuccessMessage('');
     const inputErrors = editOfferingInputValidation(inputValues);
 
-    if (isEmptyObject(inputErrors)) {
-      if (!inputValues.attachment) {
-        new Blob(
-          [new Uint8Array(inputValues.attachmentValue.data)],
-          {type: ".pdf"}
-        )
-          .text()
-          .then((result) => {
-            handleEdit(result);
-          });
-        return;
-      }
-
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        handleEdit(reader.result);
-      };
-
-      reader.onerror = () => setErrors({
-        main: "Error while reading attachment"
-      });
-      
-      reader.readAsDataURL(inputValues.attachment);
-    } else setErrors(inputErrors);
+    if (isEmptyObject(inputErrors))
+      editOffering({
+        offeringId: offeringId,
+        ...inputValues,
+        offeringDescription: JSON.stringify(convertToRaw(inputValues.offeringDescription.getCurrentContent()))
+      })
+        .then(() => setSuccessMessage("Offering is updated!!"))
+        .catch((error) => {
+          if (error.response)
+            if (error.response.data) setErrors(error.response.data);
+            else setErrors({ main: "Some Error Occured, Try Again!" });
+          else setErrors({ main: "Some Error Occured, Try Again!" });
+        });
+    else setErrors(inputErrors);
   };
 
   useEffect(() => {
     getSingleOffering(offeringId)
       .then(({ data }) => {
-        setInputValues({
-          offeringTitle: data.title,
-          offeringDescription: EditorState.createWithContent(
-            convertFromRaw(JSON.parse(data.description))
-          ),
-          attachmentValue: data.attachment,
-          ownerName: data.owner_name,
-          ownerEmail: data.owner_email,
+        setInputValues((prevInputValues) => {
+          return {
+            ...prevInputValues,
+            offeringTitle: data.title,
+            offeringDescription: EditorState.createWithContent(
+              convertFromRaw(JSON.parse(data.description))
+            ),
+            ownerName: data.owner_name,
+            ownerEmail: data.owner_email,
+          };
         });
+        
+        if (data.attachment)
+          new Blob(
+            [new Uint8Array(data.attachment.data)],
+            {type: ".pdf"}
+          )
+            .text()
+            .then((result) => {
+              setInputValues((prevInputValues) => {
+                return {
+                  ...prevInputValues,
+                  attachment: result,
+                };
+              });
+            });
       })
       .catch((error) => console.log(error));
   }, []);
@@ -174,7 +180,7 @@ const EditOffering = () => {
             )}
           </div>
           <div>
-            <label className="block mb-1 font-bold text-gray-500">Attachement</label>
+            <label className="block mb-1 font-bold text-gray-500">Attachment</label>
             <input
               type="file"
               accept=".pdf"
