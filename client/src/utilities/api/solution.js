@@ -25,6 +25,30 @@ export const createSolution = async ({
   );
 };
 
+export const editSolution = async ({
+  solutionId,
+  solutionTitle,
+  solutionDescription,
+  teamMembers,
+  attachment,
+}) => {
+  const endpoint = `/api/solution/edit/${solutionId}`;
+  return await api.post(
+    endpoint,
+    {
+      solutionTitle,
+      solutionDescription,
+      teamMembers,
+      attachment,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
+
 export const getSolutions = async (challengeId, pageNo = 1, limit = 5) => {
   const endpoint = `/api/solution/get-solutions/${challengeId}/${pageNo}/${limit}`;
   return await api.get(endpoint);

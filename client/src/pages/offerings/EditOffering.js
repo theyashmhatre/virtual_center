@@ -32,12 +32,12 @@ const EditOffering = () => {
       reader.onload = () => {
         setInputValues({
           ...inputValues,
-          attachment: reader.result,
+          [name]: reader.result,
         });
       };
 
       reader.onerror = () => setErrors({
-        attachment: "Error while reading attachment"
+        [name]: "Error while reading file"
       });
       
       reader.readAsDataURL(files[0]);
