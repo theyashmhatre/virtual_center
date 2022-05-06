@@ -8,7 +8,10 @@ import Comments from "../../components/Comments";
 import { Like } from "../../components/Like";
 import { AuthContext } from "../../contexts";
 import MainLayout from "../../layouts/MainLayout";
-import { deleteOffering, getSingleOffering } from "../../utilities/api/offering";
+import {
+  deleteOffering,
+  getSingleOffering,
+} from "../../utilities/api/offering";
 
 const Offering = () => {
   const [offering, setOffering] = useState({});
@@ -24,7 +27,7 @@ const Offering = () => {
         })
         .catch(() => {});
   }, []);
-  
+
   const onDelete = () => {
     deleteOffering(offeringId)
       .then(() => navigate("/main/offerings"))
@@ -55,7 +58,11 @@ const Offering = () => {
                   <button
                     className="border-2 border-black rounded-3xl hover:scale-110 text-center text-pink-700 p-2 ml-2"
                     onClick={() => {
-                      if(confirm("Are you sure, you want to delete this challenge?"))
+                      if (
+                        confirm(
+                          "Are you sure, you want to delete this challenge?"
+                        )
+                      )
                         onDelete();
                     }}
                   >

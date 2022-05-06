@@ -248,7 +248,7 @@ router.post("/login", (req, res) => {
   );
 });
 
-router.post(
+router.get(
   "/profile/:userId",
   passport.authenticate("jwt", { session: false }),
   function (req, res) {
@@ -262,7 +262,11 @@ router.post(
 
 
       mysqlConnection.query(
-        `SELECT user_id, employee_name, email, username, display_picture, location, contact_number, creation_date, account_type_id, security_question_id, role, status from user where user_id = ${userId}`,
+        `SELECT user_id, employee_name, email, username, display_picture,
+        location, contact_number, creation_date, a.account_name as accountName,
+        security_question_id, role, status FROM user u
+        INNER JOIN account_type a ON a.account_type_id = u.account_type_id
+        where u.user_id = ${userId}`,
         (sqlErr, result, fields) => {
         
           if (sqlErr) {
