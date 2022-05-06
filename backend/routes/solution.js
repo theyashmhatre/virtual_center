@@ -139,7 +139,7 @@ router.post(
             });
         } else if(!result.length){
            //if no solution found
-           return res.status(200).json({
+           return res.status(400).json({
             main: "No such solution exists",
             devMsg: "Solution ID is invalid",
           });
@@ -158,7 +158,7 @@ router.post(
                 });
             } else if(!result.length){
                 //if no team members found
-            return res.status(200).json({
+            return res.status(400).json({
               main: "No such team members exists",
               devMsg: "Team Members not found in db",
             });
@@ -167,7 +167,7 @@ router.post(
               let teamMembers = result.map(item => parseInt(item.username));
               // if user is not a team member
               if(teamMembers.indexOf(username) == -1){
-                  return res.status(200).json({
+                  return res.status(400).json({
                     main: "You don't have rights to update",
                     devMsg: "User is niether co-owner nor the team member",
                   })

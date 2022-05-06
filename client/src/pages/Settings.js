@@ -3,7 +3,12 @@ import { roleIds } from "../../constants";
 import MainLayout from "../layouts/MainLayout";
 import { getDeletedChallenges } from "../utilities/api/challenge";
 import { getDeletedOfferings } from "../utilities/api/offering";
-import { getAdminDetails, getUserDetails } from "../utilities/api/userDetails";
+import {
+  getAdminDetails,
+  getUserDetails,
+  updateStatusToActive,
+  updateStatusToInactive
+} from "../utilities/api/userDetails";
 
 const Settings = () => {
   const [users, setUsers] = useState([]);
@@ -36,6 +41,40 @@ const Settings = () => {
       })
       .catch((e) => console.log(e));
   }, []);
+
+  const handleStatusChange = (index, type) => {
+    let user;
+    if (type === roleIds["admin"])
+      user = admins[index];
+    else
+      user = users[index];
+    
+    if (user.status) {
+      updateStatusToInactive(user.username);
+
+      if (type === roleIds["admin"]) {
+        const newAdmins = [...admins];
+        newAdmins[index] = { ...admins[index], status: 0};
+        setAdmins(newAdmins);
+      } else {
+        const newUsers = [...users];
+        newUsers[index] = { ...users[index], status: 0};
+        setUsers(newUsers);
+      }
+    } else {
+      updateStatusToActive(user.username);
+      
+      if (type === roleIds["admin"]) {
+        const newAdmins = [...admins];
+        newAdmins[index] = { ...admins[index], status: 1};
+        setAdmins(newAdmins);
+      } else {
+        const newUsers = [...users];
+        newUsers[index] = { ...users[index], status: 1};
+        setUsers(newUsers);
+      }
+    }
+  };
  
   return (
     <MainLayout role={roleIds["super_admin"]}>
@@ -71,22 +110,30 @@ const Settings = () => {
                   {users.map((user, index) => (
                     <tr key={index}>
                       <td className="border p-2">
-                        {user.username}
+                        {users[index].username}
                       </td>
                       <td className="border p-2">
-                        {user.employee_name}
+                        {users[index].employee_name}
                       </td>
                       <td className="border p-2">
-                        {user.email}
+                        {users[index].email}
                       </td>
                       <td className="border p-2">
-                        {user.contact_number}
+                        {users[index].contact_number}
                       </td>
                       <td className="border p-2">
-                        {user.account_type}
+                        {users[index].account_type}
                       </td>
                       <td className="border p-2">
-                        {user.status == 1 ? "Active" : "Inactive"}
+                        <select
+                          className="py-2 border-2 border-gray-400 rounded-xl focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none"
+                          name="status"
+                          value={users[index].status}
+                          onChange={() => handleStatusChange(index, roleIds["user"])}
+                        >
+                          <option value={0} label="Inactive" />
+                          <option value={1} label="Active" />
+                        </select>
                       </td>
                     </tr>
                   ))}
@@ -126,22 +173,30 @@ const Settings = () => {
                   {admins.map((admin, index) => (
                     <tr key={index}>
                       <td className="border p-2">
-                        {admin.username}
+                        {admins[index].username}
                       </td>
                       <td className="border p-2">
-                        {admin.employee_name}
+                        {admins[index].employee_name}
                       </td>
                       <td className="border p-2">
-                        {admin.email}
+                        {admins[index].email}
                       </td>
                       <td className="border p-2">
-                        {admin.contact_number}
+                        {admins[index].contact_number}
                       </td>
                       <td className="border p-2">
-                        {admin.account_type}
+                        {admins[index].account_type}
                       </td>
                       <td className="border p-2">
-                        {admin.status == 1 ? "Active" : "Inactive"}
+                        <select
+                          className="py-2 border-2 border-gray-400 rounded-xl focus:border-green-400 text-gray-600 placeholder-zinc-400 outline-none"
+                          name="status"
+                          value={admins[index].status}
+                          onChange={() => handleStatusChange(index, roleIds["admin"])}
+                        >
+                          <option value={0} label="Inactive" />
+                          <option value={1} label="Active" />
+                        </select>
                       </td>
                     </tr>
                   ))}

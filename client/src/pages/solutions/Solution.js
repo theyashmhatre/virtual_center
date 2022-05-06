@@ -1,19 +1,25 @@
-import { faEnvelope, faSpinner, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import draftToHtml from "draftjs-to-html";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { Link } from "react-router-dom";
 import { postTypeId, roleIds } from "../../../constants";
 import { Attachment } from "../../components/Attachement";
 import Comments from "../../components/Comments";
 import { Like } from "../../components/Like";
+import { AuthContext } from "../../contexts";
 import MainLayout from "../../layouts/MainLayout";
-import { getSingleSolution, getTeamMembers } from "../../utilities/api/solution";
+import {
+  getSingleSolution,
+  getTeamMembers
+} from "../../utilities/api/solution";
 
 const Solution = () => {
   const [solution, setSolution] = useState({});
   const [teamMembers, setTeamMembers] = useState([]);
   const { solutionId } = useParams();
+  const context = useContext(AuthContext);
 
   useEffect(() => {
     if (solutionId) {
@@ -31,7 +37,7 @@ const Solution = () => {
         .catch(() => {});
     }
   }, []);
-  
+
   return (
     <MainLayout role={roleIds["user"]}>
       <div className="mx-16">
@@ -44,6 +50,15 @@ const Solution = () => {
               <div className="flex justify-end items-center w-full">
                 <Like postId={solutionId} typeId={postTypeId["solution"]} />
                 <Attachment attachmentData={solution.attachment} />
+                {solution.email !== context.auth.email ? null : (
+                  <div className="flex ml-2">
+                    <Link to={`/challenge/edit-solution/${solutionId}`}>
+                      <h2 className="border-2 border-black rounded-3xl hover:scale-110 text-center text-pink-700 p-2">
+                        Edit Solution
+                      </h2>
+                    </Link>
+                  </div>
+                )}
               </div>
             </div>
             <div>
@@ -73,8 +88,11 @@ const Solution = () => {
               <div>
                 <h1 className="text-lg pt-2 font-bold mt-2">Team Members</h1>
                 <div className="flex flex-row">
-                  {teamMembers.map((member) => (
-                    <div className="flex flex-col rounded-lg shadow-lg border-2 w-fit py-2 px-10 my-4 mr-4">
+                  {teamMembers.map((member, index) => (
+                    <div
+                      key={index}
+                      className="flex flex-col rounded-lg shadow-lg border-2 w-fit py-2 px-10 my-4 mr-4"
+                    >
                       <p className="font-semibold flex justify-center align-bottom">
                         <FontAwesomeIcon
                           icon={faUser}
