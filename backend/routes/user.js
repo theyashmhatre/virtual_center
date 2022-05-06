@@ -695,4 +695,86 @@ router.get("/get-admins", passport.authenticate("jwt", { session: false }), (req
   );
 });
 
+//Changing the status of the user or admin to active i.e, 1
+router.post("/active/:username", passport.authenticate("jwt", { session: false }), (req, res) => {
+  try{
+    let { username } = req.params;
+
+    if(!username)
+    return res.status(400).json({
+      main: "Invalid request",
+      devMsg: "No username found"
+    })
+
+    if(res.req.user.role != roles["super_admin"]){
+      return res.status(200).json({
+        main: "You don't have rights to update",
+        devMsg: "User is not super admin",
+       })
+    }
+    mysqlConnection.query(`UPDATE user SET status = 1 WHERE username = ?`,
+    [username],
+    (sqlErr, result, fields) => {
+      if(sqlErr){
+        res.status(500).json({
+          main: "Something went wrong. Please try again",
+          devError: sqlErr,
+          devMsg: "MySql query error",
+      })
+    } else {
+      res
+        .status(200)
+        .json({ main: "Status updated to Active Successfully." });
+    }
+  }
+)}catch(error){
+    return res.status(500).json({
+      main: "Something went wrong. Please try again",
+      devError: error,
+      devMsg: "Error occured while updating the status",
+    })
+  }
+})
+
+//Changing the status of the user or admin to inactive i.e, 0
+router.post("/inactive/:username", passport.authenticate("jwt", { session: false }), (req, res) => {
+  try{
+    let { username } = req.params;
+
+    if(!username)
+    return res.status(400).json({
+      main: "Invalid request",
+      devMsg: "No username found"
+    })
+
+    if(res.req.user.role != roles["super_admin"]){
+      return res.status(200).json({
+        main: "You don't have rights to update",
+        devMsg: "User is not super admin",
+       })
+    }
+    mysqlConnection.query(`UPDATE user SET status = 0 WHERE username = ?`,
+    [username],
+    (sqlErr, result, fields) => {
+      if(sqlErr){
+        res.status(500).json({
+          main: "Something went wrong. Please try again",
+          devError: sqlerr,
+          devMsg: "MySql query error",
+      })
+    } else {
+      res
+        .status(200)
+        .json({ main: "Status updated to Inactive Successfully." });
+    }
+  }
+)}catch(error){
+    return res.status(500).json({
+      main: "Something went wrong. Please try again",
+      devError: error,
+      devMsg: "Error occured while updating the status",
+    })
+  }
+})
+
 module.exports = router;

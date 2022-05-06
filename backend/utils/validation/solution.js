@@ -1,7 +1,7 @@
 const { isEmptyObject } = require("../utils");
 
 function createSolutionValidation(req, res) {
-  const { challengeId, solutionTitle, solutionDescription } = req.body;
+  const { challengeId, solutionTitle, solutionDescription, attachment } = req.body;
 
   const errors = {};
 
@@ -15,6 +15,8 @@ function createSolutionValidation(req, res) {
   if (!solutionTitle) errors.solutionTitle = "Solution Title cannot be empty";
 
   if (!solutionDescription) errors.solutionDescription = "Description cannot be empty";
+  
+  if(!attachment) errors.attachment = "Attachment cannot be empty";
 
   // if (!req.file || !req.file.originalname.match(/\.(doc|DOC|docx|DOCX|pptx|PPTX|pdf|PDF)$/)) errors.attachment = "Please choose a valid Word, PPT or PDF attachment for solution";
 
@@ -25,4 +27,32 @@ function createSolutionValidation(req, res) {
   };
 }
 
-module.exports = createSolutionValidation;
+function editSolutionValidation(req, res) {
+  const { solutionTitle, solutionDescription, attachment } = req.body;
+
+  const errors = {};
+
+  if (!res.req.user.user_id) {
+    errors.main = "Something went wrong. Please try again.";
+    errors.devError = "No userId found in request";
+  }
+
+  if (!solutionTitle) errors.solutionTitle = "Solution Title cannot be empty";
+
+  if (!solutionDescription) errors.solutionDescription = "Description cannot be empty";
+
+  if(!attachment) errors.attachment = "Attachment cannot be empty";
+
+  // if (!req.file || !req.file.originalname.match(/\.(doc|DOC|docx|DOCX|pptx|PPTX|pdf|PDF)$/)) errors.attachment = "Please choose a valid Word, PPT or PDF attachment for solution";
+
+
+  return {
+    errors,
+    isValid: isEmptyObject(errors),
+  };
+}
+
+module.exports = {
+  createSolutionValidation,
+  editSolutionValidation
+}

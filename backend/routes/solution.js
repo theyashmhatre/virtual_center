@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const mysqlConnection = require("../config/dbConnection");
-const createSolutionValidation = require("../utils/validation/solution");
+const { createSolutionValidation, editSolutionValidation } = require("../utils/validation/solution");
 const { generatePaginationValues } = require("../utils/utils");
 const passport = require("passport");
 
@@ -97,6 +97,115 @@ router.post(
     }
   }
 );
+
+router.post(
+  "/edit/:solutionId",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    try{
+      let { solutionId } = req.params;
+
+      if(!solutionId)
+        return res.status(400).json({
+          main: "Invalid Request",
+          devMsg: "No Solution id found",
+        });
+
+      const { errors, isValid } = editSolutionValidation(req, res);
+
+      if (!isValid) return res.status(400).json(errors);
+  
+
+      let {
+        solutionTitle,
+        solutionDescription,
+        attachment
+      } = req.body;
+      
+      const updatedSolution = {
+        title: solutionTitle,
+        description: solutionDescription,
+        attachment: attachment
+      }
+
+      mysqlConnection.query(
+        `SELECT * FROM solution WHERE solution_id = ${solutionId}`,
+        (sqlErr, result, fields) => {
+          if (sqlErr) {
+            return res.status(500).json({
+              main: "Something went wrong. Please try again.",
+              devError: sqlErr,
+              devMsg: "Error occured while fetching solution from db",
+            });
+        } else if(!result.length){
+           //if no solution found
+           return res.status(200).json({
+            main: "No such solution exists",
+            devMsg: "Solution ID is invalid",
+          });
+        } else {
+
+          let username = parseInt(res.req.user.username);
+
+          mysqlConnection.query(
+            `SELECT username FROM user_team WHERE solution_id = ${solutionId}`,
+            (sqlErr, result, fields) => {
+              if (sqlErr) {
+                return res.status(500).json({
+                  main: "Something went wrong. Please try again.",
+                  devError: sqlErr,
+                  devMsg: "Error occured while fetching solution team members from db",
+                });
+            } else if(!result.length){
+                //if no team members found
+            return res.status(200).json({
+              main: "No such team members exists",
+              devMsg: "Team Members not found in db",
+            });
+            } else{
+              console.log(result);
+              let teamMembers = result.map(item => parseInt(item.username));
+              // if user is not a team member
+              if(teamMembers.indexOf(username) == -1){
+                  return res.status(200).json({
+                    main: "You don't have rights to update",
+                    devMsg: "User is niether co-owner nor the team member",
+                  })
+              } else{
+
+                //Storing updated solution into db
+                mysqlConnection.query(
+                `UPDATE solution SET ?  WHERE solution_id = ?`,
+                [updatedSolution, solutionId],
+                (sqlErr, result, fields) => {
+                  if (sqlErr) {
+                    console.log(sqlErr);
+                    return res.status(500).json({
+                      main: "Something went wrong. Please try again.",
+                      devError: sqlErr,
+                      devMsg: "Error occured while updating solution in db",
+                    });
+                  } else {
+                    res
+                      .status(200)
+                      .json({ main: "Solution updated Successfully." });
+                  }
+                })
+              }
+            }
+            })
+        }
+        })
+    } catch(error){
+      console.log(error);
+      return res.status(500).json({
+        main: "Something went wrong",
+        devError: error,
+        devMsg: "Error occured while editing solution",
+      });
+    }
+  }
+)
 
 router.get(
   "/get-single-solution/:solutionId",
