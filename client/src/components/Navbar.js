@@ -1,7 +1,7 @@
 import { faAngleDown, faSearch, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext } from "react";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { Link, NavLink } from "react-router-dom";
 import { navigationData, roleIds } from "../../constants";
 import Log from "../../public/Log.png"
@@ -10,6 +10,7 @@ import { AuthContext } from "../contexts";
 const Navbar = () => {
   const context = useContext(AuthContext);
   const location = useLocation();
+  const navigate = useNavigate();
 
   return (
     <main className="flex-2 flex flex-col grow">
@@ -68,7 +69,10 @@ const Navbar = () => {
               )}
               <button
                 className="hover:bg-gray-200 w-full py-2 px-4 flex justify-start"
-                onClick={() => context.removeAuth()}
+                onClick={() => {
+                  context.removeAuth();
+                  navigate("/login");
+                }}
               >
                 Logout
               </button>
@@ -81,20 +85,26 @@ const Navbar = () => {
         className="flex gap-16 decoration-from-font font-medium bg-gray-rgb p-4"
       >
         {navigationData[location.pathname.split("/")[1]].map(
-          ({ title, link }, index) => (
-            <NavLink
-              key={index}
-              style={({ isActive }) => ({
-                color: isActive ? "rgb(190 24 93)" : "",
-                fontWeight: isActive ? "bold" : "",
-              })}
-              to={link}
-              className="text-xl"
-              end
-            >
-              {title}
-            </NavLink>
-          )
+          ({ title, link, roles }, index) => {
+            for (i in roles) {
+              if (context.auth.role == roles[i])
+                return (
+                  <NavLink
+                    key={index}
+                    style={({ isActive }) => ({
+                      color: isActive ? "rgb(190 24 93)" : "",
+                      fontWeight: isActive ? "bold" : "",
+                    })}
+                    to={link}
+                    className="text-xl"
+                    end
+                  >
+                    {title}
+                  </NavLink>
+                )
+            }
+            return null
+          }
         )}
       </div>
     </main>
