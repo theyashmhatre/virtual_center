@@ -88,31 +88,35 @@ const Solution = () => {
               <div>
                 <h1 className="text-lg pt-2 font-bold mt-2">Team Members</h1>
                 <div className="flex flex-row">
-                  {teamMembers.map((member, index) => (
-                    <div
-                      key={index}
-                      className="flex flex-col rounded-lg shadow-lg border-2 w-fit py-2 px-10 my-4 mr-4"
-                    >
-                      <p className="font-semibold flex justify-center align-bottom">
-                        <FontAwesomeIcon
-                          icon={faUser}
-                          size="sm"
-                          className="p-1"
-                        />
-                        {member.employee_name}
-                      </p>
-                      <div>
-                        <div className="flex justify-center">
+                  {teamMembers.map((member, index) => {
+                    if (member.email === solution.email)
+                      return null
+                    return (
+                      <div
+                        key={index}
+                        className="flex flex-col rounded-lg shadow-lg border-2 w-fit py-2 px-10 my-4 mr-4"
+                      >
+                        <p className="font-semibold flex justify-center align-bottom">
                           <FontAwesomeIcon
-                            icon={faEnvelope}
-                            size="lg"
-                            className=" p-1"
+                            icon={faUser}
+                            size="sm"
+                            className="p-1"
                           />
-                          <p className="font-serif">{member.email}</p>
+                          {member.employee_name}
+                        </p>
+                        <div>
+                          <div className="flex justify-center">
+                            <FontAwesomeIcon
+                              icon={faEnvelope}
+                              size="lg"
+                              className=" p-1"
+                            />
+                            <p className="font-serif">{member.email}</p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             )}

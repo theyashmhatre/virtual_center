@@ -74,28 +74,26 @@ const Solutions = () => {
               key={solution.solution_id}
               className="flex flex-col justify-between border-2 shadow-sm hover:shadow-xl rounded-lg m-2 p-4 w-24per md:w-1/2 sm:w-2/3 xs:w-5/6"
             >
-              <div>
-                <div className="rounded-lg bg-gradient-to-r from-pink-900 to-blue-grd border-gray-500 border-2 flex flex-col justify-between p-3">
-                  <div className="h-25per flex justify-center">
-                    <h2 className="text-2xl font-mono font-semibold text-white">
-                      {solution.title}
-                    </h2>
-                  </div>
+              <div className="h-25per rounded-lg bg-gradient-to-r from-pink-900 to-blue-grd border-gray-500 border-2 flex flex-col justify-between p-3">
+                <div className="flex justify-center">
+                  <h2 className="text-2xl font-mono font-semibold text-white">
+                    {solution.title}
+                  </h2>
                 </div>
-                <div className="p-2 font-serif flex items-center justify-center">
-                  <div>
-                    {!solution.description ? null : (
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html: draftToHtml(
-                            getTruncatedContentState(
-                              JSON.parse(solution.description)
-                            )
-                          ),
-                        }}
-                      />
-                    )}
-                  </div>
+              </div>
+              <div className="p-2 font-serif flex items-center justify-center">
+                <div>
+                  {!solution.description ? null : (
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: draftToHtml(
+                          getTruncatedContentState(
+                            JSON.parse(solution.description)
+                          )
+                        ),
+                      }}
+                    />
+                  )}
                 </div>
               </div>
               <div>
