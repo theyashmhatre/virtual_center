@@ -62,7 +62,11 @@ const Solution = () => {
             </div>
             <div>
               <h1 className="text-lg pt-2 font-bold mt-2">Owner</h1>
-              <User name={solution.employee_name} email={solution.email} />
+              <User
+                name={solution.employee_name}
+                email={solution.email}
+                displayPicture={solution.display_picture}
+              />
             </div>
             {!teamMembers.length ? null : (
               <div>
@@ -73,7 +77,11 @@ const Solution = () => {
                       return null
                     return (
                       <div key={index} className="mr-4">
-                        <User name={member.employee_name} email={member.email} />
+                        <User
+                          name={member.employee_name}
+                          email={member.email}
+                          displayPicture={member.display_picture}
+                        />
                       </div>
                     );
                   })}

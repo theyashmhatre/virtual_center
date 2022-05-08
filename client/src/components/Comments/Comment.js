@@ -1,8 +1,8 @@
-import { faThumbsUp, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import { apiURL } from "../../../constants";
 import { downvoteComment, upvoteComment } from "../../utilities/api/comment";
+import { DisplayPicture } from "../DisplayPicture";
 
 const Comment = ({ typeId, comment }) => {
   const [isLiked, setIsLiked] = useState(!!comment.isUpvoted);
@@ -31,20 +31,12 @@ const Comment = ({ typeId, comment }) => {
       {/* DO CHECK ID AGAIN */}
       <div className="flex flex-col w-10per justify-center align-middle">
         <div className="w-full flex justify-center mb-3">
-          <div className="bg-gray-200 border-2 rounded-full h-20 w-20">
-            {!comment.display_picture ? (
-              <FontAwesomeIcon
-                icon={faUser}
-                size="3x"
-                className=" pl-4 pt-2"
-              />
-            ) : (
-              <img
-                className="object-fill h-full rounded-3xl"
-                src={apiURL + "/public/images/" + comment.display_picture}
-                alt="User Picture"
-              />
-            )}
+          <div className="bg-gray-200 rounded-full h-20 w-20">
+            <DisplayPicture
+              displayPicture={comment.display_picture}
+              size="3x"
+              boxSize={20}
+            />
           </div>
         </div>
         <div className="w-full flex justify-center">

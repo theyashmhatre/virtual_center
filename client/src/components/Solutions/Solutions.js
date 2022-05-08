@@ -102,7 +102,11 @@ const Solutions = () => {
                   Posted on : {postedOn_date}
                 </p>
                 <div className="flex justify-center">
-                  <User name={solution.employee_name} email={solution.email} />
+                  <User
+                    name={solution.employee_name}
+                    email={solution.email}
+                    displayPicture={solution.display_picture}
+                  />
                 </div>
                 <div>
                   <Link to={`/challenge/solution/${solution.solution_id}`}>
