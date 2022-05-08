@@ -1,12 +1,13 @@
-import { faEnvelope, faSpinner, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
+import { monthNames } from "../../../constants";
 import { getSolutions } from "../../utilities/api/solution";
 import { getTruncatedContentState } from "../../utilities/utils";
-import { monthNames } from "../../../constants";
+import { User } from "../User";
 
 const Solutions = () => {
   const [solutions, setSolutions] = useState([]);
@@ -100,27 +101,8 @@ const Solutions = () => {
                 <p className="text-xs pl-2 text-gray-400">
                   Posted on : {postedOn_date}
                 </p>
-                <div className="flex flex-col">
-                  <div className="flex flex-col m-4 rounded shadow-lg border-2">
-                    <p className="font-semibold flex justify-center align-bottom">
-                      <FontAwesomeIcon
-                        icon={faUser}
-                        size="sm"
-                        className="p-1"
-                      />
-                      {solution.employee_name}
-                    </p>
-                    <div>
-                      <div className="flex justify-center">
-                        <FontAwesomeIcon
-                          icon={faEnvelope}
-                          size="lg"
-                          className=" p-1"
-                        />
-                        <p className="font-serif">{solution.email}</p>
-                      </div>
-                    </div>
-                  </div>
+                <div className="flex justify-center">
+                  <User name={solution.employee_name} email={solution.email} />
                 </div>
                 <div>
                   <Link to={`/challenge/solution/${solution.solution_id}`}>

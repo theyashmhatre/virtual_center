@@ -1,14 +1,11 @@
-import {
-  faEnvelope,
-  faSpinner,
-  faUser,
-} from "@fortawesome/free-solid-svg-icons";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import draftToHtml from "draftjs-to-html";
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { roleIds } from "../../../constants";
 import { Attachment } from "../../components/Attachement";
+import { User } from "../../components/User";
 import { AuthContext } from "../../contexts";
 import MainLayout from "../../layouts/MainLayout";
 import { getOfferings } from "../../utilities/api/offering";
@@ -111,27 +108,9 @@ const Offerings = () => {
                     </div>
                     <div>
                       <div className="flex flex-col">
-                        <div className="flex flex-col m-4 rounded shadow-lg border-2">
-                          <p className="font-semibold flex justify-center align-bottom">
-                            <FontAwesomeIcon
-                              icon={faUser}
-                              size="sm"
-                              className="p-1"
-                            />
-                            {offering.owner_name}
-                          </p>
-                          <div>
-                            <div className="flex justify-center">
-                              <FontAwesomeIcon
-                                icon={faEnvelope}
-                                size="lg"
-                                className=" p-1"
-                              />
-                              <p className="font-serif">{offering.owner_email}</p>
-                            </div>
-                          </div>
+                        <div className="flex justify-center">
+                          <User name={offering.owner_name} email={offering.owner_email} />
                         </div>
-
                         <div className="flex items-center">
                           <Attachment attachmentData={offering.attachment} />
                         </div>

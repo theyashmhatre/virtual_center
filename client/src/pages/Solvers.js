@@ -1,8 +1,7 @@
-import { faUser, faEnvelope } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { roleIds } from "../../constants";
+import { User } from "../components/User";
 import MainLayout from "../layouts/MainLayout";
 import { getSolvers } from "../utilities/api/solution";
 import { getAccountTypes } from "../utilities/api/user";
@@ -65,27 +64,8 @@ const Solvers = () => {
                   key={solver.id}
                   className="border-2 shadow-sm hover:shadow-xl rounded-lg lg:mb-0 mb-4 mr-4 w-24per md:w-1/2 sm:w-2/3 xs:w-5/6"
                 >
-                  <div className="flex flex-col">
-                    <div className="flex flex-col m-4 rounded shadow-lg border-2">
-                      <p className="font-semibold flex justify-center align-bottom">
-                        <FontAwesomeIcon
-                          icon={faUser}
-                          size="sm"
-                          className="p-1"
-                        />
-                        {solver.employee_name}
-                      </p>
-                      <div>
-                        <div className="flex justify-center">
-                          <FontAwesomeIcon
-                            icon={faEnvelope}
-                            size="lg"
-                            className=" p-1"
-                          />
-                          <p className="font-serif">{solver.email}</p>
-                        </div>
-                      </div>
-                    </div>
+                  <div className="flex justify-center">
+                    <User name={solver.employee_name} email={solver.email} />
                   </div>
                   <div>
                     <Link className="flex justify-center" to={``}>

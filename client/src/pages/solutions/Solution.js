@@ -1,5 +1,3 @@
-import { faEnvelope, faUser } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import draftToHtml from "draftjs-to-html";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
@@ -8,6 +6,7 @@ import { postTypeId, roleIds } from "../../../constants";
 import { Attachment } from "../../components/Attachement";
 import Comments from "../../components/Comments";
 import { Like } from "../../components/Like";
+import { User } from "../../components/User";
 import { AuthContext } from "../../contexts";
 import MainLayout from "../../layouts/MainLayout";
 import {
@@ -63,26 +62,7 @@ const Solution = () => {
             </div>
             <div>
               <h1 className="text-lg pt-2 font-bold mt-2">Owner</h1>
-              <div className="flex flex-col rounded-lg shadow-lg border-2 w-fit py-2 px-10 my-4">
-                <p className="font-semibold flex justify-center align-bottom">
-                  <FontAwesomeIcon
-                    icon={faUser}
-                    size="sm"
-                    className="p-1"
-                  />
-                  {solution.employee_name}
-                </p>
-                <div>
-                  <div className="flex justify-center">
-                    <FontAwesomeIcon
-                      icon={faEnvelope}
-                      size="lg"
-                      className=" p-1"
-                    />
-                    <p className="font-serif">{solution.email}</p>
-                  </div>
-                </div>
-              </div>
+              <User name={solution.employee_name} email={solution.email} />
             </div>
             {!teamMembers.length ? null : (
               <div>
@@ -92,28 +72,8 @@ const Solution = () => {
                     if (member.email === solution.email)
                       return null
                     return (
-                      <div
-                        key={index}
-                        className="flex flex-col rounded-lg shadow-lg border-2 w-fit py-2 px-10 my-4 mr-4"
-                      >
-                        <p className="font-semibold flex justify-center align-bottom">
-                          <FontAwesomeIcon
-                            icon={faUser}
-                            size="sm"
-                            className="p-1"
-                          />
-                          {member.employee_name}
-                        </p>
-                        <div>
-                          <div className="flex justify-center">
-                            <FontAwesomeIcon
-                              icon={faEnvelope}
-                              size="lg"
-                              className=" p-1"
-                            />
-                            <p className="font-serif">{member.email}</p>
-                          </div>
-                        </div>
+                      <div key={index} className="mr-4">
+                        <User name={member.employee_name} email={member.email} />
                       </div>
                     );
                   })}
