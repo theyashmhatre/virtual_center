@@ -759,7 +759,7 @@ router.post("/inactive/:username", passport.authenticate("jwt", { session: false
       if(sqlErr){
         res.status(500).json({
           main: "Something went wrong. Please try again",
-          devError: sqlerr,
+          devError: sqlErr,
           devMsg: "MySql query error",
       })
     } else {
@@ -773,6 +773,111 @@ router.post("/inactive/:username", passport.authenticate("jwt", { session: false
       main: "Something went wrong. Please try again",
       devError: error,
       devMsg: "Error occured while updating the status",
+    })
+  }
+})
+
+router.post("/change-to-admin/:username/:accountName", passport.authenticate("jwt", { session: false }), (req, res) => {
+  try{
+    let { username, accountName } = req.params;
+
+    if(!username || !accountName || username == null || accountName == null)
+    return res.status(400).json({
+      main: "Invalid request",
+      devMsg: `Either username or accountName is invalid. Username: ${username}, AccountName: ${accountName}`
+    })
+
+    if(res.req.user.role != roles["super_admin"]){
+      return res.status(200).json({
+        main: "You don't have rights to update",
+        devMsg: "User is not super admin",
+       })
+    }
+
+    mysqlConnection.query(`
+    SELECT u.employee_name FROM user u
+    INNER JOIN account_type a 
+    ON a.account_type_id = u.account_type_id AND a.account_name = ? AND u.role = 2
+    `,[accountName],
+    (sqlErr, result, fields) => {
+      if(sqlErr){
+        res.status(500).json({
+          main: "Something went wrong. Please try again",
+          devError: sqlErr,
+          devMsg: "MySql query error",
+      })
+    }else if(result.length > 0){
+        return res.status(200).json({
+          main: result[0].employee_name + " is admin of the " + accountName + ". Each account can have only one admin",
+          devMsg: "Already an admin exists in db for the given accountType"
+        })
+      } else {
+        mysqlConnection.query(`UPDATE user SET role = ? WHERE username = ?`,
+        [roles["admin"], username],
+        (sqlErr, result, fields) => {
+          if(sqlErr){
+            res.status(500).json({
+              main: "Something went wrong. Please try again",
+              devError: sqlErr,
+              devMsg: "MySql query error",
+          })
+        } else {
+          res
+            .status(200)
+            .json({ main: "Role updated to Admin Successfully." });
+        }
+        })
+      }
+    })
+  }catch(error){
+    console.log(error)
+    return res.status(500).json({
+      main: "Something went wrong. Please try again",
+      devError: error,
+      devMsg: "Error occured while making user as an admin",
+    })
+  }
+})
+
+router.post("/change-to-user/:username", passport.authenticate("jwt", { session: false }), (req, res) => {
+  try{
+    let { username, accountName } = req.params;
+
+    if(!username || username == null)
+    return res.status(400).json({
+      main: "Invalid request",
+      devMsg: `Username is invalid. Username: ${username}`
+    })
+
+    if(res.req.user.role != roles["super_admin"]){
+      return res.status(200).json({
+        main: "You don't have rights to update",
+        devMsg: "User is not super admin",
+       })
+    }
+
+        mysqlConnection.query(`UPDATE user SET role = ? WHERE username = ?`,
+          [roles["user"], username],
+          (sqlErr, result, fields) => {
+            if(sqlErr){
+              res.status(500).json({
+                main: "Something went wrong. Please try again",
+                devError: sqlErr,
+                devMsg: "MySql query error",
+            })
+          } else {
+            res
+              .status(200)
+              .json({ main: "Role updated to User Successfully." });
+          }
+        })
+
+  }catch(error){
+    console.log(error)
+    return res.status(500).json({
+      main: "Something went wrong. Please try again",
+      devError: error,
+      devMsg: "Error occured while making user as an admin",
     })
   }
 })
