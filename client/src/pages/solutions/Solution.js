@@ -6,7 +6,7 @@ import { postTypeId, roleIds } from "../../../constants";
 import { Attachment } from "../../components/Attachement";
 import Comments from "../../components/Comments";
 import { Like } from "../../components/Like";
-import { User } from "../../components/User";
+import { UserCard } from "../../components/UserCard";
 import { AuthContext } from "../../contexts";
 import MainLayout from "../../layouts/MainLayout";
 import {
@@ -62,7 +62,7 @@ const Solution = () => {
             </div>
             <div>
               <h1 className="text-lg pt-2 font-bold mt-2">Owner</h1>
-              <User
+              <UserCard
                 name={solution.employee_name}
                 email={solution.email}
                 displayPicture={solution.display_picture}
@@ -77,7 +77,7 @@ const Solution = () => {
                       return null
                     return (
                       <div key={index} className="mr-4">
-                        <User
+                        <UserCard
                           name={member.employee_name}
                           email={member.email}
                           displayPicture={member.display_picture}

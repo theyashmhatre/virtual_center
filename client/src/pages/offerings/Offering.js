@@ -6,7 +6,7 @@ import { postTypeId, roleIds } from "../../../constants";
 import { Attachment } from "../../components/Attachement";
 import Comments from "../../components/Comments";
 import { Like } from "../../components/Like";
-import { User } from "../../components/User";
+import { UserCard } from "../../components/UserCard";
 import { AuthContext } from "../../contexts";
 import MainLayout from "../../layouts/MainLayout";
 import {
@@ -52,7 +52,7 @@ const Offering = () => {
 
           <div className="flex items-center justify-between w-full my-2">
             <div className="flex">
-              <User name={offering.owner_name} email={offering.owner_email} />
+              <UserCard name={offering.owner_name} email={offering.owner_email} />
             </div>
             <div className="flex items-center">
               {context.auth.role !== roleIds["super_admin"] ? null : (

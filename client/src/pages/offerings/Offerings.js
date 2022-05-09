@@ -5,7 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { roleIds } from "../../../constants";
 import { Attachment } from "../../components/Attachement";
-import { User } from "../../components/User";
+import { UserCard } from "../../components/UserCard";
 import { AuthContext } from "../../contexts";
 import MainLayout from "../../layouts/MainLayout";
 import { getOfferings } from "../../utilities/api/offering";
@@ -109,7 +109,7 @@ const Offerings = () => {
                     <div>
                       <div className="flex flex-col">
                         <div className="flex justify-center">
-                          <User name={offering.owner_name} email={offering.owner_email} />
+                          <UserCard name={offering.owner_name} email={offering.owner_email} />
                         </div>
                         <div className="flex items-center">
                           <Attachment attachmentData={offering.attachment} />

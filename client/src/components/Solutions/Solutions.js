@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { monthNames } from "../../../constants";
 import { getSolutions } from "../../utilities/api/solution";
 import { getTruncatedContentState } from "../../utilities/utils";
-import { User } from "../User";
+import { UserCard } from "../UserCard";
 
 const Solutions = () => {
   const [solutions, setSolutions] = useState([]);
@@ -102,7 +102,7 @@ const Solutions = () => {
                   Posted on : {postedOn_date}
                 </p>
                 <div className="flex justify-center">
-                  <User
+                  <UserCard
                     name={solution.employee_name}
                     email={solution.email}
                     displayPicture={solution.display_picture}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { roleIds } from "../../constants";
-import { User } from "../components/User";
+import { UserCard } from "../components/UserCard";
 import MainLayout from "../layouts/MainLayout";
 import { getSolvers } from "../utilities/api/solution";
 import { getAccountTypes } from "../utilities/api/user";
@@ -65,7 +65,7 @@ const Solvers = () => {
                   className="border-2 shadow-sm hover:shadow-xl rounded-lg lg:mb-0 mb-4 mr-4 w-24per md:w-1/2 sm:w-2/3 xs:w-5/6"
                 >
                   <div className="flex justify-center">
-                    <User name={solver.employee_name} email={solver.email} />
+                    <UserCard name={solver.employee_name} email={solver.email} />
                   </div>
                   <div>
                     <Link className="flex justify-center" to={``}>
