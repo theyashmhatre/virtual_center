@@ -58,7 +58,8 @@ export const getTruncatedContentState = (rawContent, maxCharCount = 100) => {
       truncatedText = blocks[i].getText();
       currentLength += truncatedText.length;
 
-      truncatedBlocks.push(blocks[i]);
+      const state = ContentState.createFromText(truncatedText);
+      truncatedBlocks.push(state.getFirstBlock());
     }
   }
 

@@ -44,47 +44,50 @@ router.post(
           } else if(result.length > 0){
             let users = result.map(item => parseInt(item.username))
             // console.log(users)
-            let unRegisteredMembers = teamMembers.filter(item => users.indexOf(item) === -1);
+            let unRegisteredMembers = teamMembers.filter(item => users.indexOf(parseInt(item)) === -1);
             if(unRegisteredMembers.length > 0){
-              res.status(200).json({
+              res.status(400).json({
                 main: "These Members are not registered",
                 devMsg: unRegisteredMembers
               });
+            } else {
+              //If All the team members are valid then create a solution
+              const newIdea = {
+                challenge_id: challengeId,
+                user_id: res.req.user.user_id,
+                title: solutionTitle,
+                description: solutionDescription,
+                attachment:attachment
+              };
+      
+              mysqlConnection.query(
+                `INSERT INTO solution SET ?`,
+                newIdea,
+                (sqlErr, result, fields) => {
+                  if (sqlErr) {
+                    return mysqlConnection.rollback(function () {
+                      throw sqlErr;
+                    });
+                  }
+      
+                mysqlConnection.query(`INSERT INTO user_team (username, solution_id) VALUES ?`,[teamMembers.map(item => [item, result.insertId])],
+                (sqlErr, result, fields) => {
+                  if (sqlErr) {
+                    return mysqlConnection.rollback(function () {
+                      throw sqlErr;
+                    });
+                  }
+                });
+                  return res
+                    .status(201)
+                    .json({ devMsg: "New solution created successfully" });
+                }
+              );
             }
-          } else{
-
-            //If All the team members are valid then create a solution
-            const newIdea = {
-              challenge_id: challengeId,
-              user_id: res.req.user.user_id,
-              title: solutionTitle,
-              description: solutionDescription,
-              attachment:attachment
-            };
-      
-            mysqlConnection.query(
-              `INSERT INTO solution SET ?`,
-              newIdea,
-              (sqlErr, result, fields) => {
-                if (sqlErr) {
-                  return mysqlConnection.rollback(function () {
-                    throw sqlErr;
-                  });
-                }
-      
-              mysqlConnection.query(`INSERT INTO user_team (username, solution_id) VALUES ?`,[teamMembers.map(item => [item, result.insertId])],
-              (sqlErr, result, fields) => {
-                if (sqlErr) {
-                  return mysqlConnection.rollback(function () {
-                    throw sqlErr;
-                  });
-                }
-              });
-                return res
-                  .status(201)
-                  .json({ devMsg: "New solution created successfully" });
-              }
-            );
+          } else {
+            res.status(500).json({
+              main: "Something went wrong"
+            });
           }
         });
     } catch (error) {
