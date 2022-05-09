@@ -9,23 +9,23 @@ var colors = ["red", "yellow", "blue", "green", "gray", "pink", "orange", "voile
 
 var navigationData = {
   "main": [
-    { title: "Home", link: "/main" },
-    { title: "Our Offerings", link: "/main/offerings" }
+    { title: "Home", link: "/main", roles: [1, 2, 3] },
+    { title: "Our Offerings", link: "/main/offerings", roles: [1, 2, 3] }
   ],
   "challenge": [
-    { title: "Challenges", link: "/challenge/challenges" },
-    { title: "Dashboard", link: "/challenge/dashboard" },
-    { title: "Our Solvers", link: "/challenge/solvers" }
+    { title: "Challenges", link: "/challenge/challenges", roles: [1, 2, 3] },
+    { title: "Dashboard", link: "/challenge/dashboard", roles: [1, 2, 3] },
+    { title: "Our Solvers", link: "/challenge/solvers", roles: [1, 2, 3] }
   ],
   "support": [
-    { title: "Contact", link: "/support" }
+    { title: "Contact", link: "/support", roles: [1, 2, 3] }
   ],
   "help": [
-    { title: "help", link: "/help" }
+    { title: "help", link: "/help", roles: [1, 2, 3] }
   ],
   "account": [
-    { title: "Profile", link: "/account/profile" },
-    { title: "Settings", link: "/account/settings" }
+    { title: "Profile", link: "/account/profile", roles: [1, 2, 3] },
+    { title: "Settings", link: "/account/settings", roles: [1] }
   ]
 };
 

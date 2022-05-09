@@ -10,6 +10,16 @@ export const getAdminDetails = () => {
   return api.get(endpoint);
 };
 
+export const updateStatusToActive = (username) => {
+  const endpoint = `/api/user/active/${username}`;
+  return api.post(endpoint);
+};
+
+export const updateStatusToInactive = (username) => {
+  const endpoint = `/api/user/inactive/${username}`;
+  return api.post(endpoint);
+};
+
 export const profile = async (userId) => {
   const endpoint = `/api/user/profile/${userId}`;
   return await api.get(endpoint);
