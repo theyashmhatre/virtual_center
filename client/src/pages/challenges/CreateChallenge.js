@@ -68,7 +68,7 @@ const CreateChallenge = () => {
 
   return (
     <MainLayout role={roleIds["admin"]}>
-      <div className="my-10 mx-40">
+      <div className="min-h-screen my-10 mx-40 md:mx-24 sm:mx-10 xs:mx-5">
         <h1 className="text-3xl text-center font-bold my-5">
           Create Challenge
         </h1>
