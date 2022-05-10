@@ -13,7 +13,7 @@ export const UserCard = ({name, email, displayPicture}) => {
             boxSize={5}
           />
         </div>
-        <p className="font-semibold break-all">{name}</p>
+        <p className="font-semibold break-all text-center">{name}</p>
       </div>
       <div className="flex justify-center items-center">
         <FontAwesomeIcon
@@ -21,7 +21,7 @@ export const UserCard = ({name, email, displayPicture}) => {
           size="lg"
           className="p-1"
         />
-        <p className="font-serif break-all">{email}</p>
+        <p className="font-serif break-all text-center">{email}</p>
       </div>
     </div>
   );
