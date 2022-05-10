@@ -20,7 +20,7 @@ const ChallengeCard = ({ challenge }) => {
     
     const temp = new Date(challenge.end_date);
     setEndDate(
-      temp.getDate()-1 +
+      temp.getDate() +
       " " +
       monthNames[temp.getMonth()] +
       " " +
@@ -36,20 +36,20 @@ const ChallengeCard = ({ challenge }) => {
 
   return (
     <div
-      className="border-2 h-70v lg:mb-0 mb-4 mr-3 w-24per md:w-1/2 sm:w-2/3 xs:w-5/6"
+      className="flex flex-col border-2 m-3 w-96"
     >
-      <div className="h-40per">
+      <div className="h-52">
         <img
           className="object-fill h-full w-full"
           src={coverImage}
           alt="challenge cover"
         />
       </div>
-      <div className="h-60per border-gray-500 border-2 flex flex-col justify-between p-3">
-        <div className="h-25per flex items-center">
+      <div className="h-full border-gray-500 border-2 flex flex-col justify-between p-3">
+        <div className="font-bold">
           <h2>{challenge.title}</h2>
         </div>
-        <div className="h-10per flex items-center">
+        <div className="flex items-center my-4">
           <div
             dangerouslySetInnerHTML={{
               __html: draftToHtml(
@@ -60,27 +60,25 @@ const ChallengeCard = ({ challenge }) => {
             }}
           />
         </div>
-        <div className="flex flex-col">
-          <div className=" flex items-center mb-1">
-            <button className="bg-pink-700 px-1 rounded mr-2">
-              Open
-            </button>
-            <p>Until {endDate}</p>
-          </div>
+        <div className="flex items-center">
+          <button className="bg-pink-700 px-1 rounded mr-2">
+            Open
+          </button>
+          <p>Until {endDate}</p>
         </div>
-        <div className="flex flex-row">
+        <div className="flex flex-wrap my-3">
           {tags.map((tag) => {
             return (
               <div
                 key={tag}
-                className="bg-gray-400 rounded p-0.5 mr-1"
+                className="bg-gray-400 rounded p-0.5 m-1"
               >
                 {tag}
               </div>
             );
           })}
           {totalTags > 3 ? (
-            <div className="bg-gray-400 rounded p-0.5 mr-1">
+            <div className="bg-gray-400 rounded p-0.5 m-1">
               +{totalTags - 3}
             </div>
           ) : (
