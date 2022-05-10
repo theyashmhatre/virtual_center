@@ -788,48 +788,50 @@ router.post("/change-to-admin/:username", passport.authenticate("jwt", { session
     })
 
     if(res.req.user.role != roles["super_admin"]){
-      return res.status(200).json({
+      return res.status(400).json({
         main: "You don't have rights to update",
         devMsg: "User is not super admin",
-       })
+      })
     }
 
     mysqlConnection.query(`
-    SELECT u.employee_name, a.account_name FROM user u
-    INNER JOIN account_type a 
-    ON a.account_type_id = u.account_type_id AND u.role = 2 AND
-     a.account_type_id IN (SELECT account_type_id FROM user WHERE username = ?)
-    `,[username],
-    (sqlErr, result, fields) => {
-      if(sqlErr){
-        res.status(500).json({
-          main: "Something went wrong. Please try again",
-          devError: sqlErr,
-          devMsg: "MySql query error",
-      })
-    }else if(result.length > 0){
-        return res.status(200).json({
-          main: result[0].employee_name + " is admin of the " + result[0].account_name + ". Each account can have only one admin",
-          devMsg: "Already an admin exists in db for the given accountType"
-        })
-      } else {
-        mysqlConnection.query(`UPDATE user SET role = ? WHERE username = ?`,
-        [roles["admin"], username],
-        (sqlErr, result, fields) => {
-          if(sqlErr){
-            res.status(500).json({
-              main: "Something went wrong. Please try again",
-              devError: sqlErr,
-              devMsg: "MySql query error",
+      SELECT u.employee_name, a.account_name FROM user u
+      INNER JOIN account_type a 
+      ON a.account_type_id = u.account_type_id AND u.role = ${roles["admin"]} AND
+      a.account_type_id IN (SELECT account_type_id FROM user WHERE username = ?)
+      `,[username],
+      (sqlErr, result, fields) => {
+        if(sqlErr){
+          res.status(500).json({
+            main: "Something went wrong. Please try again",
+            devError: sqlErr,
+            devMsg: "MySql query error",
+          })
+        }else if(result.length > 0){
+          return res.status(400).json({
+            main: result[0].employee_name + " is admin of the " + result[0].account_name + ". Each account can have only one admin",
+            devMsg: "Already an admin exists in db for the given accountType"
           })
         } else {
-          res
-            .status(200)
-            .json({ main: "Role updated to Admin Successfully." });
+          mysqlConnection.query(`UPDATE user SET role = ? WHERE username = ?`,
+            [roles["admin"], username],
+            (sqlErr, result, fields) => {
+              if(sqlErr){
+                res.status(500).json({
+                  main: "Something went wrong. Please try again",
+                  devError: sqlErr,
+                  devMsg: "MySql query error",
+                })
+              } else {
+                res
+                  .status(200)
+                  .json({ main: "Role updated to Admin Successfully." });
+              }
+            }
+          )
         }
-        })
       }
-    })
+    )
   }catch(error){
     console.log(error)
     return res.status(500).json({
@@ -851,27 +853,27 @@ router.post("/change-to-user/:username", passport.authenticate("jwt", { session:
     })
 
     if(res.req.user.role != roles["super_admin"]){
-      return res.status(200).json({
+      return res.status(400).json({
         main: "You don't have rights to update",
         devMsg: "User is not super admin",
        })
     }
 
-        mysqlConnection.query(`UPDATE user SET role = ? WHERE username = ?`,
-          [roles["user"], username],
-          (sqlErr, result, fields) => {
-            if(sqlErr){
-              res.status(500).json({
-                main: "Something went wrong. Please try again",
-                devError: sqlErr,
-                devMsg: "MySql query error",
-            })
-          } else {
-            res
-              .status(200)
-              .json({ main: "Role updated to User Successfully." });
-          }
+    mysqlConnection.query(`UPDATE user SET role = ? WHERE username = ?`,
+      [roles["user"], username],
+      (sqlErr, result, fields) => {
+        if(sqlErr){
+          res.status(500).json({
+            main: "Something went wrong. Please try again",
+            devError: sqlErr,
+            devMsg: "MySql query error",
         })
+      } else {
+        res
+          .status(200)
+          .json({ main: "Role updated to User Successfully." });
+      }
+    })
 
   }catch(error){
     console.log(error)

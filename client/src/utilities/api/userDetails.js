@@ -20,6 +20,16 @@ export const updateStatusToInactive = (username) => {
   return api.post(endpoint);
 };
 
+export const changeUserToAdmin = (username) => {
+  const endpoint = `/api/user/change-to-admin/${username}`;
+  return api.post(endpoint);
+};
+
+export const changeAdminToUser = (username) => {
+  const endpoint = `/api/user/change-to-user/${username}`;
+  return api.post(endpoint);
+};
+
 export const profile = async (userId) => {
   const endpoint = `/api/user/profile/${userId}`;
   return await api.get(endpoint);
