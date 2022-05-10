@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { roleIds } from "../../constants";
 import { UserCard } from "../components/UserCard";
 import MainLayout from "../layouts/MainLayout";
@@ -36,13 +35,13 @@ const Solvers = () => {
 
   return (
     <MainLayout role={roleIds["user"]}>
-      <div className="flex flex-col items-center px-10 py-5">
+      <div className="flex flex-col items-center min-h-screen my-10 mx-32 lg:mx-24 md:mx-16 sm:mx-10 xs:mx-5">
         <h1 className="text-3xl text-center font-bold mt-2">Our Solvers</h1>
         <div className="w-full">
           <div className="flex flex-wrap flex-start mt-10">
             <h2 className="mr-2 ">Account type :</h2>
             <select
-              className="border-2 px-2"
+              className="border-2 px-2 xs:w-40"
               name="accountTypeId"
               value={accountTypeId}
               onChange={(e) => setAccountTypeId(Number(e.target.value))}
@@ -57,22 +56,22 @@ const Solvers = () => {
               ))}
             </select>
           </div>
-          <div className="border-2 mt-6 p-4 min-h-100">
-            <div className="flex flex-wrap md:flex-col sm:flex-col md:items-center sm:items-center mt-5">
+          <div className="border-2 my-5 p-5 xs:p-1 min-h-100">
+            <div className="flex flex-wrap sm:justify-center">
               {solvers.map((solver) => (
                 <div
                   key={solver.id}
-                  className="border-2 shadow-sm hover:shadow-xl rounded-lg lg:mb-0 mb-4 mr-4 w-24per md:w-1/2 sm:w-2/3 xs:w-5/6"
+                  className="border-2 shadow-sm hover:shadow-xl rounded-lg m-2 p-5 xs:p-2"
                 >
-                  <div className="flex justify-center">
-                    <UserCard name={solver.employee_name} email={solver.email} />
-                  </div>
-                  <div>
-                    <Link className="flex justify-center" to={``}>
-                      <h2 className="text-center m-4 w-20 p-1 rounded-lg bg-pink-700 text-white">
+                  <div className="flex flex-col items-center">
+                    <div className="w-fit">
+                      <UserCard name={solver.employee_name} email={solver.email} />
+                    </div>
+                    <div>
+                      <button className="text-center m-4 w-20 p-1 rounded-lg bg-pink-700 text-white">
                         Connect
-                      </h2>
-                    </Link>
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
