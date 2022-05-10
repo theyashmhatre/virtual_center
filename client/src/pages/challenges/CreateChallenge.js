@@ -88,7 +88,7 @@ const CreateChallenge = () => {
               placeholder="Type the challenge title here"
               className="w-full border-2 border-gray-200 p-3 rounded-lg outline-none focus:border-purple-500"
             />
-            <label htmlFor="agree" className="ml-2 text-gray-400 text-sm">
+            <label htmlFor="agree" className="ml-2 text-gray-400 text-sm sm:text-xs">
               A crisp and clear title attracts more readers
             </label>
             {!errors.title ? null : (
@@ -181,7 +181,7 @@ const CreateChallenge = () => {
                 });
               }}
             />
-            <label htmlFor="tags" className="ml-2 text-gray-400 text-sm">
+            <label htmlFor="tags" className="ml-2 text-gray-400 text-sm sm:text-xs">
               Please use meaningful tags that makes it easy for others to
               discover your content.
             </label>

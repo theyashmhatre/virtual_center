@@ -1,8 +1,8 @@
 import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getTruncatedContentState } from "../../utilities/utils";
 import { monthNames } from "../../../constants";
+import { getTruncatedContentState } from "../../utilities/utils";
 
 const ChallengeCard = ({ challenge }) => {
   const [endDate, setEndDate] = useState();
@@ -71,14 +71,14 @@ const ChallengeCard = ({ challenge }) => {
             return (
               <div
                 key={tag}
-                className="bg-gray-400 rounded p-0.5 m-1"
+                className="bg-gray-400 rounded-xl py-1 px-2 m-1"
               >
                 {tag}
               </div>
             );
           })}
           {totalTags > 3 ? (
-            <div className="bg-gray-400 rounded p-0.5 m-1">
+            <div className="bg-gray-400 rounded-xl py-1 px-2 m-1">
               +{totalTags - 3}
             </div>
           ) : (
