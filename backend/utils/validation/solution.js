@@ -52,7 +52,30 @@ function editSolutionValidation(req, res) {
   };
 }
 
+function messageValidation(req, res){
+  const { message } = req.body;
+  const { toUser } = req.params;
+
+  const errors = {};
+
+  if (!res.req.user.user_id) {
+    errors.main = "Something went wrong. Please try again.";
+    errors.devError = "No userId found in request";
+  }
+
+  if (!message) errors.message = "Message cannot be empty";
+
+  if (!toUser) errors.toUser = "Sender's ID cannot be empty";
+
+  return {
+    errors,
+    isValid: isEmptyObject(errors),
+  };
+
+}
+
 module.exports = {
   createSolutionValidation,
-  editSolutionValidation
+  editSolutionValidation,
+  messageValidation
 }
