@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const mysqlConnection = require("../config/dbConnection");
-const { createSolutionValidation, editSolutionValidation } = require("../utils/validation/solution");
+const { createSolutionValidation, editSolutionValidation, messageValidation } = require("../utils/validation/solution");
 const { generatePaginationValues } = require("../utils/utils");
 const passport = require("passport");
 
@@ -408,448 +408,11 @@ router.get(
   }
 );
 
-router.post("/like/:solutionId",
- passport.authenticate("jwt", {session:false}),
-  (req,res) =>{
-    try{
-      const { solutionId } = req.params;
-      const userId = res.req.user.user_id;
-
-      if (!solutionId || !userId || solutionId == null || userId == null) 
-      return res.status(400).json({ 
-        main: "Something went wrong. Please try again", 
-        devMsg: `Either solutionId or userId is invalid. 
-        solutionId: ${solutionId} userId: ${userId}` })
-
-      const newLike = {
-        post_id: solutionId,
-        user_id: userId,
-        type_id: 2
-      };
-
-      mysqlConnection.query(`SELECT * FROM likes WHERE user_id=${userId} AND post_id=${solutionId} AND type_id = 2`,
-      (sqlErr, result, fields) => {
-        if (sqlErr) {
-          return res.status(500).json({
-              main: "Something went wrong. Please try again.",
-              devError: sqlErr,
-              devMsg: "Error occured while inserting like into db",
-          });
-      } else if(!result[0]){
-        mysqlConnection.query(`INSERT INTO likes SET ?`,
-        newLike,
-        (sqlErr, result, fields) => {
-          if (sqlErr) {
-            return res.status(500).json({
-                main: "Something went wrong. Please try again.",
-                devError: sqlErr,
-                devMsg: "Error occured while inserting like into db",
-            });
-        } else {
-          res.status(200).json({main: "Solution Liked Successfully"});
-          }
-        })
-      } else {
-        // var likes = result[0].likes ^ 1; 
-        mysqlConnection.query(`DELETE FROM likes WHERE user_id=${userId} AND post_id=${solutionId} AND type_id = 2`,
-        (sqlErr, result, fields) => {
-          if(sqlErr) {
-            return res.status(500).json({
-              main: "Something went wrong. Please try again.",
-              devError: sqlErr,
-              devMsg: "Error occured while updating like to db",
-          });
-          } else {
-            return res.status(201).json({ main: "Solution unliked successfully" });
-          }
-        });
-      }
-      })
-    }catch(error){
-      return res.status(500).json({
-        main:"Something went wrong. Please try again.",
-        devError:error,
-        devMsg:"Error occured while adding like"
-      });
-    }
-});
-
-router.get("/get-likes/:solutionId",
-passport.authenticate("jwt", { session: false }), 
-(req, res) => {
-  try{
-
-    const { solutionId } = req.params;
-    const userId = res.req.user.user_id;
-
-    if (!solutionId || !userId || solutionId == null || userId == null)
-            return res.status(400).json({ main: "Something went wrong. Please try again",
-             devMsg: `Either solutionId or userId is invalid. SolutionId: ${solutionId} userId: ${userId}` })
-
-    let noOfLikes = 0;
-    mysqlConnection.query(`SELECT COUNT(*) as likesCount from likes where post_id = ${solutionId} AND type_id = 2`,
-    (sqlErr, result, fields) => {
-      if (sqlErr) {
-        return res.status(500).json({
-           main: "Something went wrong. Please try again.",
-           devError: sqlErr,
-           devMsg: "Error occured while checking if user has liked the post",
-    });
-  } else {
-    noOfLikes = (!result[0]) ? 0 : (result[0].likesCount)
-  }
-    })
-
-    mysqlConnection.query(`SELECT COUNT(*) as likesCount from likes where post_id = ${solutionId} AND user_id = ${userId} AND type_id = 2`,
-     (sqlErr, result, fields) => {
-      if (sqlErr) {
-          return res.status(500).json({
-             main: "Something went wrong. Please try again.",
-             devError: sqlErr,
-             devMsg: "Error occured while checking if user has liked the post",
-      });
-      } else {
-      const { likesCount } = result[0];
-      console.log(result)
-      const isLiked = likesCount > 0 ? true : false;
-      return res.status(201).json({ isLiked: isLiked, noOfLikes: noOfLikes });
-     }
-  });  
-  } catch(err){
-    return res.status(500).json({
-      main: "Something went wrong. Please try again.",
-      devError: error,
-      devMsg: "Error occured while executing check like api",
-  });
-  }
-})
-
-router.post("/:solutionId/comment", 
-passport.authenticate("jwt", { session: false }), 
-(req, res) => {
-  try{
-    const { solutionId } = req.params;
-    const { commentText } = req.body;
-    const userId = res.req.user.user_id;
-
-    if (!solutionId || !userId || solutionId == null || userId == null || !commentText) 
-    return res.status(400).json({ 
-      main: "Something went wrong. Please try again", 
-      devMsg: `Either solutionId, userId, commentText is invalid. 
-      SolutionId: ${solutionId} userId: ${userId} commentText: ${commentText}` })
-
-      const newComment = {
-        user_id: userId,
-        post_id: solutionId,
-        type_id: 2,
-        comment_text: commentText
-      };
-     
-      mysqlConnection.query(`INSERT INTO comment SET ?`, 
-      newComment,
-      (sqlErr, result, fields) => {
-        if(sqlErr) {
-          return res.status(500).json({
-            main: "Something went wrong. Please try again.",
-            devError: sqlErr,
-            devMsg: "Error occured while adding comment to db",
-        });
-        } else {
-          return res.status(201).json({ main: "Comment added successfully" });
-        }
-      });
-  }catch(error){
-    return res.status(500).json({
-      main: "Something went wrong. Please try again.",
-      devError: error,
-      devMsg: "Error occured while adding comment to db",
-  });
-  }
-});
-
-router.get(
-  "/get-comments/:solutionId/:pageNum/:limit",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    try {
-      const { solutionId } = req.params; //current page number
-
-      let { limit, pageNum, offset } = generatePaginationValues(req);
-
-      if(!solutionId)
-      return res
-      .status(400)
-      .json({ main: "Something went wrong. Please try again", devMsg: "No solution id found" });
-      
-
-      mysqlConnection.query(
-        `SELECT c.*, u.employee_name, u.email, u.display_picture
-         FROM comment c
-         INNER JOIN user u
-         ON c.user_id = u.user_id
-         WHERE c.post_id = ${solutionId} AND type_id = 2
-         ORDER BY c.posted_on DESC
-         LIMIT ? OFFSET ?
-         `,
-        [limit, offset],
-        (sqlErr, result, fields) => {
-          if (sqlErr) {
-            console.log(sqlErr);
-            return res.status(500).json({
-              main: "Something went wrong. Please try again.",
-              devError: sqlErr,
-              devMsg: "Error occured while fetching solution comments from db",
-            });
-          } else if (!result.length) {
-            return res.status(200).json({ main: "No solution comments found." });
-          } else {
-            let data = {
-              comments_count: result.length,
-              page_number: pageNum,
-              comments_list: result,
-            };
-            return res.status(200).json(data);
-          }
-        }
-      );
-    } catch (error) {
-      console.log(error);
-      return res.status(500).json({
-        main: "Something went wrong. Please try again.",
-        devError: error,
-        devMsg: "Error occured while fetching solution comments",
-      });
-    }
-  }
-);
-
-
-
-router.post("/upvote/:commentId",
-passport.authenticate("jwt", { session: false }), 
-(req, res) => {
-  try{
-    const { commentId } = req.params;
-    const userId = res.req.user.user_id;
-
-    if (!commentId || !userId || commentId == null || userId == null)
-            return res.status(400).json({ main: "Something went wrong. Please try again",
-             devMsg: `Either commentId or userId is invalid. CommentId: ${commentId} userId: ${userId}` })
-
-    const newUpvote = {
-      user_id: userId,
-      comment_id: commentId,
-      upvotes:1
-    }
-
-    mysqlConnection.query(`SELECT * FROM upvote WHERE user_id=${userId} AND comment_id=${commentId}`,
-    (sqlErr, result, fields) => {
-      if(sqlErr) {
-        return res.status(500).json({
-          main: "Something went wrong. Please try again.",
-          devError: sqlErr,
-          devMsg: "Error occured while adding upvotes to db",
-      });
-      } else if(!result[0]) {
-        mysqlConnection.query(`INSERT INTO upvote SET ?`,
-        newUpvote,
-        (sqlErr, result, fields) => {
-          if(sqlErr) {
-            return res.status(500).json({
-              main: "Something went wrong. Please try again.",
-              devError: sqlErr,
-              devMsg: "Error occured while adding upvotes to db",
-          });
-          } else {
-            return res.status(201).json({ main: "Upvoted successfully" });
-          }
-        });
-      } else {
-        mysqlConnection.query(`UPDATE upvote SET upvotes=1 WHERE user_id=${userId} AND solution_comment_id=${commentId}`,
-        (sqlErr, result, fields) => {
-          if(sqlErr) {
-            return res.status(500).json({
-              main: "Something went wrong. Please try again.",
-              devError: sqlErr,
-              devMsg: "Error occured while adding upvotes to db",
-          });
-          } else {
-            return res.status(201).json({ main: "Upvoted successfully" });
-          }
-        });
-      }
-    })
-  } catch(error){
-    return res.status(500).json({
-      main: "Something went wrong. Please try again.",
-      devError: error,
-      devMsg: "Error occured while adding upvotes to db",
-  });
-  }
-});
-
-router.post("/downvote/:commentId",
-passport.authenticate("jwt", { session: false }), 
-(req, res) => {
-  try{
-
-    const { commentId } = req.params;
-    const userId = res.req.user.user_id;
-
-    if (!commentId || !userId || commentId == null || userId == null)
-            return res.status(400).json({ main: "Something went wrong. Please try again",
-             devMsg: `Either commentId or userId is invalid. CommentId: ${commentId} userId: ${userId}` })
-
-    const newDownvote = {
-      user_id: userId,
-      comment_id: commentId,
-      upvotes:-1
-    }
-
-    mysqlConnection.query(`SELECT * FROM upvote WHERE user_id="${userId}" AND comment_id="${commentId}"`,
-    (sqlErr, result, fields) => {
-      if(sqlErr) {
-        return res.status(500).json({
-          main: "Something went wrong. Please try again.",
-          devError: sqlErr,
-          devMsg: "Error occured while adding downvotes to db",
-      });
-      } else if(!result[0]) {
-        mysqlConnection.query(`INSERT INTO upvote SET ?`,
-        newDownvote,
-        (sqlErr, result, fields) => {
-          if(sqlErr) {
-            return res.status(500).json({
-              main: "Something went wrong. Please try again.",
-              devError: sqlErr,
-              devMsg: "Error occured while adding downvotes to db",
-          });
-          } else {
-            return res.status(201).json({ main: "Downvoted successfully" });
-          }
-        });
-      } else {
-        mysqlConnection.query(`UPDATE upvote SET upvotes=-1 WHERE user_id="${userId}" AND comment_id="${commentId}"`,
-        (sqlErr, result, fields) => {
-          if(sqlErr) {
-            return res.status(500).json({
-              main: "Something went wrong. Please try again.",
-              devError: sqlErr,
-              devMsg: "Error occured while adding downvotes to db",
-          });
-          } else {
-            return res.status(201).json({ main: "Downvoted successfully" });
-          }
-        });
-      }
-    })
-  } catch(error){
-    return res.status(500).json({
-      main: "Something went wrong. Please try again.",
-      devError: error,
-      devMsg: "Error occured while adding Downvotes to db",
-  });
-  }
-});
-
-
-router.get("/get-upvotes/:commentId",
- passport.authenticate("jwt", { sessoin: false }),
- (req,res) => {
-   const { commentId } = req.params;
-   const userId = res.req.user.user_id;
-
-   if (!commentId || !userId || commentId == null || userId == null)
-   return res.status(400).json({ main: "Something went wrong. Please try again",
-    devMsg: `Either commentId or userId is invalid. CommentId: ${commentId} userId: ${userId}` })
-
-   try{
-
-      let voteStatus = ""; // Gives the status of the vote for respective user and comment 
-
-      mysqlConnection.query(`SELECT upvotes from upvote WHERE user_id=${userId} AND comment_id=${commentId}`,
-      (sqlErr, result, fields) => {
-        if(sqlErr){
-          return res.status(500).json({
-            main: "Something went wrong. Please try again.",
-            devError: sqlErr,
-            devMsg: "Error occured while fetching upvotes from db",
-        });
-        } else {
-          voteStatus = (!result[0]) ? "None" : (result[0].upvotes === 1 ? "UpVote" : "DownVote")
-        }
-      })
-
-      mysqlConnection.query(`SELECT comment_id, sum(upvotes) as votes FROM upvote WHERE comment_id=${commentId}`,
-      (sqlErr, result, fields) => {
-        if(sqlErr){
-          return res.status(500).json({
-            main: "Something went wrong. Please try again.",
-            devError: sqlErr,
-            devMsg: "Error occured while fetching upvotes from db",
-        });
-        } else if (!result[0].votes){
-          return res.status(200).json({
-            main:"No upvotes found",
-            devMsg:"No upvotes found with the commentId from db"
-          })
-        } else {
-          result[0].voteStatus = voteStatus;
-          return res.status(200).json({result});
-        }
-      })
-
-   } catch(err){
-    return res.status(500).json({
-      main: "Something went wrong. Please try again.",
-      devError: err,
-      devMsg: "Error occured while fetching upvotes from db",
-  });
-   }
- });
-
-router.get("/get-comments/:solutionId",
-  passport.authenticate("jwt", { sessoin: false }),
-  (req,res) => {
-    const { solutionId } = req.params;
-
-    if (!solutionId || solutionId == null )
-            return res.status(400).json({ main: "Something went wrong. Please try again",
-             devMsg: `SolutionId is invalid. solutionId: ${solutionId}` })
-    
-    try{
-      mysqlConnection.query(
-        `SELECT * FROM comment WHERE post_id=${solutionId} AND type_id = 2 ORDER BY posted_on DESC`,
-        (sqlErr, result, fields) => {
-          if(sqlErr){
-            return res.status(500).json({
-              main: "Something went wrong. Please try again.",
-              devError: sqlErr,
-              devMsg: "Error occured while fetching upvotes from db",
-            });
-          } else if(!result[0]){
-            return res.status(200).json({main:"No comments found"})
-          } else{
-            return res.status(200).json({
-              count: result.length,
-              comments: result
-            });
-        }
-      });
-    } catch(err){
-      return res.status(500).json({
-        main: "Something went wrong. Please try again.",
-        devError: error,
-        devMsg: "Error occured while fetching upvotes from db",
-      });
-    }
-  }
-);
 
 
 router.get(
   "/get-solvers/:accountId",
-  passport.authenticate("jwt", { sessoin: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     try {
       let { accountId } = req.params;
@@ -895,6 +458,99 @@ router.get(
     }
   }
 );
+
+//Sending a message to a solver in the solvers page, toUser is the userId of the user to whom the message to be sent
+router.post("/send-message/:toUser",
+passport.authenticate("jwt", { session: false }),
+(req, res) => {
+  try{
+
+    const { errors, isValid } = messageValidation(req, res);
+
+    if (!isValid) return res.status(400).json(errors);
+
+    let { toUser } = req.params;
+    let fromUser = res.req.user.user_id;
+
+    let { message } = req.body;
+
+    let newMessage = {
+      from_user_id: fromUser,
+      to_user_id: toUser,
+      message: message
+    }
+    
+    mysqlConnection.query(`INSERT INTO conversation SET ?`,
+    [newMessage],
+    (sqlErr, result, fields) => {
+      if (sqlErr) {
+        return res.status(500).json({
+          main: "Something went wrong. Please try again.",
+          devError: sqlErr,
+          devMsg: "Error occured while fetching solvers from db",
+        });
+      } 
+      return res.status(200).json({
+        main:"Message is added sucessfully"
+      })
+    })
+  }catch(error){
+    console.log(error);
+    return res.status(500).json({
+      main: "Something went wrong. Please try again.",
+      devError: error,
+      devMsg: "Error occured while sending message",
+    });
+  }
+})
+
+//solverId denotes the solver's userId
+router.get("/get-solvers-messages/:solverId",
+passport.authenticate("jwt", { session: false }),
+(req, res) => {
+  try{
+
+    let { solverId } = req.params;
+    let userId = res.req.user.user_id;
+    // console.log(userId);
+
+    if(!solverId)
+    return res.status(400).json({
+      main: "Invalid Request",
+      devMsg: "No solverId found"
+    })
+
+    mysqlConnection.query(`SELECT message, timestamp FROM conversation WHERE from_user_id = ${solverId} AND to_user_id = ${userId} ORDER BY timestamp ASC ;
+    SELECT message, timestamp FROM conversation WHERE from_user_id = ${userId} AND to_user_id = ${solverId} ORDER BY timestamp ASC`,
+    [solverId, userId],
+    (sqlErr, result, fields) => {
+      if (sqlErr) {
+        return res.status(500).json({
+          main: "Something went wrong. Please try again.",
+          devError: sqlErr,
+          devMsg: "Error occured while fetching solvers from db",
+        });
+      } else if(!result[0]){
+        return res.status(200).json({
+          main:"No conversations exists",
+          devMsg: "There are no messages found in db"
+      })
+      } else{
+        return res.status(200).json({
+          totalMessagesCount: result[0].length*result[1].length,
+          receiversMessages: result[0], //From solver's side 
+          sendersMessages: result[1] //From user's side
+        })
+      }
+    })
+  } catch(error){
+    return res.status(500).json({
+      main: "Something went wrong. Please try again.",
+      devError: error,
+      devMsg: "Error occured while sending message",
+    });
+  }
+})
 
 
 module.exports = router;
