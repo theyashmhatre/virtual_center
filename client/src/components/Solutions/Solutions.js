@@ -60,7 +60,7 @@ const Solutions = () => {
   }, [pageNo]);
 
   return (
-    <div className="w-full border-2">
+    <div className="w-full border-2 p-5 sm:p-2">
       <div className="flex flex-wrap items-between justify-center">
         {solutions.map((solution) => {
           const temp = new Date(solution.posted_on);
@@ -73,16 +73,16 @@ const Solutions = () => {
           return (
             <div
               key={solution.solution_id}
-              className="flex flex-col justify-between border-2 shadow-sm hover:shadow-xl rounded-lg m-2 p-4 w-24per md:w-1/2 sm:w-2/3 xs:w-5/6"
+              className="flex flex-col justify-between border-2 shadow-sm hover:shadow-xl rounded-lg m-2 p-3 w-96 xs:w-full"
             >
-              <div className="h-25per rounded-lg bg-gradient-to-r from-pink-900 to-blue-grd border-gray-500 border-2 flex flex-col justify-between p-3">
-                <div className="flex justify-center">
+              <div className="h-25per rounded-lg bg-gradient-to-r from-pink-900 to-blue-grd border-gray-500 border-2 p-2">
+                <div className="text-center">
                   <h2 className="text-2xl font-mono font-semibold text-white">
                     {solution.title}
                   </h2>
                 </div>
               </div>
-              <div className="p-2 font-serif flex items-center justify-center">
+              <div className="p-2 font-serif">
                 <div>
                   {!solution.description ? null : (
                     <div
@@ -110,7 +110,7 @@ const Solutions = () => {
                 </div>
                 <div>
                   <Link to={`/challenge/solution/${solution.solution_id}`}>
-                    <h2 className="text-center p-4 text-pink-700">
+                    <h2 className="text-center p-2 text-pink-700">
                       View Detail
                     </h2>
                   </Link>

@@ -4,6 +4,8 @@ import MainLayout from "../layouts/MainLayout";
 import { getDeletedChallenges } from "../utilities/api/challenge";
 import { getDeletedOfferings } from "../utilities/api/offering";
 import {
+  changeAdminToUser,
+  changeUserToAdmin,
   getAdminDetails,
   getUserDetails,
   updateStatusToActive,
@@ -50,30 +52,62 @@ const Settings = () => {
       user = users[index];
     
     if (user.status) {
-      updateStatusToInactive(user.username);
-
-      if (type === roleIds["admin"]) {
-        const newAdmins = [...admins];
-        newAdmins[index] = { ...admins[index], status: 0};
-        setAdmins(newAdmins);
-      } else {
-        const newUsers = [...users];
-        newUsers[index] = { ...users[index], status: 0};
-        setUsers(newUsers);
-      }
+      updateStatusToInactive(user.username)
+        .then(() => {
+          if (type === roleIds["admin"]) {
+            const newAdmins = [...admins];
+            newAdmins[index] = { ...admins[index], status: 0};
+            setAdmins(newAdmins);
+          } else {
+            const newUsers = [...users];
+            newUsers[index] = { ...users[index], status: 0};
+            setUsers(newUsers);
+          }
+        })
+        .catch((e) => console.log(e));
     } else {
-      updateStatusToActive(user.username);
-      
-      if (type === roleIds["admin"]) {
-        const newAdmins = [...admins];
-        newAdmins[index] = { ...admins[index], status: 1};
-        setAdmins(newAdmins);
-      } else {
-        const newUsers = [...users];
-        newUsers[index] = { ...users[index], status: 1};
-        setUsers(newUsers);
-      }
+      updateStatusToActive(user.username)
+        .then(() => {
+          if (type === roleIds["admin"]) {
+            const newAdmins = [...admins];
+            newAdmins[index] = { ...admins[index], status: 1};
+            setAdmins(newAdmins);
+          } else {
+            const newUsers = [...users];
+            newUsers[index] = { ...users[index], status: 1};
+            setUsers(newUsers);
+          }
+        })
+        .catch((e) => console.log(e));
     }
+  };
+
+  const changeAccessToAdmin = (index) => {
+    const user = users[index];
+    changeUserToAdmin(user.username)
+      .then(() => {
+        setUsers(users.filter((el, i) => i!==index));
+        setAdmins([ user, ...admins ]);
+      })
+      .catch((error) => {
+        if (error?.response?.data) {
+          alert(error.response.data.main);
+        }
+      });
+  };
+  
+  const changeAccessToUser = (index) => {
+    const user = admins[index];
+    changeAdminToUser(user.username)
+      .then(() => {
+        setAdmins(admins.filter((el, i) => i!==index));
+        setUsers([ user, ...users ]);
+      })
+      .catch((error) => {
+        if (error?.response?.data) {
+          alert(error.response.data.main);
+        }
+      });
   };
  
   return (
@@ -81,7 +115,7 @@ const Settings = () => {
       <div className="flex flex-col items-center mb-10">
         <div>
           <h1 className="text-3xl text-center font-bold my-10">User Details</h1>
-          <div className="w-90v flex justify-center">
+          <div className="w-90v flex flex-col items-center">
             <div className="overflow-x-auto whitespace-nowrap pb-5 sm:pb-10">
               <table className="border p-2">
                 <thead>
@@ -103,6 +137,9 @@ const Settings = () => {
                     </th>
                     <th className="border p-2">
                       Status
+                    </th>
+                    <th className="border p-2">
+                      Change Role To Admin
                     </th>
                   </tr>
                 </thead>
@@ -135,10 +172,23 @@ const Settings = () => {
                           <option value={1} label="Active" />
                         </select>
                       </td>
+                      <td className="border p-2 flex justify-center">
+                        <button
+                          className="py-3 px-10 rounded-full bg-pink-800 text-white font-bold"
+                          onClick={() => changeAccessToAdmin(index)}
+                        >
+                          Change
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+            </div>
+            <div>
+              <p className="text-pink-800">
+                Note: Each account can have only one admin.
+              </p>
             </div>
           </div>
         </div>
@@ -166,6 +216,9 @@ const Settings = () => {
                     </th>
                     <th className="border p-2">
                       Status
+                    </th>
+                    <th className="border p-2">
+                      Change Role To User
                     </th>
                   </tr>
                 </thead>
@@ -197,6 +250,14 @@ const Settings = () => {
                           <option value={0} label="Inactive" />
                           <option value={1} label="Active" />
                         </select>
+                      </td>
+                      <td className="border p-2 flex justify-center">
+                        <button
+                          className="py-3 px-10 rounded-full bg-pink-800 text-white font-bold"
+                          onClick={() => changeAccessToUser(index)}
+                        >
+                          Change
+                        </button>
                       </td>
                     </tr>
                   ))}
