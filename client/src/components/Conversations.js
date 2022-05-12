@@ -1,4 +1,5 @@
-import { faArrowLeft, faCircleChevronRight, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { faCircleXmark } from "@fortawesome/free-regular-svg-icons";
+import { faArrowLeft, faCircleChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts";
@@ -40,7 +41,6 @@ export const Conversations = () => {
     if (context.showMessages && context.messageUserId) {
       getConversationWithUserId(context.messageUserId)
         .then(({ data }) => {
-          console.log(data);
           if (data.count)
             setMessages(data.messages)
           
@@ -84,34 +84,51 @@ export const Conversations = () => {
   return (
     <div className="fixed bottom-20 right-20 z-10 bg-gray-200 rounded-2xl w-96">
       {!context.messageUserId ? (
-        <div className="px-5 py-10">
-          <h1 className="text-xl text-center">Conversations</h1>
-          <div className="max-h-50v overflow-y-auto">
-            {conversations.map((conversation, index) => (
-              <div
-                className="relative w-full mt-5 px-5"
-                onClick={() => {
-                  context.setMessageUserId(conversation.user_id)
-                }}
-                key={index}
-              >
-                <div className="flex items-center bg-gray-300 rounded-2xl w-full cursor-pointer py-2 px-5">
-                  <div className="bg-gray-400 rounded-full h-16 w-16">
-                    <DisplayPicture
-                      displayPicture={conversation.display_picture}
-                      size="2x"
-                      boxSize={16}
-                    />
+        <div className="relative">
+          <div className="absolute right-3 top-2">
+            <FontAwesomeIcon
+              icon={faCircleXmark}
+              size="lg"
+              color="red"
+              onClick={() => {
+                context.setShowMessages(false);
+                context.setMessageUserId(null);
+                setMessages([]);
+                setMessageUser({});
+                setNewMessage("");
+              }}
+              className="cursor-pointer hover:scale-110"
+            />
+          </div>
+          <div className="px-5 py-10">
+            <h1 className="text-2xl text-center">Conversations</h1>
+            <div className="max-h-50v overflow-y-auto">
+              {conversations.map((conversation, index) => (
+                <div
+                  className="relative w-full mt-5 px-5"
+                  onClick={() => {
+                    context.setMessageUserId(conversation.user_id)
+                  }}
+                  key={index}
+                >
+                  <div className="flex items-center bg-gray-300 rounded-2xl w-full cursor-pointer py-2 px-5">
+                    <div className="bg-gray-400 rounded-full h-16 w-16">
+                      <DisplayPicture
+                        displayPicture={conversation.display_picture}
+                        size="2x"
+                        boxSize={16}
+                      />
+                    </div>
+                    <p className="text-lg ml-5">{conversation.employee_name}</p>
                   </div>
-                  <p className="text-lg ml-5">{conversation.employee_name}</p>
+                  {!conversation.unreadMsg ? null : (
+                    <span className="flex absolute -top-2 right-3">
+                      <span className="bg-sky-500 rounded-full px-2 py-1">{conversation.unreadMsg}</span>
+                    </span>
+                  )}
                 </div>
-                {!conversation.unreadMsg ? null : (
-                  <span className="flex absolute -top-2 right-3">
-                    <span className="bg-sky-500 rounded-full px-2 py-1">{conversation.unreadMsg}</span>
-                  </span>
-                )}
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       ) : (
