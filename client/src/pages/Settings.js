@@ -112,15 +112,17 @@ const Settings = () => {
  
   return (
     <MainLayout role={roleIds["super_admin"]}>
-      <div className="flex flex-col items-center mb-10">
+      <div className="min-h-screen my-10 mx-32 lg:mx-24 md:mx-16 sm:mx-10 xs:mx-5">
         <div>
-          <h1 className="text-3xl text-center font-bold my-10">User Details</h1>
-          <div className="w-90v flex flex-col items-center">
+          <h1 className="text-3xl sm:text-2xl text-center font-bold my-10">
+            User Details
+          </h1>
+          <div className="flex justify-center">
             <div className="overflow-x-auto whitespace-nowrap pb-5 sm:pb-10">
               <table className="border p-2">
                 <thead>
                   <tr>
-                    <th className="border p-2 sticky left-0 z-10">
+                    <th className="border p-2">
                       Employee Id
                     </th>
                     <th className="border p-2">
@@ -185,21 +187,23 @@ const Settings = () => {
                 </tbody>
               </table>
             </div>
-            <div>
-              <p className="text-pink-800">
-                Note: Each account can have only one admin.
-              </p>
-            </div>
+          </div>
+          <div className="text-center my-5">
+            <p className="text-pink-800">
+              Note: Each account can have only one admin.
+            </p>
           </div>
         </div>
         <div>
-          <h1 className="text-3xl text-center font-bold my-10">Admin Details</h1>
-          <div className="w-90v flex justify-center">
+          <h1 className="text-3xl sm:text-2xl text-center font-bold my-10">
+            Admin Details
+          </h1>
+          <div className="flex justify-center">
             <div className="overflow-x-auto whitespace-nowrap pb-5 sm:pb-10">
               <table className="border p-2">
                 <thead>
                   <tr>
-                    <th className="border p-2 sticky left-0 z-10">
+                    <th className="border p-2">
                       Employee Id
                     </th>
                     <th className="border p-2">
@@ -267,13 +271,15 @@ const Settings = () => {
           </div>
         </div>
         <div>
-          <h1 className="text-3xl text-center font-bold my-10">Deleted Challenges</h1>
-          <div className="w-90v flex justify-center">
+          <h1 className="text-3xl sm:text-2xl text-center font-bold my-10">
+            Deleted Challenges
+          </h1>
+          <div className="flex justify-center">
             <div className="overflow-x-auto whitespace-nowrap pb-5 sm:pb-10">
               <table className="border p-2">
                 <thead>
                   <tr>
-                    <th className="border p-2 sticky left-0 z-10">
+                    <th className="border p-2">
                       Challenge Id
                     </th>
                     <th className="border p-2">
@@ -328,13 +334,15 @@ const Settings = () => {
           </div>
         </div>
         <div>
-          <h1 className="text-3xl text-center font-bold my-10">Deleted Offerings</h1>
-          <div className="w-90v flex justify-center">
+          <h1 className="text-3xl sm:text-2xl text-center font-bold my-10">
+            Deleted Offerings
+          </h1>
+          <div className="flex justify-center">
             <div className="overflow-x-auto whitespace-nowrap pb-5 sm:pb-10">
               <table className="border p-2">
                 <thead>
                   <tr>
-                    <th className="border p-2 sticky left-0 z-10">
+                    <th className="border p-2">
                       Offering Id
                     </th>
                     <th className="border p-2">

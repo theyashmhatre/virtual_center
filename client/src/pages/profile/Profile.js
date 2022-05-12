@@ -1,15 +1,13 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { roleIds } from "../../../constants";
 import { AuthContext } from "../../contexts";
 import MainLayout from "../../layouts/MainLayout";
 import { profile } from "../../utilities/api/userDetails";
+import { DisplayPicture } from "../../components/DisplayPicture";
 
 const Profile = () => {
   const [userDetail, setUserDetail] = useState({});
-  const [displayPicture, setDisplayPicture] = useState("");
   const context = useContext(AuthContext);
   const userId = context.auth.id;
 
@@ -17,13 +15,6 @@ const Profile = () => {
     if (userId)
       profile(userId)
         .then(({ data }) => {
-          if (data.display_picture)
-            new Blob([new Uint8Array(data.display_picture.data)], {
-              type: ".png",
-            })
-              .text()
-              .then((result) => setDisplayPicture(result));
-
           setUserDetail(data);
         })
         .catch(() => {});
@@ -31,39 +22,27 @@ const Profile = () => {
 
   return (
     <MainLayout role={roleIds["user"]}>
-      <div>
-        <div
-          className="h-max mt-10 text-center text-2xl uppercase tracking-wide text-gray-700 font-bold mb-2"
-          htmlFor="grid-profile"
-        >
-          User Profile
-        </div>
+      <div className="min-h-screen mx-28 lg:mx-20 md:mx-16 sm:mx-10 xs:mx-3 my-10">
+        <h1 className="text-3xl text-center tracking-wide text-gray-700 font-bold mb-10">
+          USER PROFILE
+        </h1>
+        
         <div className="flex justify-center my-10">
-          <div className="w-40per pt-10 border-2 p-6">
-            <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col align-middle justify-center">
-              <div className="w-full flex justify-center">
-                <div className="w-32 h-32 border-2 rounded-full">
-                  {displayPicture ? (
-                    <img
-                      alt="profile"
-                      src={displayPicture}
-                      className="w-32 h-32 border-2 rounded-full"
-                    />
-                  ) : (
-                    <FontAwesomeIcon
-                      icon={faUser}
-                      size="6x"
-                      className="pl-5 pt-2"
-                    />
-                  )}
-                </div>
+          <div className="w-50per lg:w-60per md:w-70per sm:w-full border-2 py-10 px-6 sm:px-3 xs:px-1">
+            <div className="w-full flex justify-center">
+              <div className="border-4 rounded-full">
+                <DisplayPicture
+                  displayPicture={userDetail.display_picture}
+                  size="6x"
+                  boxSize={32}
+                />
               </div>
             </div>
 
             <div className="flex flex-wrap my-5">
-              <div className="w-full md:w-1/2 px-3">
+              <div className="w-full px-3">
                 <div
-                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-lg md:text-base sm:text-sm font-bold mb-2"
                   htmlFor="userId"
                 >
                   UserName
@@ -80,9 +59,9 @@ const Profile = () => {
             </div>
 
             <div className="flex flex-wrap my-5">
-              <div className="w-full md:w-1/2 px-3">
+              <div className="w-full px-3">
                 <div
-                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-lg md:text-base sm:text-sm font-bold mb-2"
                   htmlFor="grid-name"
                 >
                   Name
@@ -101,7 +80,7 @@ const Profile = () => {
             <div className="flex flex-wrap my-5">
               <div className="w-full px-3">
                 <div
-                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-lg md:text-base sm:text-sm font-bold mb-2"
                   htmlFor="grid-email"
                 >
                   Email
@@ -120,7 +99,7 @@ const Profile = () => {
             <div className="flex flex-wrap my-5">
               <div className="w-full px-3">
                 <div
-                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-lg md:text-base sm:text-sm font-bold mb-2"
                   htmlFor="griduserDetail.-email"
                 >
                   Location
@@ -139,7 +118,7 @@ const Profile = () => {
             <div className="flex flex-wrap my-5">
               <div className="w-full px-3">
                 <div
-                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-lg md:text-base sm:text-sm font-bold mb-2"
                   htmlFor="grid-zip"
                 >
                   Contact Number

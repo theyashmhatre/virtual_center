@@ -60,11 +60,11 @@ const Offerings = () => {
 
   return (
     <MainLayout role={roleIds["user"]}>
-      <div className="min-h-screen mx-16 my-5">
-        <h1 className="text-3xl text-center font-bold mb-10">Offerings</h1>
+      <div className="min-h-screen mx-28 lg:mx-20 md:mx-16 sm:mx-10 xs:mx-5 my-10">
+        <h1 className="text-3xl text-center font-bold">Offerings</h1>
         
         {context.auth && (context.auth.role == roleIds["super_admin"]) ? (
-          <div className="flex justify-end mb-10">
+          <div className="flex justify-end my-5">
             <Link to={`/main/create-offering`}>
               <h2 className="border-2 border-black rounded-3xl hover:scale-110 text-center text-pink-700 p-2">
                 Create Offering
@@ -73,15 +73,14 @@ const Offerings = () => {
           </div>
         ) : null}
 
-        <div className="lg:h-80v w-90v">
-          <div className="lg:h-70v lg:w-4/5 flex md:flex-col md:items-center sm:items-center sm:flex-col justify-start flex-wrap">
+        <div>
+          <div className="flex items-between flex-wrap mb-10 justify-center">
             {/* Offerings blocks Started */}
-
             {offeringData.map((offering) => {
               return (
                 <div
                   key={offering.offering_id}
-                  className="border-2 shadow-sm hover:shadow-xl rounded-lg lg:mb-0 mb-4 mx-1 w-24per md:w-1/2 sm:w-2/3 xs:w-5/6"
+                  className="flex flex-col justify-between border-2 shadow-sm hover:shadow-xl rounded-lg m-2 w-96 xs:w-full"
                 >
                   <div className="flex flex-col justify-between h-full">
                     <div className="h-full">
@@ -109,7 +108,9 @@ const Offerings = () => {
                     <div>
                       <div className="flex flex-col">
                         <div className="flex justify-center">
-                          <UserCard name={offering.owner_name} email={offering.owner_email} />
+                          <div className="w-fit">
+                            <UserCard name={offering.owner_name} email={offering.owner_email} />
+                          </div>
                         </div>
                         <div className="flex items-center">
                           <Attachment attachmentData={offering.attachment} />

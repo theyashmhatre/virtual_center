@@ -75,10 +75,18 @@ const Solvers = () => {
                     </div>
                     <div>
                       <button
-                        className="text-center m-4 w-20 p-1 rounded-lg bg-pink-700 text-white"
+                        className={`
+                          text-center m-4 w-20 p-1 rounded-lg text-white
+                          ${context.auth.id !== solver.user_id
+                            ? "bg-pink-700 cursor-pointer"
+                            : "bg-pink-500 cursor-not-allowed"
+                          }
+                        `}
                         onClick={() => {
-                          context.setShowMessages(true)
-                          context.setMessageUserId(solver.user_id)
+                          if (context.auth.id !== solver.user_id) {
+                            context.setShowMessages(true)
+                            context.setMessageUserId(solver.user_id)
+                          }
                         }}
                       >
                         Connect
