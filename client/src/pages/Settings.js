@@ -6,11 +6,11 @@ import { getDeletedOfferings } from "../utilities/api/offering";
 import {
   changeAdminToUser,
   changeUserToAdmin,
-  getAdminDetails,
-  getUserDetails,
+  getAdmins,
+  getUsers,
   updateStatusToActive,
   updateStatusToInactive
-} from "../utilities/api/userDetails";
+} from "../utilities/api/superAdmin";
 
 const Settings = () => {
   const [users, setUsers] = useState([]);
@@ -21,11 +21,11 @@ const Settings = () => {
   const limit = 10;
 
   useEffect(() => {
-    getUserDetails()
+    getUsers()
       .then(({ data }) => setUsers(data))
       .catch((e) => console.log(e));
     
-    getAdminDetails()
+    getAdmins()
       .then(({ data }) => setAdmins(data))
       .catch((e) => console.log(e));
     

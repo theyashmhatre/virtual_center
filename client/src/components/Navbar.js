@@ -54,6 +54,20 @@ const Navbar = () => {
               >
                 Profile
               </Link>
+              <button
+                className="hover:bg-gray-200 w-full py-2 px-4 flex justify-start"
+                onClick={() => context.setShowMessages(!context.showMessages)}
+              >
+                <p className="relative">
+                  Conversations
+                  {!context.unReadConversations ? null : (
+                    <span className="flex absolute -top-2 -right-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75" />
+                      <span className="text-sky-500">{context.unReadConversations}</span>
+                    </span>
+                  )}
+                </p>
+              </button>
               {context.auth.role == roleIds["super_admin"] && (
                 <Link
                   to="/account/settings"
@@ -73,6 +87,12 @@ const Navbar = () => {
               </button>
             </div>
           </div>
+          {!context.unReadConversations ? null : (
+            <span className="flex justify-end absolute h-5 w-5 top-0 right-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75" />
+              <span className="bg-sky-500 rounded-full h-3 w-3" />
+            </span>
+          )}
         </li>
       </ul>
 

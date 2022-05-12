@@ -2,10 +2,6 @@ module.exports = {
   mode: "jit",
   content: ["./src/**/*.{html,js}"],
   theme: {
-    minHeight: {
-      100: "400px",
-      "screen": "100vh"
-    },
     extend: {
       flexGrow: {
         2: 2,
@@ -37,6 +33,14 @@ module.exports = {
         "70per": "70%",
         "10per": "10%",
         "90per": "90%",
+      },
+      minHeight: {
+        40: "10rem",
+        100: "400px",
+        "screen": "100vh"
+      },
+      maxHeight: {
+        "50v": "50vh"
       },
       width: {
         "10per": "10%",

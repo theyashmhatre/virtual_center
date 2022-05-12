@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { roleIds } from "../../constants";
 import { UserCard } from "../components/UserCard";
+import { AuthContext } from "../contexts";
 import MainLayout from "../layouts/MainLayout";
 import { getSolvers } from "../utilities/api/solution";
 import { getAccountTypes } from "../utilities/api/user";
@@ -9,6 +10,7 @@ const Solvers = () => {
   const [accountTypes, setAccountTypes] = useState([]);
   const [accountTypeId, setAccountTypeId] = useState(0);
   const [solvers, setSolvers] = useState([]);
+  const context = useContext(AuthContext);
 
   const updateSolvers = (id) => {
     getSolvers(id)
@@ -60,15 +62,25 @@ const Solvers = () => {
             <div className="flex flex-wrap sm:justify-center">
               {solvers.map((solver) => (
                 <div
-                  key={solver.id}
+                  key={solver.user_id}
                   className="border-2 shadow-sm hover:shadow-xl rounded-lg m-2 p-5 xs:p-2"
                 >
                   <div className="flex flex-col items-center">
                     <div className="w-fit">
-                      <UserCard name={solver.employee_name} email={solver.email} />
+                      <UserCard
+                        name={solver.employee_name}
+                        email={solver.email}
+                        displayPicture={solver.display_picture}
+                      />
                     </div>
                     <div>
-                      <button className="text-center m-4 w-20 p-1 rounded-lg bg-pink-700 text-white">
+                      <button
+                        className="text-center m-4 w-20 p-1 rounded-lg bg-pink-700 text-white"
+                        onClick={() => {
+                          context.setShowMessages(true)
+                          context.setMessageUserId(solver.user_id)
+                        }}
+                      >
                         Connect
                       </button>
                     </div>
