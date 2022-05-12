@@ -1,4 +1,5 @@
 import AuthRequired from "../components/Authentication/AuthRequired";
+import { Conversations } from "../components/Conversations";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
@@ -16,6 +17,10 @@ const MainLayout = ({ children, role }) => {
           {children}
         </div>
         <Footer />
+      </div>
+
+      <div>
+        <Conversations />
       </div>
     </AuthRequired>
   );

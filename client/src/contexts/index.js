@@ -12,6 +12,9 @@ try {
 
 export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState(initialAuthState);
+  const [showMessages, setShowMessages] = useState(false);
+  const [messageUserId, setMessageUserId] = useState();
+  const [unReadConversations, setUnReadConversations] = useState(0);
 
   const storeAuth = (token) => {
     sessionStorage.setItem('Access Token', token);
@@ -42,6 +45,12 @@ export const AuthProvider = ({ children }) => {
     storeAuth: storeAuth,
     checkAuth: checkAuth,
     removeAuth: removeAuth,
+    showMessages: showMessages,
+    setShowMessages: setShowMessages,
+    messageUserId: messageUserId,
+    setMessageUserId: setMessageUserId,
+    unReadConversations: unReadConversations,
+    setUnReadConversations: setUnReadConversations,
   };
 
   return (
