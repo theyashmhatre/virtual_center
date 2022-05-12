@@ -41,12 +41,12 @@ const Solution = () => {
     <MainLayout role={roleIds["user"]}>
       <div className="min-h-screen my-10 mx-32 lg:mx-24 md:mx-16 sm:mx-10 xs:mx-5">
         <div>
-          <div className="my-5 text-center">
-            <h1 className="font-mono font-semibold text-4xl sm:text-3xl">
+          <div className="text-center my-5">
+            <h1 className="font-semibold text-4xl sm:text-3xl">
               {solution.title}
             </h1>
           </div>
-          <div className="my-5 flex sm:flex-col justify-between">
+          <div className="flex sm:flex-col justify-between my-5">
             <div className="flex items-center">
               <Like postId={solutionId} typeId={postTypeId["solution"]} />
               <Attachment attachmentData={solution.attachment} />
