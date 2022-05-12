@@ -82,7 +82,7 @@ export const Conversations = () => {
     return null;
   
   return (
-    <div className="fixed bottom-20 right-20 z-10 bg-gray-200 rounded-2xl w-96">
+    <div className="fixed bottom-20 right-20 sm:bottom-12 sm:right-12 z-10 bg-gray-200 rounded-2xl w-96 sm:w-80 xs:hidden">
       {!context.messageUserId ? (
         <div className="relative">
           <div className="absolute right-3 top-2">
