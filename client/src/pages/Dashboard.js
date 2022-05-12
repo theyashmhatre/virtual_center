@@ -27,14 +27,14 @@ const Dashboard = () => {
   
   return (
     <MainLayout role={roleIds["user"]}>
-      <div className="min-h-screen">
-        <div className="grid grid-cols-3 m-10">
-          <div className="m-5 p-5 bg-gray-100 border-t-4 border-pink-700 h-fit">
-            <div className="flex justify-between items-center h-12">
+      <div className="flex flex-col min-h-screen m-10 sm:mx-10 xs:mx-5">
+        <div className="grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 order-2 xl:order-1">
+          <div className="mx-2 my-5 p-5 bg-gray-100 border-t-4 border-pink-700 h-fit">
+            <div className="flex xs:flex-col justify-between items-center h-12 xs:h-fit">
               <label className="font-bold text-gray-600 mr-2">
                 Top Challenges - Most Converted into customer projects
               </label>
-              <select className="py-1 px-2 border-b-2 rounded shadow bg-white ring-1">
+              <select className="py-1 px-2 border-b-2 rounded shadow bg-white ring-1 xs:my-2">
                 <option>2022</option>
                 <option>2021</option>
                 <option>2020</option>
@@ -100,13 +100,13 @@ const Dashboard = () => {
           </div>
 
           {/* second table starts */}
-          <div className="m-5 p-5 bg-gray-100 border-t-4 border-pink-700 h-fit">
-            <div className="flex justify-between items-start h-12">
+          <div className="mx-2 my-5 p-5 bg-gray-100 border-t-4 border-pink-700 h-fit">
+            <div className="flex xs:flex-col justify-between items-center h-12 xs:h-fit">
               <label className="font-bold text-gray-600 mr-2">
                 Top Challenges - Most Submissions Done
               </label>
               <select
-                className="py-1 px-2 border-b-2 rounded shadow bg-white ring-1"
+                className="py-1 px-2 border-b-2 rounded shadow bg-white ring-1 xs:my-2"
                 value={mostSubmissionsYear}
                 onChange={(e) => setMostSubmissionsYear(e.target.value)}
               >
@@ -160,8 +160,8 @@ const Dashboard = () => {
           </div>
 
           {/* doughnut chart using chartjs  */}
-          <div className="m-5 p-5 bg-gray-100 border-t-4 border-pink-700 h-fit">
-            <div className="h-12">
+          <div className="mx-2 my-5 p-5 bg-gray-100 border-t-4 border-pink-700 h-fit">
+            <div className="h-12 xs:h-fit">
               <label className="font-bold text-gray-600">
                 Number of Challenges in Each Account Type
               </label>
@@ -190,7 +190,7 @@ const Dashboard = () => {
               </div>
             </div>
 
-            <div className="h-16 mt-16">
+            <div className="h-16 mt-16 xs:h-fit">
               <div className="flex flex-wrap items-center">
                 {challengeCounts.map((challenge, index) => (
                   <div
@@ -210,8 +210,8 @@ const Dashboard = () => {
         </div>
         
         {/* content at bottom */}
-        <div className="m-10">
-          <div className="pl-5 pr-20 pb-5">
+        <div className="my-10 order-1 xl:order-2">
+          <div className="xl:px-10">
             <h2 className="text-2xl">
               Dashboard
             </h2>
