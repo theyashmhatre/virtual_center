@@ -78,7 +78,7 @@ const EditChallenge = () => {
 
   return (
     <MainLayout role={roleIds["admin"]}>
-      <div className="my-10 mx-40">
+      <div className="min-h-screen my-10 mx-40 md:mx-24 sm:mx-10 xs:mx-5">
         <h1 className="text-3xl text-center font-bold my-5">
           Edit Challenge
         </h1>
@@ -98,7 +98,7 @@ const EditChallenge = () => {
               placeholder="Type the challenge title here"
               className="w-full border-2 border-gray-200 p-3 rounded-lg outline-none focus:border-purple-500"
             />
-            <label htmlFor="agree" className="ml-2 text-gray-400 text-sm">
+            <label htmlFor="agree" className="ml-2 text-gray-400 text-sm sm:text-xs">
               A crisp and clear title attracts more readers
             </label>
             {!errors.title ? null : (
@@ -170,7 +170,7 @@ const EditChallenge = () => {
                 });
               }}
             />
-            <label htmlFor="tags" className="ml-2 text-gray-400 text-sm">
+            <label htmlFor="tags" className="ml-2 text-gray-400 text-sm sm:text-xs">
               Please use meaningful tags that makes it easy for others to
               discover your content.
             </label>

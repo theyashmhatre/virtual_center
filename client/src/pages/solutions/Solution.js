@@ -39,66 +39,70 @@ const Solution = () => {
 
   return (
     <MainLayout role={roleIds["user"]}>
-      <div className="mx-16">
-        <div className="mb-5">
-          <div className="w-80v md:w-95v sm:w-95v">
-            <div className="mt-10 flex flex-row">
-              <h1 className="font-mono font-semibold text-4xl w-4/5">
-                {solution.title}
-              </h1>
-              <div className="flex justify-end items-center w-full">
-                <Like postId={solutionId} typeId={postTypeId["solution"]} />
-                <Attachment attachmentData={solution.attachment} />
-                {solution.email !== context.auth.email ? null : (
-                  <div className="flex ml-2">
-                    <Link to={`/challenge/edit-solution/${solutionId}`}>
-                      <h2 className="border-2 border-black rounded-3xl hover:scale-110 text-center text-pink-700 p-2">
-                        Edit Solution
-                      </h2>
-                    </Link>
-                  </div>
-                )}
-              </div>
+      <div className="min-h-screen my-10 mx-32 lg:mx-24 md:mx-16 sm:mx-10 xs:mx-5">
+        <div>
+          <div className="my-5 text-center">
+            <h1 className="font-mono font-semibold text-4xl sm:text-3xl">
+              {solution.title}
+            </h1>
+          </div>
+          <div className="my-5 flex sm:flex-col justify-between">
+            <div className="flex items-center">
+              <Like postId={solutionId} typeId={postTypeId["solution"]} />
+              <Attachment attachmentData={solution.attachment} />
             </div>
-            <div>
-              <h1 className="text-lg pt-2 font-bold mt-2">Owner</h1>
+            <div className="flex justify-end items-center sm:mt-5">
+              {solution.email !== context.auth.email ? null : (
+                <div className="flex ml-2">
+                  <Link to={`/challenge/edit-solution/${solutionId}`}>
+                    <h2 className="border-2 border-black rounded-3xl hover:scale-110 text-center text-pink-700 w-fit p-2">
+                      Edit Solution
+                    </h2>
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+          <div>
+            <h1 className="text-lg pt-2 font-bold mt-2">Owner</h1>
+            <div className="w-fit">
               <UserCard
                 name={solution.employee_name}
                 email={solution.email}
                 displayPicture={solution.display_picture}
               />
             </div>
-            {!teamMembers.length ? null : (
-              <div>
-                <h1 className="text-lg pt-2 font-bold mt-2">Team Members</h1>
-                <div className="flex flex-row">
-                  {teamMembers.map((member, index) => {
-                    if (member.email === solution.email)
-                      return null
-                    return (
-                      <div key={index} className="mr-4">
-                        <UserCard
-                          name={member.employee_name}
-                          email={member.email}
-                          displayPicture={member.display_picture}
-                        />
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
+          </div>
+          {!teamMembers.length ? null : (
             <div>
-              <h1 className="text-lg pt-2 font-bold mt-2">Description</h1>
-              <div className="md:w-full sm:w-full w-60v  border-2 p-4">
-                {!solution.description ? null : (
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: draftToHtml(JSON.parse(solution.description)),
-                    }}
-                  />
-                )}
+              <h1 className="text-lg pt-2 font-bold mt-2">Team Members</h1>
+              <div className="flex flex-row">
+                {teamMembers.map((member, index) => {
+                  if (member.email === solution.email)
+                    return null
+                  return (
+                    <div key={index} className="mr-4">
+                      <UserCard
+                        name={member.employee_name}
+                        email={member.email}
+                        displayPicture={member.display_picture}
+                      />
+                    </div>
+                  );
+                })}
               </div>
+            </div>
+          )}
+          <div>
+            <h1 className="text-lg pt-2 font-bold mt-2">Description</h1>
+            <div className="md:w-full sm:w-full w-60v  border-2 p-4">
+              {!solution.description ? null : (
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: draftToHtml(JSON.parse(solution.description)),
+                  }}
+                />
+              )}
             </div>
           </div>
         </div>

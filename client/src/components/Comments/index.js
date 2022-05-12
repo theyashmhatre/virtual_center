@@ -15,7 +15,10 @@ const Comments = ({ typeId, postId }) => {
   
   const onPost = () => {
     postComment(postId, typeId, commentText)
-      .then(() => setSuccess(true))
+      .then(() => {
+        setCommentText("");
+        setSuccess(true);
+      })
       .catch(() => {});
   };
 

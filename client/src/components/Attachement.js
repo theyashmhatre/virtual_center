@@ -14,7 +14,7 @@ export const Attachment = ({ attachmentData }) => {
 
   return (
     <a
-      className="bg-pink-600 text-white ml-4 px-2 py-1 rounded"
+      className="bg-pink-600 text-white sm:text-sm ml-4 px-2 py-1 rounded"
       href={attachment}
       download="Attachement.pdf"
     >

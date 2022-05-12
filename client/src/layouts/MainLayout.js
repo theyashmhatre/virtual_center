@@ -6,11 +6,11 @@ import Sidebar from "../components/Sidebar";
 const MainLayout = ({ children, role }) => {
   return (
     <AuthRequired role={role}>
-      <div style={{height:'100vh' , float:"left"}}>
+      <div className="h-screen fixed float-left w-24 md:w-20 sm:w-16">
         <Sidebar />
       </div>
       
-      <div className="ml-24">
+      <div className="ml-24 md:ml-20 sm:ml-16">
         <Navbar />
         <div className="min-h-screen">
           {children}

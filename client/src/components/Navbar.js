@@ -1,6 +1,6 @@
-import { faAngleDown, faSearch, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown, faBars, faSearch, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { Link, NavLink } from "react-router-dom";
 import { navigationData, roleIds } from "../../constants";
@@ -8,28 +8,25 @@ import Log from "../../public/Log.png"
 import { AuthContext } from "../contexts";
 
 const Navbar = () => {
+  const [active, setActive] = useState(false);
   const context = useContext(AuthContext);
   const location = useLocation();
   const navigate = useNavigate();
 
   return (
     <main className="flex-2 flex flex-col grow">
-      <ul
-        className="flex justify-end items-center gap-3 p-7 bg-gradient-to-r from-blue-grd to-green-grd"
-      >
-        <li>
-          <img alt="background_image" src={Log} width={55} height={55} />
+      <ul className="flex justify-end items-center gap-3 p-7 md:p-5 sm:p-4 bg-gradient-to-r from-blue-grd to-green-grd">
+        <li className="w-16">
+          <img alt="background_image" src={Log} width={100} height={100} />
         </li>
         <li className="grow">
-          <h1 className="font-bold text-slate-50 text-3xl">
+          <h1 className="font-bold text-slate-50 text-3xl md:text-2xl sm:text-2xl">
             TCS Virtual Innovation Center
           </h1>
         </li>
-        <li
-          className="flex justify-between items-center bg-white rounded-full px-1"
-        >
+        <li className="flex justify-between items-center bg-white rounded-full px-1 sm:hidden">
           <input
-            className="rounded-full p-2"
+            className="rounded-full p-2 lg:w-40 md:w-28"
             type="text"
             placeholder="Search.."
           />
@@ -39,12 +36,10 @@ const Navbar = () => {
             className="ml-4 mr-2 cursor-pointer"
           />
         </li>
-        <li className="relative group cursor-pointer">
-          <div
-            className="rounded-full bg-white px-3 py-2"
-          >
+        <li className="relative group cursor-pointer xs:hidden">
+          <div className="flex flex-nowrap items-center rounded-full bg-white px-3 py-2">
             <FontAwesomeIcon icon={faUser} size="lg" className="mr-4" />
-            {context.auth.name}
+            <p className="h-6 overflow-hidden">{context.auth.name}</p>
             <FontAwesomeIcon icon={faAngleDown} size="lg" className="ml-4" />
           </div>
           <div
@@ -81,9 +76,17 @@ const Navbar = () => {
         </li>
       </ul>
 
-      <div
-        className="flex gap-16 decoration-from-font font-medium bg-gray-rgb p-4"
-      >
+      <div className="hidden sm:flex justify-between items-center font-medium bg-gray-rgb p-4">
+        <p className="text-xl">TCS VIC</p>
+        <button
+          className="rounded-lg py-1 px-2 hover:bg-gray-300"
+          onClick={() => setActive(!active)}
+        >
+          <FontAwesomeIcon icon={faBars} size="xl" />
+        </button>
+      </div>
+
+      <div className={`${!active ? "sm:hidden" : "flex-col gap-4"} flex gap-16 decoration-from-font font-medium bg-gray-rgb p-4`}>
         {navigationData[location.pathname.split("/")[1]].map(
           ({ title, link, roles }, index) => {
             for (i in roles) {

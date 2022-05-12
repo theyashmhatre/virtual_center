@@ -47,26 +47,28 @@ const Challenge = () => {
   
   return (
     <MainLayout role={roleIds["user"]}>
-      <div className="flex items-center flex-col mx-10 my-10 min-h-screen">
-        <div className="flex flex-col mb-1">
-          <div className="h-30v flex items-center justify-center">
-            <img
-              className="object-fill h-full rounded-3xl"
-              src={coverImage}
-              alt="challenge cover"
-            />
+      <div className="flex flex-col items-center min-h-screen mx-40 lg:mx-24 md:mx-24 sm:mx-10 xs:mx-5 my-10">
+        <div className="my-4">
+          <div className="flex flex-col mb-1">
+            <div className="h-30v flex items-center justify-center">
+              <img
+                className="object-fill h-full rounded-3xl"
+                src={coverImage}
+                alt="challenge cover"
+              />
+            </div>
           </div>
+          <h1 className="my-5 text-center font-serif text-4xl sm:text-3xl">
+            {challenge.title}
+          </h1>
         </div>
-        <h1 className="my-5 flex justify-center font-serif text-4xl">
-          {challenge.title}
-        </h1>
 
-        <div className="flex justify-between w-full mb-5">
-          <div className="flex w-80v flex-wrap md:w-95v sm:w-95v w-4/5">
+        <div className="flex sm:flex-col justify-between xs:text-sm w-full mb-5">
+          <div className="flex sm:flex-wrap sm:mb-5">
             <button
               className={`${
                 tab == "overview" ? "border-2" : "border-b-2 hover:border-2"
-              } border-black hover:scale-110 p-2 mr-2`}
+              } border-black hover:scale-110 p-2 mr-2 mt-1`}
               onClick={() => setTab("overview")}
             >
               Overview
@@ -74,7 +76,7 @@ const Challenge = () => {
             <button
               className={`${
                 tab == "solutions" ? "border-2" : "border-b-2 hover:border-2"
-              } border-black hover:scale-110 p-2 mx-2`}
+              } border-black hover:scale-110 p-2 mr-2 mt-1`}
               onClick={() => setTab("solutions")}
             >
               Solutions
@@ -84,32 +86,34 @@ const Challenge = () => {
                 tab == "create solution"
                   ? "border-2"
                   : "border-b-2 hover:border-2"
-              } border-black hover:scale-110 p-2 mx-2`}
+              } border-black hover:scale-110 p-2 mr-2 mt-1`}
               onClick={() => setTab("create solution")}
             >
               Create solution
             </button>
           </div>
-          <div className="flex w-full justify-end mr-2">
+          <div className="flex justify-end ml-2">
             {tab == "overview" && (
               context.auth.role == roleIds["super_admin"] || 
               context.auth.id == challenge.user_id
               ? (
                 <div className="flex">
                   <Link to={`/challenge/edit-challenge/${challengeId}`}>
-                    <h2 className="border-2 border-black rounded-3xl hover:scale-110 text-center text-pink-700 p-2">
+                    <h2 className="border-2 border-black rounded-3xl hover:scale-110 text-center text-pink-700 p-2 mt-1">
                       Edit Challenge
                     </h2>
                   </Link>
-                  <button
-                    className="border-2 border-black rounded-3xl hover:scale-110 text-center text-pink-700 p-2 ml-2"
-                    onClick={() => {
-                      if(confirm("Are you sure, you want to delete this challenge?"))
-                        onDelete();
-                    }}
-                  >
-                    Delete Challenge
-                  </button>
+                  <div>
+                    <button
+                      className="border-2 border-black rounded-3xl hover:scale-110 text-center text-pink-700 p-2 ml-2 mt-1"
+                      onClick={() => {
+                        if(confirm("Are you sure, you want to delete this challenge?"))
+                          onDelete();
+                      }}
+                    >
+                      Delete Challenge
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <Like postId={challengeId} typeId={postTypeId["challenge"]} />
@@ -135,22 +139,22 @@ const Challenge = () => {
                 </div>
               </div>
               <h1 className="text-lg pl-2 pt-2 font-bold">Tags</h1>
-              <div className="flex flex-row p-2 ">
+              <div className="flex flex-row flex-wrap p-2">
                 {tags.map((tag) => {
                   return (
-                    <div key={tag} className="bg-gray-400 rounded p-0.5 mr-1">
+                    <div key={tag} className="bg-gray-400 rounded-xl py-1 px-2 my-1 mr-1">
                       {tag}
                     </div>
                   );
                 })}
               </div>
-              <div className="mt-10 pl-2 pt-2 flex items-center">
+              <div className="mt-10 pl-2 pt-2 flex xs:flex-col items-center xs:items-start">
                 <h1 className="text-lg font-bold">Cloud Provider</h1>
-                <div className="ml-10">{challenge.cloud_provider}</div>
+                <div className="ml-10 xs:ml-0">{challenge.cloud_provider}</div>
               </div>
-              <div className="my-10 pl-2 pt-2 flex items-center">
+              <div className="my-10 pl-2 pt-2 flex xs:flex-col items-center xs:items-start">
                 <h1 className="text-lg font-bold">Account Type</h1>
-                <div className="ml-10">{challenge.accountName}</div>
+                <div className="ml-10 xs:ml-0">{challenge.accountName}</div>
               </div>
             </div>
             <Comments typeId={postTypeId["challenge"]} postId={challengeId} />

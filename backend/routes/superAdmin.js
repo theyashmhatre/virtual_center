@@ -157,7 +157,7 @@ router.get("/get-users", passport.authenticate("jwt", { session: false }), (req,
       mysqlConnection.query(`
       SELECT u.employee_name, a.account_name FROM user u
       INNER JOIN account_type a 
-      ON a.account_type_id = u.account_type_id AND u.role = 2 AND
+      ON a.account_type_id = u.account_type_id AND u.role = ${roles["admin"]} AND
        a.account_type_id IN (SELECT account_type_id FROM user WHERE username = ?)
       `,[username],
       (sqlErr, result, fields) => {
