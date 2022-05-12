@@ -83,7 +83,7 @@ CREATE TABLE `solution` (
 
 ---------------------------------------------------------------------------------------------------------------------
 Updated Tables for comments, upvotes and likes
->comment
+> comment
 CREATE TABLE `comment` (
   `comment_id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
@@ -95,7 +95,7 @@ CREATE TABLE `comment` (
   UNIQUE KEY `comment_id_UNIQUE` (`comment_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
->type
+> type
 CREATE TABLE `type` (
   `type_id` int NOT NULL AUTO_INCREMENT,
   `type_name` TEXT NOT NULL,
@@ -111,6 +111,7 @@ CREATE TABLE `upvote` (
   UNIQUE KEY `upvoted_item` (`user_id`,`comment_id`,`type_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
+> likes
 CREATE TABLE `likes` (
   `user_id` int NOT NULL,
   `post_id` int NOT NULL,
@@ -118,7 +119,7 @@ CREATE TABLE `likes` (
   UNIQUE KEY `liked_item` (`user_id`,`post_id`,`type_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
->login_history table
+> login_history table
 CREATE TABLE `login_history` (
   `id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(50) NOT NULL,
@@ -127,9 +128,19 @@ CREATE TABLE `login_history` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
->user_team table
+> user_team table
 CREATE TABLE `user_team` (
   `username` int NOT NULL,
   `solution_id` int NOT NULL,
   UNIQUE KEY `team_member` (`username`,`solution_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+> conversation table
+CREATE TABLE `conversation` (
+  `from_user_id` int NOT NULL,
+  `to_user_id` int NOT NULL,
+  `message` TEXT NOT NULL,
+  `timestamp` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `is_read` BOOLEAN NOT NULL DEFAULT FALSE,
+  UNIQUE KEY `single_message` (`from_user_id`, `to_user_id`,`timestamp`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci

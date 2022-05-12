@@ -19,6 +19,8 @@ app.use("/api/utils/comment", require("./routes/utils/comment"));
 app.use("/api/search", require("./routes/search"));
 app.use("/api/utils/like",require("./routes/utils/like"));
 app.use("/api/utils/upvote" ,require("./routes/utils/upvote"));
+app.use("/api/conversation", require("./routes/conversation"));
+app.use("/api/super-admin", require("./routes/superAdmin"));
 
 // Passport Middleware
 app.use(passport.initialize());
