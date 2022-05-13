@@ -13,7 +13,8 @@ router.get("/account-analytics", passport.authenticate("jwt", { session: false }
      INNER JOIN user u 
      ON c.user_id = u.user_id 
      INNER JOIN account_type at 
-     on u.account_type_id = at.account_type_id 
+     on u.account_type_id = at.account_type_id
+     WHERE c.is_deleted = 0
      GROUP BY u.account_type_id`, (sqlErr, result, fields) => {
         if (sqlErr) {
             return res.status(500).json({
