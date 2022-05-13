@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { colors, roleIds } from "../../constants";
 import DoughnutChart from "../components/DoughnutChart";
 import MainLayout from "../layouts/MainLayout";
@@ -195,13 +196,18 @@ const Dashboard = () => {
                 {challengeCounts.map((challenge, index) => (
                   <div
                     key={index}
-                    className="flex items-center space-x-1 px-2 py-1"
+                    className="px-2 py-1"
                   >
-                    <div
-                      className={`border-2 rounded-full h-5 w-5`}
-                      style={{ backgroundColor: [colors[index]] }}
-                    />
-                    <p className="text-sm">{challenge.accountName}</p>
+                    <Link
+                      to={`/challenge/challenges/filter-by/${challenge.accountName}`}
+                      className="flex items-center space-x-1"
+                    >
+                      <div
+                        className={`border-2 rounded-full h-5 w-5`}
+                        style={{ backgroundColor: [colors[index]] }}
+                      />
+                      <p className="text-sm">{challenge.accountName}</p>
+                    </Link>
                   </div>
                 ))}
               </div>

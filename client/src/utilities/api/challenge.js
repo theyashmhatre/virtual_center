@@ -74,6 +74,11 @@ export const getSingleChallenge = async (challengeId) => {
   return await api.get(endpoint);
 };
 
+export const getFilteredChallenges = async (accountName, pageNo, limit, sortedBy, order) => {
+  const endpoint = `/api/dashboard/get-challenges/${accountName}/${pageNo}/${limit}/${sortedBy}/${order}`;
+  return await api.get(endpoint);
+};
+
 export const searchChallenges = async (searchQuery, pageNo) => {
   const endpoint = `/api/challenge/search/${searchQuery}/${pageNo}`;
   return await api.get(endpoint);

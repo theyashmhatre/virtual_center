@@ -9,6 +9,7 @@ import Challenge from "./pages/challenges/Challenge";
 import Challenges from "./pages/challenges/Challenges";
 import CreateChallenge from "./pages/challenges/CreateChallenge";
 import EditChallenge from "./pages/challenges/EditChallenge";
+import FilteredChallenges from "./pages/challenges/FilteredChallenges";
 import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 import CreateOffering from "./pages/offerings/CreateOffering";
@@ -38,6 +39,10 @@ const App = () => {
         <Route
           path="/challenge"
           element={<Navigate to="/challenge/challenges" />}
+        />
+        <Route
+          path="/challenge/challenges/filter-by/:accountName"
+          element={<FilteredChallenges />}
         />
         <Route path="challenge/dashboard" element={<Dashboard />} />
         <Route path="challenge/challenges" element={<Challenges />} />
