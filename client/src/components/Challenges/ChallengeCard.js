@@ -1,3 +1,5 @@
+import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -36,16 +38,16 @@ const ChallengeCard = ({ challenge }) => {
 
   return (
     <div
-      className="flex flex-col border-2 m-3 w-96"
+      className="flex flex-col border-gray-500 border-2 rounded m-3 w-96"
     >
       <div className="h-52">
         <img
-          className="object-fill h-full w-full"
+          className="object-fill h-full w-full rounded"
           src={coverImage}
           alt="challenge cover"
         />
       </div>
-      <div className="h-full border-gray-500 border-2 flex flex-col justify-between p-3">
+      <div className="h-full flex flex-col justify-between p-3">
         <div className="font-bold">
           <h2>{challenge.title}</h2>
         </div>
@@ -61,7 +63,7 @@ const ChallengeCard = ({ challenge }) => {
           />
         </div>
         <div className="flex items-center">
-          <button className="bg-pink-700 px-1 rounded mr-2">
+          <button className="text-pink-700 font-medium mr-2">
             Open
           </button>
           <p>Until {endDate}</p>
@@ -71,14 +73,14 @@ const ChallengeCard = ({ challenge }) => {
             return (
               <div
                 key={tag}
-                className="bg-gray-400 rounded-xl py-1 px-2 m-1"
+                className="bg-gray-200 rounded py-1 px-4 sm:px-2 my-1 mr-1"
               >
                 {tag}
               </div>
             );
           })}
           {totalTags > 3 ? (
-            <div className="bg-gray-400 rounded-xl py-1 px-2 m-1">
+            <div className="bg-gray-200 rounded py-1 px-4 sm:px-2 my-1 mr-1">
               +{totalTags - 3}
             </div>
           ) : (
@@ -87,8 +89,12 @@ const ChallengeCard = ({ challenge }) => {
         </div>
         <div>
           <Link to={`/challenge/${challenge.challenge_id}`}>
-            <h2 className="text-center text-pink-700">
+            <h2 className="flex items-center text-pink-700 font-medium">
               View challenge
+              <FontAwesomeIcon
+                icon={faAngleRight}
+                className="ml-2"
+              />
             </h2>
           </Link>
         </div>
