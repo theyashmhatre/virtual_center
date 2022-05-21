@@ -1,4 +1,4 @@
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { faAngleRight, faArrowRight, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
@@ -61,7 +61,7 @@ const Solutions = () => {
 
   return (
     <div className="w-full border-2 p-5 sm:p-2">
-      <div className="flex flex-wrap items-between justify-center">
+      <div className="flex flex-wrap items-between">
         {solutions.map((solution) => {
           const temp = new Date(solution.posted_on);
           const postedOn_date =
@@ -75,26 +75,26 @@ const Solutions = () => {
               key={solution.solution_id}
               className="flex flex-col justify-between border-2 shadow-sm hover:shadow-xl rounded-lg m-2 p-3 w-96 xs:w-full"
             >
-              <div className="h-25per rounded-lg bg-gradient-to-r from-pink-900 to-blue-grd border-gray-500 border-2 p-2">
-                <div className="text-center">
-                  <h2 className="text-2xl font-mono font-semibold text-white">
+              <div>
+                <div className="p-2">
+                  <h2 className="text-2xl font-semibold">
                     {solution.title}
                   </h2>
                 </div>
-              </div>
-              <div className="p-2 font-serif">
-                <div>
-                  {!solution.description ? null : (
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: draftToHtml(
-                          getTruncatedContentState(
-                            JSON.parse(solution.description)
-                          )
-                        ),
-                      }}
-                    />
-                  )}
+                <div className="p-2">
+                  <div>
+                    {!solution.description ? null : (
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: draftToHtml(
+                            getTruncatedContentState(
+                              JSON.parse(solution.description)
+                            )
+                          ),
+                        }}
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
               <div>
@@ -108,13 +108,19 @@ const Solutions = () => {
                     displayPicture={solution.display_picture}
                   />
                 </div>
-                <div>
-                  <Link to={`/challenge/solution/${solution.solution_id}`}>
-                    <h2 className="text-center p-2 text-pink-700">
-                      View Detail
-                    </h2>
-                  </Link>
-                </div>
+                <Link
+                  to={`/challenge/solution/${solution.solution_id}`}
+                  className="flex items-center space-x-4 w-fit p-2"
+                >
+                  <h2 className="font-medium text-pink-700">
+                    View Detail
+                  </h2>
+                  <FontAwesomeIcon
+                    icon={faAngleRight}
+                    size="lg"
+                    className="text-pink-700"
+                  />
+                </Link>
               </div>
             </div>
           );

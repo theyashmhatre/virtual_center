@@ -1,28 +1,35 @@
-import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
+import { faAngleRight, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DisplayPicture } from "./DisplayPicture";
 
 export const UserCard = ({name, email, displayPicture}) => {
   return (
-    <div className="flex flex-col rounded-lg shadow-lg border-2 sm:text-sm w-full py-2 px-5 sm:px-2 my-4">
-      <div className="flex justify-center items-center">
-        <div className="mr-1">
-          <DisplayPicture
-            displayPicture={displayPicture}
-            size="sm"
-            boxSize={5}
-          />
+    <div className="flex justify-between items-center rounded-lg bg-pink-50 sm:text-sm w-full cursor-pointer py-2 pl-3 pr-5 sm:px-2 my-4">
+      <div className="flex flex-col">
+        <div className="flex items-center">
+          <div className="mr-2">
+            <DisplayPicture
+              displayPicture={displayPicture}
+              size="sm"
+              boxSize={5}
+            />
+          </div>
+          <p className="font-semibold break-all text-center">{name}</p>
         </div>
-        <p className="font-semibold break-all text-center">{name}</p>
+        <div className="flex items-center">
+          <FontAwesomeIcon
+            icon={faEnvelope}
+            size="sm"
+            className="p-1 mr-1"
+          />
+          <p className="font-serif break-all text-center">{email}</p>
+        </div>
       </div>
-      <div className="flex justify-center items-center">
-        <FontAwesomeIcon
-          icon={faEnvelope}
-          size="lg"
-          className="p-1"
-        />
-        <p className="font-serif break-all text-center">{email}</p>
-      </div>
+      <FontAwesomeIcon
+        icon={faAngleRight}
+        size="2x"
+        className="p-1 text-pink-700"
+      />
     </div>
   );
 };
