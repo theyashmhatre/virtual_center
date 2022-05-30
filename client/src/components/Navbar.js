@@ -96,40 +96,44 @@ const Navbar = () => {
         </li>
       </ul>
 
-      <div className="hidden sm:flex justify-between items-center font-medium bg-gray-rgb p-4">
-        <p className="text-xl">TCS VIC</p>
-        <button
-          className="rounded-lg py-1 px-2 hover:bg-gray-300"
-          onClick={() => setActive(!active)}
-        >
-          <FontAwesomeIcon icon={faBars} size="xl" />
-        </button>
-      </div>
+      {navigationData[location.pathname.split("/")[1]] && (
+        <div>
+          <div className="hidden sm:flex justify-between items-center font-medium bg-gray-rgb p-4">
+            <p className="text-xl">TCS VIC</p>
+            <button
+              className="rounded-lg py-1 px-2 hover:bg-gray-300"
+              onClick={() => setActive(!active)}
+            >
+              <FontAwesomeIcon icon={faBars} size="xl" />
+            </button>
+          </div>
 
-      <div className={`${!active ? "sm:hidden" : "flex-col gap-4"} flex gap-16 decoration-from-font font-medium bg-gray-rgb p-4`}>
-        {navigationData[location.pathname.split("/")[1]].map(
-          ({ title, link, roles }, index) => {
-            for (i in roles) {
-              if (context.auth.role == roles[i])
-                return (
-                  <NavLink
-                    key={index}
-                    style={({ isActive }) => ({
-                      color: isActive ? "rgb(190 24 93)" : "",
-                      fontWeight: isActive ? "bold" : "",
-                    })}
-                    to={link}
-                    className="text-xl"
-                    end
-                  >
-                    {title}
-                  </NavLink>
-                )
-            }
-            return null
-          }
-        )}
-      </div>
+          <div className={`${!active ? "sm:hidden" : "flex-col gap-4"} flex gap-16 decoration-from-font font-medium bg-gray-rgb p-4`}>
+            {navigationData[location.pathname.split("/")[1]].map(
+              ({ title, link, roles }, index) => {
+                for (i in roles) {
+                  if (context.auth.role == roles[i])
+                    return (
+                      <NavLink
+                        key={index}
+                        style={({ isActive }) => ({
+                          color: isActive ? "rgb(190 24 93)" : "",
+                          fontWeight: isActive ? "bold" : "",
+                        })}
+                        to={link}
+                        className="text-xl"
+                        end
+                      >
+                        {title}
+                      </NavLink>
+                    )
+                }
+                return null
+              }
+            )}
+          </div>
+        </div>
+      )}
     </main>
   );
 };
