@@ -23,10 +23,10 @@ var navigationData = {
   "help": [
     { title: "help", link: "/help", roles: [1, 2, 3] }
   ],
-  "account": [
-    { title: "Profile", link: "/account/profile", roles: [1, 2, 3] },
-    { title: "Settings", link: "/account/settings", roles: [1] }
-  ]
+  // "account": [
+  //   { title: "Profile", link: "/account/profile", roles: [1, 2, 3] },
+  //   { title: "Settings", link: "/account/settings", roles: [1] }
+  // ]
 };
 
 const postTypeId = {

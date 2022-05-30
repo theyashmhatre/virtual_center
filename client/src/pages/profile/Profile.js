@@ -1,10 +1,12 @@
+import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { roleIds } from "../../../constants";
+import { DisplayPicture } from "../../components/DisplayPicture";
 import { AuthContext } from "../../contexts";
 import MainLayout from "../../layouts/MainLayout";
 import { profile } from "../../utilities/api/userDetails";
-import { DisplayPicture } from "../../components/DisplayPicture";
 
 const Profile = () => {
   const [userDetail, setUserDetail] = useState({});
@@ -22,33 +24,40 @@ const Profile = () => {
 
   return (
     <MainLayout role={roleIds["user"]}>
-      <div className="min-h-screen mx-28 lg:mx-20 md:mx-16 sm:mx-10 xs:mx-3 my-10">
-        <h1 className="text-3xl text-center tracking-wide text-gray-700 font-bold mb-10">
-          USER PROFILE
-        </h1>
-        
-        <div className="flex justify-center my-10">
-          <div className="w-50per lg:w-60per md:w-70per sm:w-full border-2 py-10 px-6 sm:px-3 xs:px-1">
-            <div className="w-full flex justify-center">
-              <div className="border-4 rounded-full">
-                <DisplayPicture
-                  displayPicture={userDetail.display_picture}
-                  size="6x"
-                  boxSize={32}
-                />
-              </div>
+      <div className="min-h-screen flex sm:flex-col">
+        <div className="w-96 sm:w-full bg-gray-rgb py-10">
+          <div className="text-2xl xl:text-3xl xs:text-xl text-center text-gray-500 font-bold border-b-2 px-8 pb-5">
+            <h1>Your Profile</h1>
+          </div>
+          <div className="flex flex-col items-center px-10 pt-10">
+            <div className="border-4 bg-white rounded-full p-2">
+              <DisplayPicture
+                displayPicture={userDetail.display_picture}
+                size="6x"
+                boxSize={32}
+              />
             </div>
-
+            <p className="text-xl my-5">
+              {userDetail.employee_name}
+            </p>
+          </div>
+        </div>
+        
+        <div className="w-full py-10">
+          <div className="text-2xl xl:text-3xl xs:text-xl text-center text-gray-500 font-bold border-b-2 px-10 pb-5">
+            <h1>Personal Details</h1>
+          </div>
+          <div className="py-10 px-6 sm:px-3 xs:px-1">
             <div className="flex flex-wrap my-5">
               <div className="w-full px-3">
                 <div
-                  className="block uppercase tracking-wide text-gray-700 text-lg md:text-base sm:text-sm font-bold mb-2"
+                  className="tracking-wide text-gray-700 text-lg md:text-base sm:text-sm font-bold mb-2"
                   htmlFor="userId"
                 >
                   UserName
                 </div>
                 <input
-                  className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white"
+                  className="w-full bg-white text-gray-700 border-2 border-gray-400 rounded py-3 px-4 leading-tight"
                   id="grid-first-name"
                   type="text"
                   placeholder=""
@@ -61,13 +70,13 @@ const Profile = () => {
             <div className="flex flex-wrap my-5">
               <div className="w-full px-3">
                 <div
-                  className="block uppercase tracking-wide text-gray-700 text-lg md:text-base sm:text-sm font-bold mb-2"
+                  className="tracking-wide text-gray-700 text-lg md:text-base sm:text-sm font-bold mb-2"
                   htmlFor="grid-name"
                 >
                   Name
                 </div>
                 <input
-                  className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white"
+                  className="w-full bg-white text-gray-700 border-2 border-gray-400 rounded py-3 px-4 leading-tight"
                   id="grid-first-name"
                   type="text"
                   placeholder=""
@@ -80,13 +89,13 @@ const Profile = () => {
             <div className="flex flex-wrap my-5">
               <div className="w-full px-3">
                 <div
-                  className="block uppercase tracking-wide text-gray-700 text-lg md:text-base sm:text-sm font-bold mb-2"
+                  className="tracking-wide text-gray-700 text-lg md:text-base sm:text-sm font-bold mb-2"
                   htmlFor="grid-email"
                 >
                   Email
                 </div>
                 <input
-                  className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  className="w-full bg-white text-gray-700 border-2 border-gray-400 rounded py-3 px-4 leading-tight"
                   id="grid-email"
                   type="email"
                   placeholder="abc@xyz.com"
@@ -99,14 +108,33 @@ const Profile = () => {
             <div className="flex flex-wrap my-5">
               <div className="w-full px-3">
                 <div
-                  className="block uppercase tracking-wide text-gray-700 text-lg md:text-base sm:text-sm font-bold mb-2"
-                  htmlFor="griduserDetail.-email"
+                  className="tracking-wide text-gray-700 text-lg md:text-base sm:text-sm font-bold mb-2"
+                  htmlFor="grid-accountType"
+                >
+                  Account Type
+                </div>
+                <input
+                  className="w-full bg-white text-gray-700 border-2 border-gray-400 rounded py-3 px-4 leading-tight"
+                  id="grid-accountType"
+                  type="text"
+                  placeholder="location"
+                  value={userDetail.accountName}
+                  disabled
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-wrap my-5">
+              <div className="w-full px-3">
+                <div
+                  className="tracking-wide text-gray-700 text-lg md:text-base sm:text-sm font-bold mb-2"
+                  htmlFor="grid-location"
                 >
                   Location
                 </div>
                 <input
-                  className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="grid-email"
+                  className="w-full bg-white text-gray-700 border-2 border-gray-400 rounded py-3 px-4 leading-tight"
+                  id="grid-location"
                   type="text"
                   placeholder="location"
                   value={userDetail.location}
@@ -118,13 +146,13 @@ const Profile = () => {
             <div className="flex flex-wrap my-5">
               <div className="w-full px-3">
                 <div
-                  className="block uppercase tracking-wide text-gray-700 text-lg md:text-base sm:text-sm font-bold mb-2"
+                  className="tracking-wide text-gray-700 text-lg md:text-base sm:text-sm font-bold mb-2"
                   htmlFor="grid-zip"
                 >
                   Contact Number
                 </div>
                 <input
-                  className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  className="w-full bg-white text-gray-700 border-2 border-gray-400 rounded py-3 px-4 leading-tight"
                   id="grid-zip"
                   type="text"
                   placeholder=""
@@ -137,10 +165,10 @@ const Profile = () => {
             <div className="flex justify-center w-full mt-5">
               <Link to={`edit-profile`}>
                 <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  className="bg-pink-700 text-lg text-white font-bold rounded cursor-pointer py-2 px-10"
                   type="button"
                 >
-                  Edit
+                  Update
                 </button>
               </Link>
             </div>

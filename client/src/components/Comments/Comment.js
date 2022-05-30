@@ -1,12 +1,23 @@
 import { faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { monthNames } from "../../../constants";
 import { downvoteComment, upvoteComment } from "../../utilities/api/comment";
 import { DisplayPicture } from "../DisplayPicture";
 
 const Comment = ({ typeId, comment }) => {
   const [isLiked, setIsLiked] = useState(!!comment.isUpvoted);
   const [totalLikes, setTotalLikes] = useState(comment.totalUpvotes || 0);
+  const [postedOn, setPostedOn] = useState("");
+
+  useEffect(() => {
+    const temp = new Date(comment.posted_on)
+    setPostedOn(
+      temp.getDate() + " " + monthNames[temp.getMonth()] + " " +
+      temp.getFullYear() + " " +
+      temp.toISOString().split("T")[1].split(".")[0]
+    );
+  }, [])
 
   const upvote = () => {
     if (!isLiked) {
@@ -27,10 +38,10 @@ const Comment = ({ typeId, comment }) => {
   };
 
   return (
-    <div className="flex xs:flex-col xs:items-center border-4 mt-2 p-3 xs:px-1">
+    <div className="flex xs:flex-col xs:items-center border-2 mt-2 p-3 xs:px-1">
       <div className="flex flex-col justify-center w-32 align-middle">
         <div className="flex justify-center w-full mb-3">
-          <div className="bg-gray-200 rounded-full h-20 w-20">
+          <div className="border-4 rounded-full">
             <DisplayPicture
               displayPicture={comment.display_picture}
               size="3x"
@@ -44,27 +55,28 @@ const Comment = ({ typeId, comment }) => {
       </div>
 
       <div className="flex flex-col w-full">
-        <div className="m-2 mb-1 border-2 sm:text-sm">
+        <div className="m-2 mb-1 sm:text-sm">
           {comment.comment_text}
         </div>
-        <div className="ml-2 text-xs text-gray-600">
-          Posted on {new Date(comment.posted_on).toISOString().split("T")[0]}{" "}
-          {new Date(comment.posted_on).toISOString().split("T")[1].split(".")[0]}
+        <div className="ml-2 text-sm text-gray-400">
+          Posted on {postedOn}
         </div>
         <div>
-          <button
-            className={`flex flex-row border-2 ${isLiked
-              ? "bg-green-700"
-              : "bg-pink-700"
-            } text-white m-2 p-1 w-22`}
-            onClick={upvote}
-          >
-            <div>Upvote</div>
-            <FontAwesomeIcon icon={faThumbsUp} size="1x" className=" p-1" />
-            <div className="bg-white text-pink-700 rounded-2xl mx-1 px-1">
+          <div className="flex flex-row border-2 m-2 p-1 w-fit">
+            <FontAwesomeIcon
+              icon={faThumbsUp}
+              size="1x"
+              className={`cursor-pointer ${isLiked
+                ? "text-green-700"
+                : "text-pink-700"
+              } p-1`}
+              onClick={upvote}
+            />
+            <p>Upvote</p>
+            <div className="text-gray-400 rounded-2xl mx-1 px-1">
               {totalLikes}
             </div>
-          </button>
+          </div>
         </div>
       </div>
     </div>

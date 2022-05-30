@@ -1,4 +1,4 @@
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { faAngleRight, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { getComments, postComment } from "../../utilities/api/comment";
@@ -58,18 +58,18 @@ const Comments = ({ typeId, postId }) => {
 
   return (
     <div className="mt-10 mb-20">
-      <h1 className="text-lg">Comments : </h1>
-      <div className="border-4 p-2 overflow-y-scroll">
+      <h1 className="text-lg font-medium">Comments</h1>
+      <div className="mt-3">
         <textarea
           type="text"
           value={commentText}
           onChange={(e) => setCommentText(e.target.value)}
-          className="border-4 mt-2 p-3 w-full"
+          className="border-2 mt-2 p-3 w-full"
         />
-        <div className="w-full flex flex-row justify-end">
+        <div className="w-full flex flex-row justify-end mb-8">
           <button
             onClick={onPost}
-            className="bg-pink-700 text-white m-1 border-2 p-2 px-6"
+            className="bg-pink-700 text-white rounded mt-2 p-2 px-6"
           >
             Post Comment
           </button>
@@ -90,10 +90,14 @@ const Comments = ({ typeId, postId }) => {
         {!moreCommentsAvlbl ? null : (
           <div className="flex justify-end m-2">
             <button
-              className="text-pink-500 cursor-pointer hover:scale-110 duration-150"
+              className="flex items-center text-pink-700 font-medium cursor-pointer hover:scale-110 duration-150"
               onClick={() => setPageNo(pageNo+1)}
             >
               View More Comments
+              <FontAwesomeIcon
+                icon={faAngleRight}
+                className="ml-2"
+              />
             </button>
           </div>
         )}

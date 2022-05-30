@@ -15,17 +15,16 @@ const Home = () => {
     <MainLayout role={roleIds["user"]}>
       <div className="flex flex-col">
         <div className="flex bg-[url('../public/home_cover.png')] h-80">
-          <div className="flex-1 bg-blue-bg-lite/80 pt-8 bg-blue-500 bg-opacity-60">
-            <h1 className="  text-4xl pl-14 text-white font-semibold ">
+          <div className="w-1/2 sm:w-full bg-blue-bg-lite/80 pl-14 xs:pl-4 pr-4 pt-8 bg-blue-500 bg-opacity-60">
+            <h1 className="text-4xl md:text-3xl sm:text-3xl xs:text-2xl text-white font-semibold ">
               Where Innovation Meets Reality{" "}
             </h1>
-            <h3 className="text-left pl-14 pt-5 text-lg mr-16 pr-2 text-white">
+            <h3 className="text-left pt-5 text-lg xs:text-base text-white">
               A collaborative space to innovate in the virtual world .
               Innovative teams connect to provide solutions on various customer
               ongoing challenges
             </h3>
           </div>
-          <div className="flex-1"></div>
         </div>
         {/* home */}
         <div className="pl-14 pt-8 pr-8">
@@ -38,7 +37,7 @@ const Home = () => {
             support from horizontal teams enable complete platform for smooth
             execution.
           </h3>
-          <div className="flex items-between overflow-hidden mt-10 mb-28">
+          <div className="flex overflow-x-auto items-between overflow-hidden mt-10 mb-28">
             <div className="pr-4">
               <div className="flex flex-row  items-center ">
                 <div className="h-32 w-32 rounded-full bg-pink-700 flex justify-center items-center">
@@ -99,7 +98,7 @@ const Home = () => {
               </div>
             </div>
             <div className="px-4">
-              <div className="flex flex-row items-center ">
+              <div className="flex flex-row items-center">
                 <div className="h-32 w-32 rounded-full bg-pink-700 flex justify-center items-center">
                   <img alt="background_image" src={Home3} />
                 </div>
@@ -128,8 +127,8 @@ const Home = () => {
                 </ul>
               </div>
             </div>
-            <div className="pr-8">
-              <div className="h-32 w-32 rounded-full bg-pink-700 flex justify-center items-center">
+            <div className="px-4">
+              <div className="h-32 w-32 rounded-full bg-pink-700 flex justify-center items-center mr-24">
                 <img alt="" src={Home4} />
               </div>
               <div className="my-5 h-full">

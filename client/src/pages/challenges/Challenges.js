@@ -98,7 +98,7 @@ const Challenges = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="px-4 py-2 w-90per"
-              placeholder="what are you looking for?"
+              placeholder="What are you looking for?"
             />
             <div className="absolute top-2 right-3">
               <FontAwesomeIcon
@@ -150,7 +150,7 @@ const Challenges = () => {
           {context.auth && (context.auth.role == roleIds["admin"] || context.auth.role == roleIds["super_admin"]) ? (
             <div className="flex justify-end mb-10">
               <Link to={`/challenge/create-challenge`}>
-                <h2 className="border-2 border-black rounded-3xl hover:scale-110 text-center text-pink-700 p-2">
+                <h2 className="border-2 border-gray-300 hover:scale-110 text-center text-pink-700 font-medium py-2 px-5 sm:px-2">
                   Create Challenge
                 </h2>
               </Link>
